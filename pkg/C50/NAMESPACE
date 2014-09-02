@@ -1,0 +1,28 @@
+useDynLib(C50)
+
+export(C5.0Control,
+       C5.0,
+       C5.0.default,
+       C5.0.formula,
+       C5imp,
+       predict.C5.0,
+       summary.C5.0)
+
+S3method(C5.0, default)
+S3method(C5.0, formula)
+
+S3method(summary, C5.0)
+S3method(print, summary.C5.0)
+
+S3method(print, C5.0)
+
+S3method(predict, C5.0)
+
+S3method(QuinlanAttributes, numeric)
+S3method(QuinlanAttributes, factor)
+S3method(QuinlanAttributes, character)
+S3method(QuinlanAttributes, ordered)
+S3method(QuinlanAttributes, matrix)
+S3method(QuinlanAttributes, data.frame)
+
+       

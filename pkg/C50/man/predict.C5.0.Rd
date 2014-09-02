@@ -1,0 +1,98 @@
+\name{predict.C5.0}
+\alias{predict.C5.0}
+\title{
+Predict new samples using a C5.0 model
+}
+\description{
+This function produces predicted classes or confidence values from a C5.0 model.
+}
+\usage{
+\method{predict}{C5.0}(object, newdata = NULL, 
+        trials = object$trials["Actual"],
+        type = "class", na.action = na.pass, ...)
+}
+
+\arguments{
+  \item{object}{
+an object of class \code{C5.0}
+}
+  \item{newdata}{
+a matrix or data frame of predictors
+}
+  \item{trials}{an integer for how many boosting iterations are used
+for prediction. See the note below.  }
+
+
+  \item{type}{
+either \code{"class"} for the predicted class or \code{"prob"} for model confidence values.
+}
+  \item{na.action}{
+when using a formula for the original model fit, how should missing values be handled?
+}
+  \item{\dots}{
+other options (not currently used)
+}
+}
+\details{
+
+Note that the number of trials in the object my be less than what was
+specified originally (unless \code{earlyStopping = FALSE} was used in
+\code{\link{C5.0Control}}). If the number requested is larger than the
+actual number available, the maximum actual is used and a warning is
+issued.
+
+Model confidence values reflect the distribution of the classes in
+terminal nodes or within rules. 
+
+For rule-based models (i.e. not boosted), the predicted confidence
+value is the confidence value from the most specific, active
+rule. Note that C4.5 sorts the rules, and uses the first active rule
+for prediction. However, the default in the original sources did not
+normalize the confidence values. For example, for two classes it was
+possible to get confidence values of (0.3815, 0.8850) or (0.0000,
+0.922), which do not add to one. For rules, this code divides the
+values by there sum. The previous values would be converted to
+(0.3012, 0.6988) and (0, 1). There are also cases where no rule is
+activated. Here, equal values are assigned to each class.
+
+For boosting, the per-class confidence values are aggregated over all
+of the trees created during the boosting process and these aggregate
+values are normalized so that the overall per-class confidence values
+sum to one. 
+
+When the \code{cost} argument is used in the main function, class
+probabilities derived from the class distribution in the terminal
+nodes may not be consistent with the final predicted class. For this
+reason, requesting class probabilities from a model using unequal
+costs will throw an error.
+
+}
+
+
+\value{
+when \code{type = "class"}, a factor vector is returned. When \code{type = "prob"}, a matrix of confidence values is returned (one column per class). 
+}
+\references{
+Quinlan R (1993). C4.5: Programs for Machine Learning. Morgan Kaufmann Publishers,
+\url{http://www.rulequest.com/see5-unix.html}
+}
+\author{
+Original GPL C code by Ross Quinlan, R code and modifications to C by
+Max Kuhn, Steve Weston and Nathan Coulter
+}
+
+
+\seealso{
+\code{\link{C5.0}}, \code{\link{C5.0Control}}, \code{\link{summary.C5.0}},  \code{\link{C5imp}}
+}
+\examples{
+data(churn)
+
+treeModel <- C5.0(x = churnTrain[, -20], y = churnTrain$churn)
+predict(treeModel, head(churnTest[, -20]))
+predict(treeModel, head(churnTest[, -20]), type = "prob")
+
+
+}
+
+\keyword{ models }
