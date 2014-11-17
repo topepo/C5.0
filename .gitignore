@@ -1,0 +1,10 @@
+
+pkg/C50_0.1.0-20.tar.gz
+pkg/C50.Rcheck
+*.o
+
+pkg/C50/config.log
+
+pkg/C50/config.status
+
+pkg/C50/src/C50.so
