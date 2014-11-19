@@ -8,3 +8,5 @@ pkg/C50/config.log
 pkg/C50/config.status
 
 pkg/C50/src/C50.so
+
+pkg/C50/src/Makevars

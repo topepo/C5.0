@@ -18,6 +18,8 @@ S3method(print, C5.0)
 
 S3method(predict, C5.0)
 
+S3method(as.party, C5.0)
+
 S3method(QuinlanAttributes, numeric)
 S3method(QuinlanAttributes, factor)
 S3method(QuinlanAttributes, character)
