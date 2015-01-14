@@ -1,5 +1,7 @@
 useDynLib(C50)
 
+import(partykit)
+
 export(C5.0Control,
        C5.0,
        C5.0.default,
@@ -15,6 +17,8 @@ S3method(summary, C5.0)
 S3method(print, summary.C5.0)
 
 S3method(print, C5.0)
+
+S3method(plot, C5.0)
 
 S3method(predict, C5.0)
 

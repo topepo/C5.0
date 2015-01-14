@@ -6,6 +6,13 @@
 ##               getting C5.0 into party.
 ################################################################
 
+plot.C5.0 <- function(x, ...) {
+  if(x$trials["Actual"] != 1 || x$rules != "")
+    stop("currently only implemented for single trees")
+  x <- as.party(x)
+  plot(x, ...)
+}
+
 model.frame.C5.0<-function (formula, ...) {
   if (!is.null(formula$model))
     return(formula$model)
