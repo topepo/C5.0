@@ -10,3 +10,7 @@ pkg/C50/config.status
 pkg/C50/src/C50.so
 
 pkg/C50/src/Makevars
+
+pkg/C50_0.1.0-23.tar.gz
+
+pkg/C50_0.1.0-22.tar.gz
