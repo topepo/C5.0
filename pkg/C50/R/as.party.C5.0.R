@@ -1,10 +1,10 @@
-
-plot.C5.0 <- function(x, trial = 1, subtree = NULL, ...) {
+plot.C5.0 <- function(x, trial = 0, subtree = NULL, ...) {
   if(x$rules != "") stop("tree models only")
-  if(trial > x$trials["Actual"]) {
+  if(trial > x$trials["Actual"]-1) {
     warning(paste("Only", x$trials["Actual"], "trials are in the model.",
-                  "Setting 'trial' to this value. "))
-    trial <- x$trials["Actual"]
+                  "Setting 'trial' to", x$trials["Actual"]-1,
+                  "(the plot code is zero-based)."))
+    trial <- x$trials["Actual"] - 1
   }
   x <- as.party(x, trial = trial)
   if(!is.null(subtree)) {
@@ -12,9 +12,11 @@ plot.C5.0 <- function(x, trial = 1, subtree = NULL, ...) {
       stop(paste("For this model, 'subtree' should be between zero and", length(x))) else
         x <- x[subtree]
   }
+  if(any(names(list(...)) == "trials")) {
+    warning("The option 'trials' was passed and will be ignored. Did you mean to use 'trial'?")
+  }
   plot(x, ...)
 }
-
 
 model.frame.C5.0<-function (formula, ...) {
   if (!is.null(formula$model))
@@ -45,7 +47,6 @@ as.party.C5.0<-function(obj,trial=0,...){
   out<-out[out!=""]
   out<-out[grep("^\t",out,invert=TRUE)]
   out<-out[grep("\\*\\*\\*",out,invert=TRUE)]
-  if(is.)
   tr<-as.vector(obj$trials)[2]
   if(tr>1){
     if(trial>(tr-1)){
@@ -71,28 +72,39 @@ as.party.C5.0<-function(obj,trial=0,...){
     a17<-check1[indv1,]
     rml=NULL
     for(j in 1:dim(a17)[1]){
-      iv37<-out[a17[j,]][-1]
-      vlap<-strsplit(iv37,":")[[1]]
-      arv12=gsub(" ","",vlap[(length(vlap)-1)][1])
-      if(is.na(match("",arv12))){  			 
-        vlap<-paste(arv12,vlap[length(vlap)],sep=":")
-      }else{
-        vlap=vlap[length(vlap)]
-        vlap=gsub(" ","",vlap)
-        vlap<-paste(vlap,":",sep="")
+      nterms=diff(a17[j,])
+      vlaps=NULL
+      for(i in 1:nterms){
+        iv37<-out[a17[j,1]:a17[j,2]][-1][i]
+        if(i==nterms){
+          vlap<-strsplit(iv37,":")[[1]]
+          arv12=gsub(" ","",vlap[(length(vlap)-1)][1])
+          if(is.na(match("",arv12))){
+            vlap<-paste(arv12,vlap[length(vlap)],sep=":")
+          }else{
+            vlap=vlap[length(vlap)]
+            vlap=gsub(" ","",vlap)
+            vlap<-paste(vlap,":",sep="")
+          }
+        }else{
+          v1<-strsplit(iv37," ")[[1]]
+          vlap<-v1[length(v1)]
+        }
+        vlaps=paste(vlaps,vlap,sep="")
       }
-      vlap<-paste(out[a17[j,1]],vlap,sep="")
+      vlap<-paste(out[a17[j,1]],vlaps,sep="")
       out[a17[j,1]]=vlap
-      rml=c(rml,a17[j,2])
+      pts<-unique(sort((a17[j,1]+1):a17[j,2]))
+      rml=c(rml,pts)
     }
     out=out[-rml]
   }
   indtrees<-grep( "SubTree",out)
   
-  if(length(indtrees)>0 ){		
+  if(length(indtrees)>0 ){  	
     while(length(indtrees)>0){
       xval<-t(sapply(1:length(indtrees),function(i)grep(paste("[S",i,"]",sep=""),out,fixed=TRUE)))
-      end=length(out)
+      end1=length(out)
       j=length(indtrees)
       ind.x=xval[j,1]
       torb<-sapply(1:length(obj$predictors),function(i){
@@ -103,9 +115,9 @@ as.party.C5.0<-function(obj,trial=0,...){
       adj<-strsplit(out[ind.x],obj$pred[which(torb>0)])[[1]][1]
       ind.y<-xval[j,2]+1
       
-      stree<-paste(adj,out[ind.y:end],sep="    ")
+      stree<-paste(adj,out[ind.y:end1],sep="    ")
       
-      out<-c(out[1:ind.x],stree,out[-c(1:ind.x,ind.y:end)])
+      out<-c(out[1:ind.x],stree,out[-c(1:ind.x,ind.y:end1)])
       out<-out[-length(out)]		
       out[ind.x]=gsub(paste(" \\[S",length(indtrees),"\\]",sep=""),"",out[ind.x])
       indtrees<-grep( "SubTree",out)
