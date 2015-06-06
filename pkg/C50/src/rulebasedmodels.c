@@ -26,7 +26,7 @@ void initglobals(void)
     TRIALS=1;		/* number of trees to be grown */
     FOLDS=10;		/* crossvalidation folds */
     UTILITY=0;		/* rule utility bands */
-
+    PRUNEM=0;
     SUBSET=0;		/* subset tests allowed */
     BOOST=0;		/* boosting invoked */
     EARLYSTOPPING=0;     /* let C5 check for effective boosting */
@@ -210,7 +210,7 @@ void initglobals(void)
 /*
  * Set global variables in preparation for creating a model
  */
-void setglobals(int subset, int rules, int utility, int trials, int winnow,
+void setglobals(int subset, int rules, int utility, int trials,int prunem, int winnow,
                 double sample, int seed, int noGlobalPruning, double cf,
                 int minCases, int fuzzyThreshold, int earlyStopping,
                 char *costv)
@@ -224,6 +224,7 @@ void setglobals(int subset, int rules, int utility, int trials, int winnow,
     RULES = rules != 0 ? true : false;                        /* Logical */
     UTILITY = utility;                                       /* Int */
     TRIALS = trials;                                         /* Int */
+    PRUNEM = prunem;
     BOOST = trials > 1 ? true : false;                        /* Logical */   
     EARLYSTOPPING = earlyStopping != 0 ? true : false;        /* Logical */
     WINNOW = winnow != 0 ? true : false;                      /* Logical */

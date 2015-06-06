@@ -27,7 +27,9 @@ extern	int		VERBOSITY,
 			TRIALS,
 			FOLDS,
 			UTILITY,
-			NCPU;
+			NCPU,
+      PRUNEM;
+
 
 extern	Boolean		SUBSET,
 			BOOST,
@@ -96,6 +98,7 @@ extern	String		FileStem;
 
 extern	Tree		*Raw,
 			*Pruned,
+			*TempPruned,
 			WTree;
 
 extern	float		Confidence,
@@ -146,7 +149,8 @@ extern	RuleNo		NRules,
 extern  RuleNo          *RulesUsed,
 			NRulesUsed;
 
-extern	CRuleSet	 *RuleSet;
+extern	CRuleSet	*RuleSet,
+			*TempRuleSet;
 
 extern	ClassNo		Default;
 

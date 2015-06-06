@@ -26,6 +26,7 @@ static void c50(char **namesv,
                 int *minCases,
                 int *fuzzyThreshold,
                 int *earlyStopping,
+                int *prunem,
                 char **treev,
                 char **rulesv,
                 char **outputv)
@@ -41,7 +42,7 @@ static void c50(char **namesv,
 
     // Set globals based on the arguments.  This is analogous
     // to parsing the command line in the c50 program.
-    setglobals(*subset, *rules, *utility, *trials, *winnow, *sample,
+    setglobals(*subset, *rules, *utility, *trials, *prunem, *winnow, *sample,
                *seed, *noGlobalPruning, *CF, *minCases, *fuzzyThreshold,
                *earlyStopping, *costv);
 
@@ -249,7 +250,8 @@ static R_NativePrimitiveArgType c50_t[] = {
     REALSXP,  // CF
     INTSXP,   // minCases
     LGLSXP,   // fuzzyThreshold
-    LGLSXP,   // early stopping    
+    LGLSXP,   // early stopping
+    INTSXP,   //prunem  
     STRSXP,   // treev
     STRSXP,   // rulesv
     STRSXP    // outputv
@@ -270,7 +272,7 @@ static R_NativePrimitiveArgType predictions_t[] = {
 
 // Declare the c50 and predictions functions
 static const R_CMethodDef cEntries[] = {
-    {"C50", (DL_FUNC) &c50, 18, c50_t},
+    {"C50", (DL_FUNC) &c50, 19, c50_t},
     {"predictions", (DL_FUNC) &predictions, 9, predictions_t},
     {NULL, NULL, 0}
 };
