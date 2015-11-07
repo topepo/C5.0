@@ -12,7 +12,8 @@ C5.0 algorithm
 \usage{
 C5.0(x, ...)
 
-\method{C5.0}{default}(x, y, trials = 1, rules= FALSE, 
+\method{C5.0}{default}(x, y, trials = 1, prunem = trials,
+     rules= FALSE, 
      weights = NULL, 
      control = C5.0Control(), 
      costs = NULL, ...)
@@ -32,6 +33,9 @@ a factor vector with 2 or more levels
   \item{trials}{
 an integer specifying the number of boosting iterations. A value of
 one indicates that a single model is used.
+}
+  \item{prunem}{
+an integer specifying the number of classifiers permitted in the ensemble after pruning of boosted iterations. A value of one indicates that a single model is used.
 }
   \item{rules}{
 A logical: should the tree be decomposed into a rule-based model?
@@ -86,8 +90,8 @@ generated using \code{\link{predict.C5.0}}.
 Internally, the code will attempt to halt boosting if it appears to be
 ineffective. For this reason, the value of \code{trials} may be
 different from what the model actually produced. There is an option to
-turn this off in \code{\link{C5.0Control}}.
-
+turn this off in \code{\link{C5.0Control}}. Additionally, if \code{prunem}
+is specified, the boosted ensemble is pruned using Kappa Pruning to select \code{prunem} best classifiers from \code{trials} number of classifiers.
 }
 \value{
 An object of class \code{C5.0} with elements:
@@ -125,6 +129,9 @@ a string version of the command line output
   \item{predictors}{
 a character vector of predictor names
 }
+  \item{prunem}{
+a integer vector specifying the number of classifiers in the pruned model
+  }
   \item{rbm}{
 a logical for rules
 }
