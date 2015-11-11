@@ -71,6 +71,10 @@ as.party.C5.0<-function(obj,trial=0,...){
   if(length(indv1)>0){
     a17<-check1[indv1,]
     rml=NULL
+     if(is.vector(a17)){  
+      a17=matrix(a17,1)
+    }
+   
     for(j in 1:dim(a17)[1]){
       nterms=diff(a17[j,])
       vlaps=NULL
