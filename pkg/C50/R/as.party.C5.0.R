@@ -69,12 +69,8 @@ as.party.C5.0<-function(obj,trial=0,...){
   check1<-cbind(   grep("\\{",out),grep("\\}",out))
   indv1<-which(check1[,1]!=check1[,2])
   if(length(indv1)>0){
-    a17<-check1[indv1,]
+    a17<-check1[indv1,,drop=FALSE]
     rml=NULL
-     if(is.vector(a17)){  
-      a17=matrix(a17,1)
-    }
-   
     for(j in 1:dim(a17)[1]){
       nterms=diff(a17[j,])
       vlaps=NULL
@@ -243,7 +239,7 @@ as.party.C5.0<-function(obj,trial=0,...){
     p<-dim(mf)[2]
     fn=as.formula(paste("y ~ ",paste(obj$pred,collapse=" + "),sep=""))
     g7<-party(pn,data=mf[0L,],fitted = data.frame(
-      "(fitted)" = fitted_node(pn, data = mf[,-p]),
+      "(fitted)" = fitted_node(pn, data = mf[,-p,drop=FALSE]),
       "(response)" = mf[,p],check.names = FALSE),terms=terms(fn))
   }else{
     C5.0_fitted <- function() {
@@ -254,7 +250,7 @@ as.party.C5.0<-function(obj,trial=0,...){
       ret
     }
     fitted <- C5.0_fitted()
-    g7<-party(pn,data=mf[0L,],fitted = fitted,terms=terms(mf),
+    g7<-party(pn,data=mf[0L,,drop=FALSE],fitted = fitted,terms=terms(mf),
               info=list(method="C5.0"))
   }
   
