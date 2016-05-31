@@ -10,7 +10,8 @@ C5.0.default <- function(x, y,
 {
   funcCall <- match.call(expand.dots = TRUE)
   if(!is.factor(y)) stop("C5.0 models require a factor outcome")
-
+  if(is.null(colnames(x)))
+    stop("column names are required")
   if(control$bands > 2 & !rules)
     {
       warning("rule banding only works with rules; 'rules' was changed to TRUE")
