@@ -16,7 +16,7 @@
 /*  General Public License for more details.				 */
 /*									 */
 /*  You should have received a copy of the GNU General Public License	 */
-/*  (gpl.txt) along with C5.0 GPL Edition.  If not, see 		 */
+/*  (gpl.txt) along witih C5.0 GPL Edition.  If not, see 		 */
 /*									 */
 /*      <http://www.gnu.org/licenses/>.					 */
 /*									 */

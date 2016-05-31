@@ -90,7 +90,7 @@
 /*************************************************************************/
 
 #define	 THEORYFRAC	0.23	/* discount rate for estimated coding cost */
-
+//#define M 6
 #define	 Nil	   0		/* null pointer */
 #define	 false	   0
 #define	 true	   1
@@ -446,6 +446,11 @@ typedef struct _rulesetrec
 	 }
 	 RuleSetRec, *CRuleSet;
 
+struct KappaData
+  {
+    float kappa;
+    int ha,hb;
+  };
 
 
 /*************************************************************************/
@@ -465,6 +470,9 @@ void	    ConstructClassifiers(void);
 void	    InitialiseWeights(void);
 void	    SetAvCWt(void);
 void	    Evaluate(int Flags);
+float     FindKappa(int ha,int hb);
+float     Prune_BoostClassifiers();
+int       kappanotexists(int kappadata,int m);
 void	    EvaluateSingle(int Flags);
 void	    EvaluateBoost(int Flags);
 void	    RecordAttUsage(DataRec Case, int *Usage);

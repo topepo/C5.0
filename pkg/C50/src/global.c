@@ -46,6 +46,8 @@ int		VERBOSITY=0,	/* verbosity level (0 = none) */
 		TRIALS=1,	/* number of trees to be grown */
 		FOLDS=10,	/* crossvalidation folds */
 		UTILITY=0;	/* rule utility bands */
+    PRUNEM=0;
+
 
 Boolean		SUBSET=0,	/* subset tests allowed */
 		BOOST=0,        /* boosting invoked */
@@ -129,6 +131,7 @@ String		FileStem="undefined";
 
 Tree		*Raw=0,		/* unpruned trees */
 		*Pruned=0,	/* pruned trees */
+		*TempPruned=0,	/* temporary pruned trees */
 		WTree=0;	/* winnow tree */
 
 float		SampleFrac=1,	/* fraction used when sampling */
@@ -186,7 +189,8 @@ RuleNo		NRules,		/* number of rules */
 RuleNo		*RulesUsed=Nil, /* list of all rules used */
 		NRulesUsed;    /* number ditto */
 
-CRuleSet	*RuleSet=0;	/* rulesets */
+CRuleSet	*RuleSet=0,	/* rulesets */
+		*TempRuleSet=0;	/* temporary rulesets */
 
 ClassNo		Default;	/* default class associated with ruleset or
 				   boosted classifier */

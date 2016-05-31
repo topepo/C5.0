@@ -10,7 +10,8 @@
 /*  published by the Free Software Foundation, either version 3 of the	 */
 /*  License, or (at your option) any later version.			 */
 /*									 */
-/*  C5.0 GPL Edition is distributed in the hope that it will be useful,	 */
+/*  C5.0 GPL Edition 
+is distributed in the hope that it will be useful,	 */
 /*  but WITHOUT ANY WARRANTY; without even the implied warranty of	 */
 /*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU	 */
 /*  General Public License for more details.				 */
@@ -48,7 +49,7 @@
 /*	determine the predicted class with lowest expected cost.	 */
 /*									 */
 /*************************************************************************/
-
+/* Prunes the boosted ensemble using Kappa pruning algorithm */
 
 #include "defns.h"
 #include "extern.h"
@@ -58,9 +59,120 @@
 
 /*************************************************************************/
 /*									 */
-/*	Grow single tree or sequence of boosted trees			 */
+/*	Grow single tree or sequence of boosted trees and prune the ensemble			 */
 /*									 */
 /*************************************************************************/
+
+
+int* PrunedClassifierNo; int M;
+int ClassifierNotExists(int ClassifierNo,int m)
+{
+	int i;
+	ForEach(i,0,m-1)
+	{
+		if( PrunedClassifierNo[i]==ClassifierNo)
+			return 0;		 
+	}
+	return 1;
+}
+
+float FindKappa(int ha,int hb)
+{
+	int tupleNo,ClassNo,i,j;
+	int C[MaxClass+1][MaxClass+1];
+	float kappa,SigmaOne,SigmaTwo,ThetaTwo=0.0,ThetaOne=0.0;
+	ForEach(i,1,MaxClass)
+        	ForEach(j,1,MaxClass)
+			C[i][j] = 0; 
+
+	ForEach(tupleNo,0,MaxCase)
+	{
+		 i = ( RULES ? RuleClassify(Case[tupleNo], RuleSet[ha]) :
+			     TreeClassify(Case[tupleNo], Pruned[ha]) );
+		 j = ( RULES ? RuleClassify(Case[tupleNo], RuleSet[hb]) :
+			     TreeClassify(Case[tupleNo], Pruned[hb]) );
+		C[i][j]+=1; 
+	}
+  
+	ForEach(ClassNo,0,MaxClass-1)
+	{
+		ThetaOne+=C[ClassNo][ClassNo]; 
+	}
+	
+	ThetaOne/=MaxCase;	
+	ForEach(i,0,MaxClass-1)
+	{
+		SigmaOne = 0.0;
+		SigmaTwo = 0.0;
+		
+		ForEach(j,0,MaxClass-1)
+		{	
+			SigmaOne+=((float)C[i][j]/(MaxCase+1));
+			SigmaTwo+=((float)C[j][i]/(MaxCase+1));
+		}
+
+		ThetaTwo+=(SigmaOne*SigmaTwo);
+		
+	}
+	kappa = (ThetaOne - ThetaTwo)/(1-ThetaTwo);
+	return kappa;
+}
+
+
+float PruneBoostClassifiers()
+{
+	struct KappaData{
+	  float kappa;
+	  int ha;
+    int hb;
+	};
+  struct KappaData* Kdata;
+	int Maxkappa = TRIALS*(TRIALS-1)/2;
+  float temp;
+	int temp1,trial1,trial2,k=0,maxkappa,m;
+	PrunedClassifierNo = (int*)malloc(Maxkappa*sizeof(int));
+	Kdata = (struct KappaData*)malloc(Maxkappa*sizeof(struct KappaData));
+
+	ForEach(trial1,0,TRIALS-1)
+	{
+	   ForEach(trial2,trial1+1,TRIALS-1)
+		  {   
+        Kdata[k].kappa = FindKappa(trial1,trial2);
+			  Kdata[k].ha = trial1;
+			  Kdata[k].hb = trial2;
+			  k++;
+		}		
+	}
+	
+  for(int i=0;i<Maxkappa;i++)
+	{
+    for(int j=i+1;j<Maxkappa;j++)
+		{
+			if(Kdata[i].kappa>Kdata[j].kappa)
+			{
+				temp=Kdata[i].kappa;
+			  Kdata[i].kappa=Kdata[j].kappa;
+			  Kdata[j].kappa=temp;
+				
+        temp1=Kdata[i].ha;
+			  Kdata[i].ha=Kdata[j].ha;
+			  Kdata[j].ha=temp1;
+				
+        temp1=Kdata[i].hb;
+			  Kdata[i].hb=Kdata[j].hb;
+			  Kdata[j].hb=temp1;
+			}
+    }
+  }
+  
+	for(maxkappa=0,m=0;m<M;maxkappa++)
+	{
+		if(ClassifierNotExists(Kdata[maxkappa].ha,m))
+			 PrunedClassifierNo[m++] = Kdata[maxkappa].ha;
+		if(ClassifierNotExists(Kdata[maxkappa].hb,m))
+			 PrunedClassifierNo[m++] = Kdata[maxkappa].hb;	
+  }
+}
 
 
 void ConstructClassifiers()
@@ -76,7 +188,7 @@ void ConstructClassifiers()
 
     
     /*  Clean up after possible interrupt  */
-
+    //Rprintf("MaxCase = %d, MaxClass = %d", MaxCase, MaxClass);
     FreeUnlessNil(Wrong);
 
     Wrong = Alloc(MaxCase+1, ClassNo);
@@ -357,28 +469,50 @@ void ConstructClassifiers()
     }
 
     /*  Save trees or rulesets  */
-
+    
+    int m; M = PRUNEM; 
+    
     if ( ! XVAL )
-    {
-	if ( ! RULES )
-	{
-	    ForEach(Trial, 0, TRIALS-1)
-	    {
-		SaveTree(Pruned[Trial], ".tree");
-	    }
-	}
-	else
-	{
-	    ForEach(Trial, 0, TRIALS-1)
-	    {
-		SaveRules(RuleSet[Trial], ".rules");
-	    }
-	}
-
-	fclose(TRf);
+    { 
+      if(TRIALS> M)
+      {
+	      TRIALS = M;
+          /* Prune boosted ensemble to get only M trees or rulesets */
+      	PruneBoostClassifiers();
+        if ( ! RULES )				
+        	{   
+	          TempPruned   = AllocZero(M+1, Tree);
+	          ForEach(m, 0, M-1)
+            {
+		          TempPruned[m] = Pruned[ PrunedClassifierNo[m]];		
+		          SaveTree(Pruned[ PrunedClassifierNo[m]], ".tree");
+		        }
+	          Pruned = TempPruned;
+        	}
+	        else
+	        {
+	          TempRuleSet   = AllocZero(M+1, CRuleSet);	
+	          ForEach(m, 0, M-1)
+            {
+		          TempRuleSet[m] = RuleSet[ PrunedClassifierNo[m]];	    
+		          SaveRules(RuleSet[ PrunedClassifierNo[m]], ".rules");
+		        }
+            RuleSet = TempRuleSet;
+          }
+      }
+      else 
+      {
+	    /* Pruning not required */
+        if ( ! RULES )   
+          ForEach(Trial, 0, TRIALS-1)
+	    	    SaveTree(Pruned[Trial], ".tree");
+        else
+          ForEach(Trial, 0, TRIALS-1)
+            SaveRules(RuleSet[Trial], ".rules");
+      }
+	   fclose(TRf);
     }
     TRf = 0;
-
     Free(Wrong);					Wrong = Nil;
     FreeUnlessNil(BVoteBlock);				BVoteBlock = Nil;
 }
@@ -387,7 +521,7 @@ void ConstructClassifiers()
 
 /*************************************************************************/
 /*								 	 */
-/*	Initialise the weight of each case				 */
+/*	Intitialise the weight of each case				 */
 /*								 	 */
 /*************************************************************************/
 
@@ -707,6 +841,8 @@ void EvaluateBoost(int Flags)
     Tests = Max(MaxCase+1, 1);	/* in case no useful test data! */
     Errs = AllocZero(TRIALS, CaseNo);
     ECost = AllocZero(TRIALS, double);
+    //Rprintf("Trials in EvaluateBoost = %d", TRIALS);
+
 
     fprintf(Of, "\n");
     ForEach(t, 0, 2)
@@ -855,5 +991,7 @@ void RecordAttUsage(DataRec Case, int *Usage)
 		}
 	    }
 	}
-    }
+    }   
 }
+
+

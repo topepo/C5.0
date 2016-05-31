@@ -2,6 +2,7 @@ C5.0 <-  function(x, ...) UseMethod("C5.0")
 
 C5.0.default <- function(x, y,
                          trials = 1,
+                         prunem = trials,
                          rules = FALSE,
                          weights = NULL,
                          control = C5.0Control(),
@@ -17,7 +18,10 @@ C5.0.default <- function(x, y,
       warning("rule banding only works with rules; 'rules' was changed to TRUE")
       rules <- TRUE
     }
-  
+  if(prunem > trials)
+  {
+    stop("prunem should be lesser than trials")
+  }
   ## to do add weightings
   
   lvl <- levels(y)
@@ -42,7 +46,10 @@ C5.0.default <- function(x, y,
   maxtrials <- 100
   if(trials < 1 | trials > maxtrials)
     stop(paste("number of boosting iterations must be between 1 and" ,maxtrials))
-
+  
+  if(prunem < 1 | prunem > maxtrials)
+    stop(paste("number of boosting iterations to be pruned must be between 1 and" ,maxtrials))
+  
   if(!is.data.frame(x) & !is.matrix(x)) stop("x must be a matrix or data frame")
 
   if(!is.null(weights) && !is.numeric(weights))
@@ -51,7 +58,6 @@ C5.0.default <- function(x, y,
   ## TODO: add case weights to these files when needed
   namesString <- makeNamesFile(x, y, w = weights, label = control$label, comments = TRUE)
   dataString <- makeDataFile(x, y, weights)
-
   Z <- .C("C50",
           as.character(namesString),
           as.character(dataString),
@@ -84,28 +90,27 @@ C5.0.default <- function(x, y,
           as.logical(control$fuzzyThreshold),
                                         # -p "use the Fuzzy thresholds option" var name: PROBTHRESH     
           as.logical(control$earlyStopping), # toggle C5.0 to check to see if we should stop boosting early
+          as.integer((prunem)),               # -p : " ditto with specified number of prunem", var name: PRUNEM
           ## the model is returned in 2 files: .rules and .tree
           tree = character(1),             # pass back C5.0 tree as a string
           rules = character(1),            # pass back C5.0 rules as a string
           output = character(1),           # get output that normally goes to screen
           PACKAGE = "C50"
           )
-
-  ## Figure out how may trials were actually used. 
+## Figure out how may trials were actually used. 
   modelContent <- strsplit(if(rules) Z$rules else Z$tree, "\n")[[1]]
   entries <- grep("^entries", modelContent, value = TRUE)
   if(length(entries) > 0)
     {
       actual <- as.numeric(substring(entries, 10, nchar(entries)-1))
     } else actual <- trials
-
   if(trials > 1)
     {
       boostResults <- getBoostResults(Z$output)
       ## This next line is here to avoid a false positive warning in R
       ## CMD check:
       ## * checking R code for possible problems ... NOTE
-      ## C5.0.default: no visible binding for global variable 'Data'
+      ## C5.0.default: no visible binding for global variable ‘Data’
       Data <- NULL
       size <- if(!is.null(boostResults)) subset(boostResults, Data == "Training Set")$Size else NA
     }   else {

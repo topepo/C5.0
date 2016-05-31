@@ -7,7 +7,7 @@
 extern jmp_buf rbm_buf;
 
 extern void initglobals(void);
-extern void setglobals(int subset, int rules, int bands, int trials,
+extern void setglobals(int subset, int rules, int bands, int trials,int prunem,
                       int winnow, double sample, int seed, 
                       int noGlobalPruning,
                       double CF, int minCases, int fuzzyThreshold,
