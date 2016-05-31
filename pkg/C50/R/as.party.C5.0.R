@@ -28,8 +28,8 @@ model.frame.C5.0<-function (formula, ...) {
     mf$na.action <- na.omit
   mf$drop.unused.levels <- TRUE
   mf[[1L]] <- as.name("model.frame")
-  env <- if (!is.null(environment(formula$terms)))
-    environment(formula$terms)
+  env <- if (!is.null(environment(formula$Terms)))
+    environment(formula$Terms)
   else parent.frame()
   mf <- eval(mf, env)
   
