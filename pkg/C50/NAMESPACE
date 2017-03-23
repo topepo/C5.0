@@ -1,6 +1,10 @@
 useDynLib(C50)
 
 import(partykit)
+importFrom("graphics", "plot")
+importFrom("stats", ".getXlevels", "as.formula", "delete.response",
+            "model.extract", "model.frame", "model.weights", "na.omit",
+            "na.pass", "terms")
 
 export(C5.0Control,
        C5.0,

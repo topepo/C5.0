@@ -147,7 +147,11 @@ C5.0.formula <- function (formula, data, weights, subset, na.action = na.pass, .
   
   y <- model.extract(m, "response")
   wt <- model.extract(m, "weights")
-  if (length(wt) == 0L)  wt <- NULL
+  if (length(wt) == 0L) 
+    wt <- NULL
+  if("(weights)" %in% colnames(m))
+    m[, "(weights)"] <- NULL
+  
   m <- m[,-1,drop = FALSE]
   out <- C5.0.default(x = m, y = y, weights = wt, ...)
   out$call <- call
@@ -388,27 +392,6 @@ getAtt <- function(x)
   }
 
 C5predictors <- function(x, ...) unique(getAtt(getVars(x)))
-
-
-if(FALSE)
-  {
-    library(C5.0)
-
-    test <- matrix(0, 3, 3)
-    test[1, 1] <- 10
-    test[1, 2] <- 1
-    test[3, 2] <- 2
-    mod <- C5.0(iris[, 1:4], iris$Species, costs = test)
-
-    C5.0(iris[, 1:4], iris$Species, costs = test,
-         trials = 100,
-         control=C5.0Control(
-           CF = .1, winnow = TRUE,
-           sample = .10, bands = 10, fuzzyThreshold = TRUE))
-
-
-  }
-
 
 getBoostResults <- function(x)
   {
