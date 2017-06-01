@@ -38,7 +38,13 @@ model.frame.C5.0<-function (formula, ...) {
   mf[,1:length(formula$pred)]<-mf[formula$pred]
   mf[,length(formula$pred)+1]<-tmp
   names(mf)<-c(formula$pred,rsp)
-  
+   if(any(is.na(names(mf)))){
+    i1<-as.vector(which(is.na(names(mf))))
+    if(is.na(match("(weights)",names(mf)))){
+      names(mf)[i1]<-"(weights)"
+    }
+  }
+
   return(mf)
 }
 
@@ -242,14 +248,20 @@ as.party.C5.0<-function(obj,trial=0,...){
       "(fitted)" = fitted_node(pn, data = mf[,-p,drop=FALSE]),
       "(response)" = mf[,p],check.names = FALSE),terms=terms(fn))
   }else{
-    C5.0_fitted <- function() {
+    strsplit(paste(obj$call[2])," ")[[1]][1]
+    p1<-match(strsplit(paste(obj$call[2])," ")[[1]][1],names(mf))
+    if(is.na(p1)){
+      stop("Error in Response")
+    }
+    
+    C5.0_fitted <- function(p1) {
       ret <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
       ret[["(fitted)"]] <- fitted_node(pn, data = mf)
-      ret[["(response)"]] <- mf[,dim(mf)[2]]
+      ret[["(response)"]] <- mf[,p1]
       ret[["(weights)"]] <- model.weights(mf)
       ret
     }
-    fitted <- C5.0_fitted()
+    fitted <- C5.0_fitted(p1)
     g7<-party(pn,data=mf[0L,,drop=FALSE],fitted = fitted,terms=terms(mf),
               info=list(method="C5.0"))
   }
