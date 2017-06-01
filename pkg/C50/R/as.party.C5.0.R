@@ -133,18 +133,18 @@ as.party.C5.0<-function(obj,trial=0,...){
   if(!is.default){
     mf<-model.frame(obj)
   }else{
-    xspot<-match("x",names(obj$call))[1]
+xspot<-match("x",names(obj$call))[1]
     yspot<-match("y",names(obj$call))[1]
     wspot<-match("weights",names(obj$call))[1]
     if(is.na(wspot)){
       mf<-data.frame(x=eval(parse(text=paste(obj$call)[xspot])),y=eval(parse(text=paste(obj$call)[yspot])))
+      names(mf)<-c(obj$pred,"y")
     }else{
       mf<-data.frame(eval(parse(text=paste(obj$call)[xspot])),eval(parse(text=paste(obj$call)[yspot])),eval(parse(text=paste(obj$call)[wspot])))
       ind1<-length(names(mf))-1
       ind2<-length(names(mf))
-      names(mf)[ind1:ind2]<-c("y","(weights)")
+      names(mf)<-c(obj$pred,"y","(weights)")
     }
-    names(mf)[1:length(obj$pred)]<-obj$pred
   }
   if(length(out)==1){
     pn<-as.partynode(partynode(1L), from = 1L)
@@ -250,20 +250,24 @@ as.party.C5.0<-function(obj,trial=0,...){
     }    
     pn<-as.partynode(c5.node(treestr,indvars,cuts,vars), from = 1L)
   }
-  
   if(is.default){
-     if(is.na(wspot)){
-      p<-dim(mf)[2]
+    if(is.na(wspot)){
+     p<-dim(mf)[2]
+     dat1<-data.frame(
+        "(fitted)" = fitted_node(pn, data = mf),
+         "(response)" = mf[,p],
+         check.names = FALSE)
     }else{
       p<-dim(mf)[2]-1
+      dat1<-data.frame(
+         "(fitted)" = fitted_node(pn, data = mf),
+          "(response)" = mf[,p],
+          "(weights)"=model.weights(mf),
+          check.names = FALSE)
     }
     fn=as.formula(paste("y ~ ",paste(obj$pred,collapse=" + "),sep=""))
-    g7<-party(pn,data=mf[0L,],fitted = data.frame(
-      "(fitted)" = fitted_node(pn, data = mf),
-      "(response)" = mf[,p],
-      "(weights)"=model.weights(mf),
-      check.names = FALSE),terms=terms(fn))
-   }else{
+    g7<-party(pn,data=mf[0L,],fitted =dat1 ,terms=terms(fn))
+    }else{
      p1<-match(strsplit(paste(obj$call[2])," ")[[1]][1],names(mf))
     if(is.na(p1)){
       stop("Error in Response")
