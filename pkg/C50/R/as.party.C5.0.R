@@ -133,7 +133,7 @@ as.party.C5.0<-function(obj,trial=0,...){
   if(!is.default){
     mf<-model.frame(obj)
   }else{
-xspot<-match("x",names(obj$call))[1]
+    xspot<-match("x",names(obj$call))[1]
     yspot<-match("y",names(obj$call))[1]
     wspot<-match("weights",names(obj$call))[1]
     if(is.na(wspot)){
@@ -257,7 +257,7 @@ xspot<-match("x",names(obj$call))[1]
         "(fitted)" = fitted_node(pn, data = mf),
          "(response)" = mf[,p],
          check.names = FALSE)
-    }else{
+     }else{
       p<-dim(mf)[2]-1
       dat1<-data.frame(
          "(fitted)" = fitted_node(pn, data = mf),
