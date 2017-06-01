@@ -248,8 +248,7 @@ as.party.C5.0<-function(obj,trial=0,...){
       "(fitted)" = fitted_node(pn, data = mf[,-p,drop=FALSE]),
       "(response)" = mf[,p],check.names = FALSE),terms=terms(fn))
   }else{
-    strsplit(paste(obj$call[2])," ")[[1]][1]
-    p1<-match(strsplit(paste(obj$call[2])," ")[[1]][1],names(mf))
+     p1<-match(strsplit(paste(obj$call[2])," ")[[1]][1],names(mf))
     if(is.na(p1)){
       stop("Error in Response")
     }
