@@ -75,11 +75,6 @@
 #endif
 
 
-/*  Alternative random number generator  */
-
-#define AltRandom		drand48()
-#define	AltSeed(x)		srand48(x)
-
 #define Free(x)			{free(x); x=0;}
 
 
@@ -453,6 +448,11 @@ typedef struct _rulesetrec
 /*		Function prototypes					 */
 /*									 */
 /*************************************************************************/
+
+  /* for R c functions */
+
+void GetRNGstate(void);
+void PutRNGstate(void);
 
 	/* c50.c */
 

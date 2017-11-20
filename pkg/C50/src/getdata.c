@@ -40,23 +40,22 @@
 #include "transform.h"
 #include "redefine.h"
 
+#include <Rmath.h>
+
 #define Inc 2048
 
-#ifdef WIN32
-static double
-drand48()
-{
+/*  Alternative random number generator  */
+
+#define AltRandom my_rand()
+static double my_rand() {
     double dval;
-
-    do {
-        dval = ((double) rand()) / ((double) RAND_MAX);
-    } while (dval < 0.0 || dval >= 1.0);
-
+  GetRNGstate();
+  dval = runif(0, 1);
+  PutRNGstate();
     return dval;
 }
-#else
-double drand48(void);
-#endif
+
+#define Inc 2048
 
 Boolean SuppressErrorMessages=false;
 #define XError(a,b,c)	\
@@ -398,7 +397,10 @@ DataRec GetDataRec(FILE *Df, Boolean Train)
 
 	    if ( (Class(DVec) = Dv = Which(Name, ClassName, 1, MaxClass)) == 0 )
 	    {
-		if ( strcmp(Name, "?") ) XError(BADCLASS, "", Name);
+		if ( strcmp(Name, "?") ) 
+			{
+				XError(BADCLASS, "", Name);
+			}
 	    }
 	}
 
@@ -738,7 +740,7 @@ void CheckValue(DataRec DVec, Attribute Att)
     ContValue	Cv;
 
     Cv = CVal(DVec, Att);
-    if ( ! finite(Cv) )
+    if ( ! isfinite(Cv) )
     {
 	Error(BADNUMBER, AttName[Att], "");
 
