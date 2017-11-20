@@ -133,7 +133,7 @@ void EvalSubset(Attribute Att, CaseCount Cases)
     GEnv.Blocks = 0;
     ForEach(V1, 1, MaxAttVal[Att])
     {
-	if ( GEnv.ValFreq[V1] > Epsilon || V1 == 1 && SomeNA[Att] )
+	if ( GEnv.ValFreq[V1] > Epsilon || ( V1 == 1 && SomeNA[Att] ) )
 	{
 	    if ( ++GEnv.Blocks < V1 )
 	    {
@@ -201,7 +201,7 @@ void EvalSubset(Attribute Att, CaseCount Cases)
     {
 	PrevInfo = TotalInfo(GEnv.ValFreq, 0, GEnv.Blocks) / Cases;
 
-	Penalty  = ( finite(Bell[InitialBlocks][GEnv.Blocks]) ?
+	Penalty  = ( isfinite(Bell[InitialBlocks][GEnv.Blocks]) ?
 			Log(Bell[InitialBlocks][GEnv.Blocks]) :
 			(InitialBlocks-GEnv.Blocks+1) * Log(GEnv.Blocks) );
 
@@ -302,7 +302,7 @@ void EvalSubset(Attribute Att, CaseCount Cases)
 	/*  Determine penalty as log of Bell number.  If number is too
 	    large, use an approximation of log  */
 
-	Penalty  = ( finite(Bell[InitialBlocks][GEnv.Blocks-1]) ?
+	Penalty  = ( isfinite(Bell[InitialBlocks][GEnv.Blocks-1]) ?
 			Log(Bell[InitialBlocks][GEnv.Blocks-1]) :
 			(InitialBlocks-GEnv.Blocks+1) * Log(GEnv.Blocks-1) );
 

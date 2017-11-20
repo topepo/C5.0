@@ -132,7 +132,7 @@ void SetTestIndex(Condition C)
 		break;
 
 	    case BrThresh:
-		if ( C->TestValue == 1 && CC->TestValue == 1 ||
+		if ( (C->TestValue == 1 && CC->TestValue == 1) ||
 		     ( C->TestValue != 1 && CC->TestValue != 1 &&
 		       C->Cut == CC->Cut ) )
 		{

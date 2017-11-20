@@ -616,7 +616,7 @@ void HillClimb()
 			    r, DeltaErrs[r], (AltCost - CurrentCost)/100.0))
 
 	    if ( AltCost < NewCost ||
-		 AltCost == NewCost && RuleIn[r] )
+		 ( AltCost == NewCost && RuleIn[r] ) )
 	    {
 		Toggle  = r;
 		NewCost = AltCost;
@@ -631,7 +631,7 @@ void HillClimb()
 
 	Verbosity(2, fprintf(Of, "\n"))
 
-	if ( ! Toggle || DeleteOnly && RuleCount <= OriginalCount ) break;
+	if ( ! Toggle || ( DeleteOnly && RuleCount <= OriginalCount ) ) break;
 
 	Verbosity(1,
 	    fprintf(Of, "\t%s rule %d/%d (errs=%.1f, cost=%.1f bits)\n",
