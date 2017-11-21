@@ -4,12 +4,12 @@
 #include <stdarg.h>
 
 typedef struct _STRBUF {
-    unsigned char *buf;  // The buffer itself
-    unsigned int i;      // Current position in buffer
-    unsigned int n;      // Current size of the data in the buffer
-    unsigned int len;    // Current length of buffer
-    int open;            // File open flag
-    int own;             // Should memory be deallocated?
+  unsigned char *buf; // The buffer itself
+  unsigned int i;     // Current position in buffer
+  unsigned int n;     // Current size of the data in the buffer
+  unsigned int len;   // Current length of buffer
+  int open;           // File open flag
+  int own;            // Should memory be deallocated?
 } STRBUF;
 
 extern STRBUF *strbuf_create_empty(unsigned int len);

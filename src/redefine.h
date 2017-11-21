@@ -1,8 +1,8 @@
 #ifndef _REDEFINE_H_
 #define _REDEFINE_H_
 
-#include <stdio.h>
 #include <setjmp.h>
+#include <stdio.h>
 
 #include "strbuf.h"
 

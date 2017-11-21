@@ -1,12 +1,12 @@
 /*************************************************************************/
-/*									 */
-/*	Source code for use with See5/C5.0 Release 2.09			 */
-/*	-----------------------------------------------			 */
-/*		      Copyright RuleQuest Research 2012			 */
-/*									 */
-/*	This code is provided "as is" without warranty of any kind,	 */
-/*	either express or implied.  All use is at your own risk.	 */
-/*									 */
+/*                                                                       */
+/* Source code for use with See5/C5.0 Release 2.09    */
+/* -----------------------------------------------    */
+/*        Copyright RuleQuest Research 2012    */
+/*                                                                       */
+/* This code is provided "as is" without warranty of any kind,  */
+/* either express or implied.  All use is at your own risk.  */
+/*                                                                       */
 /*************************************************************************/
 
 #include "defns.h"

@@ -1,179 +1,129 @@
 /*************************************************************************/
-/*									 */
-/*  Copyright 2010 Rulequest Research Pty Ltd.				 */
-/*									 */
-/*  This file is part of C5.0 GPL Edition, a single-threaded version	 */
-/*  of C5.0 release 2.07.						 */
-/*									 */
-/*  C5.0 GPL Edition is free software: you can redistribute it and/or	 */
-/*  modify it under the terms of the GNU General Public License as	 */
-/*  published by the Free Software Foundation, either version 3 of the	 */
-/*  License, or (at your option) any later version.			 */
-/*									 */
-/*  C5.0 GPL Edition is distributed in the hope that it will be useful,	 */
-/*  but WITHOUT ANY WARRANTY; without even the implied warranty of	 */
-/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU	 */
-/*  General Public License for more details.				 */
-/*									 */
-/*  You should have received a copy of the GNU General Public License	 */
-/*  (gpl.txt) along with C5.0 GPL Edition.  If not, see 		 */
-/*									 */
-/*      <http://www.gnu.org/licenses/>.					 */
-/*									 */
+/*                                                                       */
+/*  Copyright 2010 Rulequest Research Pty Ltd.                           */
+/*                                                                       */
+/*  This file is part of Cubist GPL Edition, a single-threaded version   */
+/*  of Cubist release 2.07.                                              */
+/*                                                                       */
+/*  Cubist GPL Edition is free software: you can redistribute it and/or  */
+/*  modify it under the terms of the GNU General Public License as       */
+/*  published by the Free Software Foundation, either version 3 of the   */
+/*  License, or (at your option) any later version.                      */
+/*                                                                       */
+/*  Cubist GPL Edition is distributed in the hope that it will be        */
+/*  useful, but WITHOUT ANY WARRANTY; without even the implied warranty  */
+/*  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     */
+/*  GNU General Public License for more details.                         */
+/*                                                                       */
+/*  You should have received a copy of the GNU General Public License    */
+/*  (gpl.txt) along with Cubist GPL Edition.  If not, see                */
+/*                                                                       */
+/*      <http://www.gnu.org/licenses/>.                                  */
+/*                                                                       */
 /*************************************************************************/
 
+extern int VERBOSITY, TRIALS, FOLDS, UTILITY, NCPU;
 
-extern	int		VERBOSITY,
-			TRIALS,
-			FOLDS,
-			UTILITY,
-			NCPU;
-
-extern	Boolean		SUBSET,
-			BOOST,
-			PROBTHRESH,
-			RULES,
-                        EARLYSTOPPING,
-			XVAL,
-			NOCOSTS,
-			WINNOW,
-			GLOBAL;
+extern Boolean SUBSET, BOOST, PROBTHRESH, RULES, EARLYSTOPPING, XVAL, NOCOSTS,
+    WINNOW, GLOBAL;
 
 /* Added for sample.c */
-extern  Boolean         RULESUSED;
+extern Boolean RULESUSED;
 
-extern	CaseCount	MINITEMS,
-			LEAFRATIO;
+extern CaseCount MINITEMS, LEAFRATIO;
 
-extern	float		CF,
-			SAMPLE;
+extern float CF, SAMPLE;
 
-extern	Boolean		LOCK;
+extern Boolean LOCK;
 
-extern	Attribute	ClassAtt,
-			LabelAtt,
-			CWtAtt;
+extern Attribute ClassAtt, LabelAtt, CWtAtt;
 
-extern double		AvCWt;
+extern double AvCWt;
 
-extern	String		*ClassName,
-			*AttName,
-			**AttValName;
+extern String *ClassName, *AttName, **AttValName;
 
-extern	char 		*IgnoredVals;
-extern	int		IValsSize,
-			IValsOffset;
+extern char *IgnoredVals;
+extern int IValsSize, IValsOffset;
 
-extern	int		MaxAtt,
-			MaxClass,
-			MaxDiscrVal,
-			MaxLabel,
-			LineNo,
-			ErrMsgs,
-			AttExIn,
-			TSBase;
+extern int MaxAtt, MaxClass, MaxDiscrVal, MaxLabel, LineNo, ErrMsgs, AttExIn,
+    TSBase;
 
-extern	DiscrValue	*MaxAttVal;
+extern DiscrValue *MaxAttVal;
 
-extern	char		*SpecialStatus;
+extern char *SpecialStatus;
 
-extern	Definition	*AttDef;
-extern	Attribute	**AttDefUses;
+extern Definition *AttDef;
+extern Attribute **AttDefUses;
 
-extern	Boolean		*SomeMiss,
-			*SomeNA,
-			Winnowed;
+extern Boolean *SomeMiss, *SomeNA, Winnowed;
 
-extern	ContValue	*ClassThresh;
+extern ContValue *ClassThresh;
 
-extern	CaseNo		MaxCase;
+extern CaseNo MaxCase;
 
-extern	DataRec		*Case;
+extern DataRec *Case;
 
-extern	DataRec		*SaveCase;
+extern DataRec *SaveCase;
 
-extern	String		FileStem;
+extern String FileStem;
 
-extern	Tree		*Raw,
-			*Pruned,
-			WTree;
+extern Tree *Raw, *Pruned, WTree;
 
-extern	float		Confidence,
-			SampleFrac,
-			*Vote,
-			*BVoteBlock,
-			**MCost,
-			**NCost,
-			*WeightMul;
+extern float Confidence, SampleFrac, *Vote, *BVoteBlock, **MCost, **NCost,
+    *WeightMul;
 
-extern	CRule		*MostSpec;
+extern CRule *MostSpec;
 
-extern	Boolean		UnitWeights,
-			CostWeights;
+extern Boolean UnitWeights, CostWeights;
 
-extern	int		Trial,
-			MaxTree;
+extern int Trial, MaxTree;
 
-extern	ClassNo		*TrialPred;
+extern ClassNo *TrialPred;
 
-extern double		*ClassFreq,
-			**DFreq;
+extern double *ClassFreq, **DFreq;
 
-extern	float		*Gain,
-			*Info,
-			*EstMaxGR;
+extern float *Gain, *Info, *EstMaxGR;
 
-double			*ClassSum;
+double *ClassSum;
 
-extern	ContValue	*Bar;
+extern ContValue *Bar;
 
-extern	double		GlobalBaseInfo,
-			**Bell;
+extern double GlobalBaseInfo, **Bell;
 
-extern	Byte		*Tested;
+extern Byte *Tested;
 
-extern	Set		**Subset;
-extern	int		*Subsets;
+extern Set **Subset;
+extern int *Subsets;
 
-extern	EnvRec		GEnv;
+extern EnvRec GEnv;
 
-extern	CRule		*Rule;
+extern CRule *Rule;
 
-extern	RuleNo		NRules,
-			RuleSpace;
+extern RuleNo NRules, RuleSpace;
 
 /* Added for sample.c */
-extern  RuleNo          *RulesUsed,
-			NRulesUsed;
+extern RuleNo *RulesUsed, NRulesUsed;
 
-extern	CRuleSet	 *RuleSet;
+extern CRuleSet *RuleSet;
 
-extern	ClassNo		Default;
+extern ClassNo Default;
 
-extern	Byte		**Fires,
-			*CBuffer;
+extern Byte **Fires, *CBuffer;
 
-extern	int		*CovBy,
-			*List;
+extern int *CovBy, *List;
 
-extern	float		AttTestBits,
-			*BranchBits;
-extern	int		*AttValues,
-			*PossibleCuts;
+extern float AttTestBits, *BranchBits;
+extern int *AttValues, *PossibleCuts;
 
-extern	double		*LogCaseNo,
-			*LogFact;
+extern double *LogCaseNo, *LogFact;
 
-extern	int		*UtilErr,
-			*UtilBand;
-extern	double		*UtilCost;
+extern int *UtilErr, *UtilBand;
+extern double *UtilCost;
 
-extern	int		KRInit,
-			Now;
+extern int KRInit, Now;
 
-extern	FILE		*TRf;
-extern	char		Fn[500];
+extern FILE *TRf;
+extern char Fn[500];
 
-extern	FILE  		*Of;
-extern enum mode {m_build ,m_predict} MODE;
-
+extern FILE *Of;
+extern enum mode { m_build, m_predict } MODE;
