@@ -1,0 +1,2 @@
+PKG_CFLAGS = -ffloat-store -g
+PKG_CPPFLAGS = -DNDEBUG
