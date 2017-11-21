@@ -18,3 +18,9 @@ pkg/C50_0.1.0-22.tar.gz
 pkg/C50_0.1.0-24.tar.gz
 
 pkg/C50_0.1.0-25.tar.gz
+
+config.log
+
+config.status
+
+*.so
