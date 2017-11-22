@@ -2,7 +2,7 @@
 title: "C5.0 Classification Models"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{C5.0 Classification}
+  %\VignetteIndexEntry{C5.0 Classification Models}
 output:
   knitr:::html_vignette:
     toc: yes

@@ -22,23 +22,24 @@
 #' 
 #' A rule-based model shown on the RuleQuest website contains 19 rules,
 #' including: 
-#' \preformatted{ Rule 1: (2221/60, lift 1.1) international plan =
-#' no total day minutes <= 223.2 number customer service calls <= 3 -> class 0
-#' [0.973]
+#' \preformatted{ 
+#' Rule 1: (60, lift 6.8)
+#'          international_plan = yes
+#'          total_intl_calls <= 2
+#'          ->  class yes  [0.984]
 #' 
-#' Rule 5: (1972/87, lift 1.1) total day minutes <= 264.4 total intl minutes <=
-#' 13.1 total intl calls > 2 number customer service calls <= 3 -> class 0
-#' [0.955]
 #' 
-#' Rule 10: (60, lift 6.8) international plan = yes total intl calls <= 2 ->
-#' class 1 [0.984]
+#' Rule 5: (43/2, lift 6.4)
+#'         international_plan = no
+#'         voice_mail_plan = no
+#'         total_day_minutes > 246.6
+#'         total_eve_charge > 20.5
+#'         ->  class yes  [0.933]
 #' 
-#' Rule 12: (32, lift 6.7) total day minutes <= 120.5 number customer service
-#' calls > 3 -> class 1 [0.971] }
-#' 
-#' This implementation of C5.0 contains the same rules, but the rule numbers
-#' are different than above.
-#' 
+#' Rule 10: (211/84, lift 4.1)
+#'          total_day_minutes > 264.4
+#'           ->  class yes  [0.601]
+#' }
 #' 
 #' @name churn
 #' @aliases churnTrain churnTest
