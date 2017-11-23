@@ -139,7 +139,7 @@ void Show(Tree T, int Sh)
         ForEach(v, 2, MaxV) {
           if (T->Branch[v]->Utility < T->Branch[Simplest]->Utility ||
 
-              T->Branch[v]->Utility == 1 && !T->Branch[v]->Cases) {
+              (T->Branch[v]->Utility == 1 && !T->Branch[v]->Cases)) {
             Simplest = v;
           }
         }
