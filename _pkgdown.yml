@@ -1,0 +1,10 @@
+template:
+  params:
+    bootswatch: united
+
+navbar:
+  left:
+  - text: Introduction 
+    href: articles/C5.0.html         
+  - text: Reference
+    href: reference/index.html

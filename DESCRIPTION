@@ -3,12 +3,19 @@ Type: Package
 Title: C5.0 Decision Trees and Rule-Based Models
 Version: 0.1.1
 Date: 2017-11-20
-Author: Max Kuhn, Steve Weston, Nathan Coulter, Mark Culp. C code for C5.0 by R. Quinlan 
+Authors@R: c(
+    person("Max", "Kuhn", , "max@rstudio.com", c("aut", "cre")),
+    person("Weston", "Steve", role = "ctb"),
+    person("Culp", "Mark", role = "ctb"),
+    person("Coulter", "Nathan", role = "ctb"),
+    person("Quinlan", "Ross", role = "aut", comment = "Author of imported C code")) 
 Maintainer: Max Kuhn <mxkuhn@gmail.com>
 Description: C5.0 decision trees and rule-based models for pattern recognition.
 Imports: partykit, Cubist
 Depends: R (>= 2.10.0)
 Suggests: recipes, knitr
+URL: https://topepo.github.io/C5.0
+BugReports: https://github.com/topepo/C5.0/issues
 License: GPL-3
 LazyLoad: yes
 Roxygen: list(markdown = TRUE)
