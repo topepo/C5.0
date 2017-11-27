@@ -3,7 +3,7 @@ AC_PROG_CC
 
 PKG_CFLAGS="-g"
 if test "x$GCC" = xyes; then
-  PKG_CFLAGS="-ffloat-store -g"
+  PKG_CFLAGS="-g"
 fi
 
 AC_SUBST(PKG_CFLAGS)
