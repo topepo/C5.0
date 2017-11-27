@@ -200,7 +200,7 @@ static void predictions(char **casev, char **namesv, char **treev,
 
     // Rprintf("predict finished\n\n");
   } else {
-    Rprintf("predict code called exit with value %d\n\n", val - JMP_OFFSET);
+    // Rprintf("predict code called exit with value %d\n\n", val - JMP_OFFSET);
   }
 
   // Close file object "Of", and return its contents via argument outputv

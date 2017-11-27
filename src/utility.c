@@ -484,7 +484,7 @@ void Error(int ErrNo, String S1, String S2)
   if (!WarningOnly)
     ErrMsgs++;
 
-  if (ErrMsgs == 10) {
+  if (ErrMsgs == 1) {
     fprintf(Of, T_ErrorLimit);
     /* hooks.c/Error did not decrement MaxCase */
     if (MODE == m_build) {

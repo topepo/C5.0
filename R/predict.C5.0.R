@@ -145,6 +145,8 @@ predict.C5.0 <-
       output = character(1),
       PACKAGE = "C50"
     )
+    if(any(grepl("Error limit exceeded", Z$output)))
+      stop(Z$output, call. = FALSE)
     
     if (type == "class") {
       out <- factor(object$levels[Z$pred], levels = object$levels)
