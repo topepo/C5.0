@@ -111,7 +111,7 @@ C5.0 <-  function(x, ...) UseMethod("C5.0")
 #' summary(ruleModel)
 #' 
 #' @export
-#' @method C5.0 default
+#' @rawNamespace export(C5.0.default)
 #' @rdname C5.0
 #' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
 
@@ -286,8 +286,8 @@ C5.0.default <- function(x,
   out
 }
 
-#' @export
-#' @method C5.0 formula
+#' @export 
+#' @rawNamespace export(C5.0.formula)
 #' @rdname C5.0
 #' @importFrom stats na.pass model.extract .getXlevels terms
 C5.0.formula <-

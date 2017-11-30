@@ -65,7 +65,7 @@
 #' 
 #' 
 #' @export
-#' @method predict C5.0
+#' @rawNamespace export(predict.C5.0)
 #' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
 predict.C5.0 <-
   function (object,
