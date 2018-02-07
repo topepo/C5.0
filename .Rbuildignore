@@ -2,3 +2,4 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^README.md$
+^revdep$
