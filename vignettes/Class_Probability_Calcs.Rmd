@@ -14,7 +14,7 @@ library(knitr)
 opts_chunk$set(comment = NA, digits = 3, prompt = TRUE, tidy = FALSE)
 ```
 
-This document descibes exactly how the model computes class probabilities using the data in the terminal nodes. Here is an example modle using the iris data:
+This document describes exactly how the model computes class probabilities using the data in the terminal nodes. Here is an example model using the iris data:
 
 ```{r}
 library(C50)
