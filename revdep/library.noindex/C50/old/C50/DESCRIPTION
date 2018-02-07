@@ -1,0 +1,37 @@
+Package: C50
+Type: Package
+Title: C5.0 Decision Trees and Rule-Based Models
+Version: 0.1.1
+Date: 2017-11-20
+Authors@R: c(
+    person("Max", "Kuhn", , "mxkuhn@gmail.com", c("aut", "cre")),
+    person("Weston", "Steve", role = "ctb"),
+    person("Culp", "Mark", role = "ctb"),
+    person("Coulter", "Nathan", role = "ctb"),
+    person("Ross", "Quinlan", role = "aut", comment = "Author of imported C code"),
+    person("RuleQuest Research", role = "cph", comment = "Copyright holder of imported C code"),
+    person("Rulequest Research Pty Ltd.", role = "cph", comment = "Copyright holder of imported C code")) 
+Maintainer: Max Kuhn <mxkuhn@gmail.com>
+Description: C5.0 decision trees and rule-based models for pattern recognition that extend the work of Quinlan (1993, ISBN:1-55860-238-0).
+Imports: partykit, Cubist (>= 0.2.0)
+Depends: R (>= 2.10.0)
+Suggests: recipes, knitr
+URL: https://topepo.github.io/C5.0
+BugReports: https://github.com/topepo/C5.0/issues
+License: GPL-3
+LazyLoad: yes
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+NeedsCompilation: yes
+Packaged: 2017-12-01 18:22:25 UTC; max
+Author: Max Kuhn [aut, cre],
+  Weston Steve [ctb],
+  Culp Mark [ctb],
+  Coulter Nathan [ctb],
+  Ross Quinlan [aut] (Author of imported C code),
+  RuleQuest Research [cph] (Copyright holder of imported C code),
+  Rulequest Research Pty Ltd. [cph] (Copyright holder of imported C code)
+Repository: CRAN
+Date/Publication: 2017-12-01 18:50:36 UTC
+Built: R 3.4.3; x86_64-apple-darwin15.6.0; 2017-12-02 05:51:33 UTC; unix
+Archs: C50.so.dSYM

@@ -1,0 +1,7 @@
+C5.0.default            C5.0 Decision Trees and Rule-Based Models
+C5.0Control             Control for C5.0 Models
+C5imp                   Variable Importance Measures for C5.0 Models
+churn                   Customer Churn Data
+plot.C5.0               Plot a decision tree
+predict.C5.0            Predict new samples using a C5.0 model
+summary.C5.0            Summaries of C5.0 Models
