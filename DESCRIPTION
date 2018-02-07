@@ -7,7 +7,7 @@ Authors@R: c(
     person("Weston", "Steve", role = "ctb"),
     person("Culp", "Mark", role = "ctb"),
     person("Coulter", "Nathan", role = "ctb"),
-    person("Ross", "Quinlan", role = "aut", comment = "Author of imported C code"),
+    person("Quinlan", "Ross", role = "aut", comment = "Author of imported C code"),
     person("RuleQuest Research", role = "cph", comment = "Copyright holder of imported C code"),
     person("Rulequest Research Pty Ltd.", role = "cph", comment = "Copyright holder of imported C code")) 
 Maintainer: Max Kuhn <mxkuhn@gmail.com>
