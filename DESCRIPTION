@@ -1,16 +1,17 @@
 Package: C50
 Type: Package
 Title: C5.0 Decision Trees and Rule-Based Models
-Version: 0.1.1
-Date: 2017-11-20
+Version: 0.1.1.9000
 Authors@R: c(
     person("Max", "Kuhn", , "mxkuhn@gmail.com", c("aut", "cre")),
     person("Weston", "Steve", role = "ctb"),
     person("Culp", "Mark", role = "ctb"),
     person("Coulter", "Nathan", role = "ctb"),
-    person("Ross", "Quinlan", role = "aut", comment = "Author of imported C code")) 
+    person("Ross", "Quinlan", role = "aut", comment = "Author of imported C code"),
+    person("RuleQuest Research", role = "cph", comment = "Copyright holder of imported C code"),
+    person("Rulequest Research Pty Ltd.", role = "cph", comment = "Copyright holder of imported C code")) 
 Maintainer: Max Kuhn <mxkuhn@gmail.com>
-Description: C5.0 decision trees and rule-based models for pattern recognition.
+Description: C5.0 decision trees and rule-based models for pattern recognition that extend the work of Quinlan (1993, ISBN:1-55860-238-0).
 Imports: partykit, Cubist (>= 0.2.0)
 Depends: R (>= 2.10.0)
 Suggests: recipes, knitr
