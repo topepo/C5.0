@@ -5,6 +5,8 @@ template:
 navbar:
   left:
   - text: Introduction 
-    href: articles/C5.0.html         
+    href: articles/C5.0.html    
+  - text: Class Probability Calculations 
+    href: articles/Class_Probability_Calcs.html            
   - text: Reference
     href: reference/index.html

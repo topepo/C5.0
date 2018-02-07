@@ -1,0 +1,83 @@
+---
+title: "Class Probability Calculations"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Class Probability Calculations}
+output:
+  knitr:::html_vignette:
+    toc: yes
+---
+
+```{r, echo = FALSE, results = "hide",message=FALSE,warning=FALSE}
+library(C50)
+library(knitr)
+opts_chunk$set(comment = NA, digits = 3, prompt = TRUE, tidy = FALSE)
+```
+
+This document descibes exactly how the model computes class probabilities using the data in the terminal nodes. Here is an example modle using the iris data:
+
+```{r}
+library(C50)
+mod <- C5.0(Species ~ ., data = iris)
+summary(mod)
+```
+
+Suppose that we are predicting the sample in row 130 with a petal length of `r iris[130,"Petal.Length"]` and a petal width of `r iris[130,"Petal.Width"]`. From this tree, the terminal node shows `virginica (6/2)` which means a predicted class of the virginica species with a probability of 4/6 = 0.66667. However, we get a different predicted probability:
+
+```{r}
+predict(mod, iris[130,], type = "prob")
+```
+
+When we wanted to describe the technical aspects of the [C5.0](https://www.rulequest.com/see5-info.html) and [cubist](https://www.rulequest.com/cubist-info.html) models, the main source of information on these models was the raw C source code from the [RuleQuest website](https://www.rulequest.com/download.html). For many years, both of these models were proprietary commercial products and we only recently open-sourced. Our intuition is that Quinlan quietly evolved these models from the versions described in the most recent publications to what they are today. For example, it would not be unreasonable to assume that C5.0 uses [AdaBoost](https://en.wikipedia.org/wiki/AdaBoost). From the sources, a similar reweighting scheme is used but it does not appear to be the same. 
+
+For classifying new samples, the C sources have 
+
+```c
+ClassNo PredictTreeClassify(DataRec Case, Tree DecisionTree){
+  ClassNo	c, C;
+  double	Prior;
+  
+  /*  Save total leaf count in ClassSum[0]  */
+  ForEach(c, 0, MaxClass) {
+    ClassSum[c] = 0;
+  }
+  
+  PredictFindLeaf(Case, DecisionTree, Nil, 1.0);
+  
+  C = SelectClassGen(DecisionTree->Leaf, (Boolean)(MCost != Nil), ClassSum);
+  
+  /*  Set all confidence values in ClassSum  */
+  ForEach(c, 1, MaxClass){
+    Prior = DecisionTree->ClassDist[c] / DecisionTree->Cases;
+    ClassSum[c] = (ClassSum[0] * ClassSum[c] + Prior) / (ClassSum[0] + 1);
+  }
+  Confidence = ClassSum[C];
+  
+  return C;
+}
+```
+
+Here:
+
+ * The predicted probability is the "confidence" value
+ * The prior is the class probabilities from the training set. For the iris data, this value is 1/3 for each of the classes 
+ * The array `ClassSum` is the probabilities of each class in the terminal node although `ClassSum[0]` is the number of samples in the terminal node (which, if there are missing values, can be fractional).
+ 
+For sample 130, the virginica values are:
+
+```
+  (ClassSum[0] * ClassSum[c] + Prior) / (ClassSum[0] + 1)
+= (          6 *       (4/6) + (1/3)) / (          6 + 1) 
+= 0.6190476
+```
+
+Why is it doing this? This will tend to avoid class predictions that are absolute zero or one.
+
+Basically, it can be viewed to be _similar_ to how Bayesian methods operate where the simple probability estimates are "shrunken" towards the prior probabilities. Note that, as the number of samples in the terminal nodes (`ClassSum[0]`) becomes large, this operation has less effect on the final results. Suppose `ClassSum[0] = 10000`, then the predicted virginica probability would be 0.6663337, which is closer to the simple estimate. 
+
+This is very much related to the [Laplace Correction](https://en.wikipedia.org/wiki/Additive_smoothing). Traditionally, we would add a value of one to the denominator of the simple estimate and add the number of classes to the bottom, resulting in `(4+1)/(6+3) = 0.5555556`. C5.0 is substituting the prior probabilities and their sum (always one) into this equation instead.
+
+To be fair, there are well known Bayesian estimates of the sample proportions under different prior distributions for the two class case. For example, if there were two classes, the estimate of the class probability under a uniform prior would be the same as the basic Laplace correction (using the integers and not the fractions).  A more flexible Bayesian approach is the [Beta-Binomial model](https://en.wikipedia.org/wiki/Beta-binomial_distribution), which uses a Beta prior instead of the uniform. The downside here is that two extra parameters need to be estimated (and it only is defined for two classes)
+
+
+
