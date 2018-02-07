@@ -2,6 +2,7 @@
 
 S3method(C5.0,default)
 S3method(C5.0,formula)
+S3method(as.party,C5.0)
 S3method(plot,C5.0)
 S3method(predict,C5.0)
 S3method(print,C5.0)
