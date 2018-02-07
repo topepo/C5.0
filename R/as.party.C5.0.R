@@ -79,6 +79,7 @@ plot.C5.0 <- function(x,
   plot(x, ...)
 }
 
+#' @importFrom stats terms model.response model.weights
 model.frame.C5.0 <- function (formula, ...) {
   if (!is.null(formula$model))
     return(formula$model)
@@ -99,19 +100,23 @@ model.frame.C5.0 <- function (formula, ...) {
     parent.frame()
   mf <- eval(mf, env)
   
-  rsp <- strsplit(paste(formula$call[2]), " ")[[1]][1]
-  tmp <- mf[rsp]
-  mf[, 1:length(formula$pred)] <- mf[formula$pred]
-  mf[, length(formula$pred) + 1] <- tmp
-  names(mf) <- c(formula$pred, rsp)
-  if (any(is.na(names(mf)))) {
-    i1 <- as.vector(which(is.na(names(mf))))
-    if (is.na(match("(weights)", names(mf)))) {
-      names(mf)[i1] <- "(weights)"
-    }
-  }
+  term_info <- terms(mf)
+  # Now we want to get the appropriate columns back in a certain
+  # order and with some potential name changes. 
   
-  return(mf)
+  # First get the predictors
+  dat <- mf[, labels(term_info), drop = FALSE]
+  # Add the outcome column with the right name
+  y_name <-
+    attr(term_info, "predvars")[attr(term_info, "response") + 1]
+  y_name <- as.character(y_name[[1]])
+  dat[[y_name]] <- model.response(mf)
+  # Potentially get weights
+  wts <- model.weights(mf)
+  if (!is.null(wts))
+    dat$`(weights)` <- wts
+  
+  return(dat)
 }
 
 #' @export
