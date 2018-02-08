@@ -204,7 +204,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
       indtrees <- grep("SubTree", out)
     }
   }
-  is.default <- length(grep("default", paste(obj$call[1]))) > 0
+  is.default <- "Terms" %in% names(obj)
   if (!is.default) {
     mf <- model.frame(obj)
   } else{
@@ -384,7 +384,9 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
                 fitted = dat1 ,
                 terms = terms(fn))
   } else{
-    p1 <- match(strsplit(paste(obj$call[2]), " ")[[1]][1], names(mf))
+    p1 <-
+      attr(obj$Terms, "predvars")[attr(obj$Terms, "response") + 1]
+    p1 <- as.character(p1[[1]])
     if (is.na(p1)) {
       stop("Error in Response")
     }
@@ -402,7 +404,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
         pn,
         data = mf[0L, , drop = FALSE],
         fitted = fitted,
-        terms = terms(mf),
+        terms = obj$Terms,
         info = list(method = "C5.0")
       )
   }
