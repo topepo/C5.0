@@ -105,7 +105,10 @@ model.frame.C5.0 <- function (formula, ...) {
   # order and with some potential name changes. 
   
   # First get the predictors
-  dat <- mf[, labels(term_info), drop = FALSE]
+  x_names <- labels(term_info)
+  # in case of non-standard names:
+  x_names <- gsub("`", "", x_names)
+  dat <- mf[, x_names, drop = FALSE]
   # Add the outcome column with the right name
   y_name <-
     attr(term_info, "predvars")[attr(term_info, "response") + 1]
@@ -121,6 +124,8 @@ model.frame.C5.0 <- function (formula, ...) {
 
 #' @export
 as.party.C5.0 <- function(obj, trial = 0, ...) {
+  split_regex <- "(>)|(<)|(=)"
+  
   out <- strsplit(obj$output, "\n")[[1]]
   out <- out[out != ""]
   out <- out[grep("^\t", out, invert = TRUE)]
@@ -204,7 +209,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
       indtrees <- grep("SubTree", out)
     }
   }
-  is.default <- "Terms" %in% names(obj)
+  is.default <- !("Terms" %in% names(obj))
   if (!is.default) {
     mf <- model.frame(obj)
   } else{
@@ -229,7 +234,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
     pn <- as.partynode(partynode(1L), from = 1L)
   } else{
     f.mat <- lapply(1:length(out), function(i) {
-      a1 <- strsplit(out[i], " ")[[1]]
+      a1 <- strsplit(out[i], split_regex)[[1]]
       a1 <- gsub(":", "", a1)
       a1 <- gsub("\\.\\.\\.", "", a1)
       a1 <- a1[a1 != ""]
