@@ -233,37 +233,56 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
   } else{
     n.cat <-sapply(1:length(obj$pred), function(i)is.factor(mf[, obj$pred[i]]))
     adj.pred<-as.vector(sapply(obj$pred,function(i){gsub("`","",i)}))
-    f.mat <- lapply(1:length(out), function(i) {
+        f.mat <- lapply(1:length(out), function(i) {
       valpred<-integer(0)
-      vec<-out[i]
-      while(length(valpred)==0 & length(vec)>0){
-        valpred<-which(!is.na(sapply(adj.pred,function(j)pmatch(j,vec))))
-        vec<-sub("^.","",vec)
+      vec<-strsplit(out[i],":")[[1]]
+      vec<-vec[vec!=""]
+      varp<-as.vector(sapply(adj.pred,function(i){
+        ind<-grep(i,vec)
+        if(length(ind)==0)return(-1)
+        return(ind)
+      }))
+      if(!any(varp>0)){
+        stop("Variable match was not found.")
       }
-      if(length(vec)==0){
-        stop("Variable split is unavailable")
-      }
+      valpred<-as.vector(which(varp>0))
+      valpred<-valpred[which.max(nchar(adj.pred[valpred]))]
       a1<-gsub(obj$pred[valpred],"",out[i])
+      
+      
       if(n.cat[valpred]){
         ##process this
-        if(length(grep("^ in \\{",a1))>0){
-          a2<-sub("^ in \\{","",a1)
-          a2<-strsplit(a2,"\\}:")
-          if(length(a2)>2){
-            stop("The code currently does not work with factor levels or responses that have the symbol '}:' in them.")
+        if(length(grep(" in \\{",a1))>0){
+          vec<-a1
+          while(length(grep("^in",vec))==0){
+            vec<-sub("^.","",vec)
           }
+          a2<-sub("in \\{","",vec)
+          if(length(grep(":",a2))>0){
+            a2<-strsplit(a2,"\\}:")
+            if(length(a2)>2){
+              stop("The code currently does not work with factor levels or responses that have the symbol '}:' in them.")
+            }
+          }else{
+            a2<-sub("\\}$","",a2)
+          }
+          
           a2<-a2[[1]][1]
-          a1<-sub(a2,"X",a1)
+          a1<-sub(a2,"X",vec)
           a2<-paste0("{",a2,"}",collapse="")
         }else{
-          a2<-sub("^ = ","",a1)
+          vec<-a1
+          while(length(grep("^=",vec))==0){
+            vec<-sub("^.","",vec)
+          }
+          
+          a2<-sub("^= ","",vec)
           a2<-strsplit(a2,":")
           if(length(a2)>2){
             stop("The code currently does not work with factor levels or responses that have the symbol ':' in them.")
           }
           a2<-a2[[1]][1]
-          a1<-sub(a2,"X",a1)
-          
+          a1<-sub(a2,"X",vec)
         }
       }
       a1 <- strsplit(a1, " ")[[1]]
@@ -275,6 +294,8 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
       }
       as.vector(c(adj.pred[valpred],a1))
     })
+                   
+                   
     indvars <- sapply(1:length(f.mat), function(i) {
       v = match(obj$predictors, f.mat[[i]][1])
       a1 <- which(!is.na(v))
