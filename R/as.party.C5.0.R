@@ -124,8 +124,6 @@ model.frame.C5.0 <- function (formula, ...) {
 
 #' @export
 as.party.C5.0 <- function(obj, trial = 0, ...) {
-  split_regex <- "(>)|(<)|(=)"
-  
   out <- strsplit(obj$output, "\n")[[1]]
   out <- out[out != ""]
   out <- out[grep("^\t", out, invert = TRUE)]
@@ -233,12 +231,49 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
   if (length(out) == 1) {
     pn <- as.partynode(partynode(1L), from = 1L)
   } else{
+    n.cat <-sapply(1:length(obj$pred), function(i)is.factor(mf[, obj$pred[i]]))
+    adj.pred<-as.vector(sapply(obj$pred,function(i){gsub("`","",i)}))
     f.mat <- lapply(1:length(out), function(i) {
-      a1 <- strsplit(out[i], split_regex)[[1]]
+      valpred<-integer(0)
+      vec<-out[i]
+      while(length(valpred)==0 & length(vec)>0){
+        valpred<-which(!is.na(sapply(adj.pred,function(j)pmatch(j,vec))))
+        vec<-sub("^.","",vec)
+      }
+      if(length(vec)==0){
+        stop("Variable split is unavailable")
+      }
+      a1<-gsub(obj$pred[valpred],"",out[i])
+      if(n.cat[valpred]){
+        ##process this
+        if(length(grep("^ in \\{",a1))>0){
+          a2<-sub("^ in \\{","",a1)
+          a2<-strsplit(a2,"\\}:")
+          if(length(a2)>2){
+            stop("The code currently does not work with factor levels or responses that have the symbol '}:' in them.")
+          }
+          a2<-a2[[1]][1]
+          a1<-sub(a2,"X",a1)
+          a2<-paste0("{",a2,"}",collapse="")
+        }else{
+          a2<-sub("^ = ","",a1)
+          a2<-strsplit(a2,":")
+          if(length(a2)>2){
+            stop("The code currently does not work with factor levels or responses that have the symbol ':' in them.")
+          }
+          a2<-a2[[1]][1]
+          a1<-sub(a2,"X",a1)
+          
+        }
+      }
+      a1 <- strsplit(a1, " ")[[1]]
       a1 <- gsub(":", "", a1)
       a1 <- gsub("\\.\\.\\.", "", a1)
       a1 <- a1[a1 != ""]
-      a1
+      if(n.cat[valpred]){
+        a1[2]<-a2
+      }
+      as.vector(c(adj.pred[valpred],a1))
     })
     indvars <- sapply(1:length(f.mat), function(i) {
       v = match(obj$predictors, f.mat[[i]][1])
@@ -267,10 +302,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
     vars <-
       sapply(1:length(f.mat), function(i)
         strsplit(f.mat[[i]][2], "=")[[1]][1])
-    n.cat <-
-      sapply(1:length(obj$pred), function(i)
-        is.factor(mf[, obj$pred[i]]))
-    xlevels <- list()
+     xlevels <- list()
     if (sum(n.cat) > 0) {
       r1 = 1
       for (i in 1:length(n.cat)) {
