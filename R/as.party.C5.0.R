@@ -92,7 +92,7 @@ model.frame.C5.0 <- function (formula, ...) {
   ))]
   if (is.null(mf$na.action))
     mf$na.action <- na.omit
-  mf$drop.unused.levels <- TRUE
+  mf$drop.unused.levels <- FALSE
   mf[[1L]] <- as.name("model.frame")
   env <- if (!is.null(environment(formula$Terms)))
     environment(formula$Terms)
