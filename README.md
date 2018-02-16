@@ -10,7 +10,6 @@ The `C50` R package fits Quinlan's C5.0 classification model based on the source
 Other resources:
 
 *  More details on C5.0 can be found in [_Applied Predictive Modeling_](http://appliedpredictivemodeling.com/). 
-*  Details on the class probability computations can be found in this [blog post](http://appliedpredictivemodeling.com/blog/2015/9/8/c50-predicted-probability-shrinkage). 
 *  A presentation on the model can be found [here](https://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/51e7e42ce4b0fd2e32684bca/1374151724529/user_C5.0.pdf)
 
 
