@@ -598,7 +598,7 @@ void DefSyntaxError(String Msg)
 void DefSemanticsError(int Fi, String Msg, int OpCode)
 /*   -----------------  */
 {
-  char Exp[1000], XMsg[1000], Op[1000];
+  char Exp[1000], XMsg[1008], Op[1000];
 
   if (!PreviousError) {
     /*  Abbreviate the input if necessary  */
