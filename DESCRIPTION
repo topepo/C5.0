@@ -1,13 +1,13 @@
 Package: C50
 Type: Package
 Title: C5.0 Decision Trees and Rule-Based Models
-Version: 0.1.1.9000
+Version: 0.1.2
 Authors@R: c(
     person("Max", "Kuhn", , "mxkuhn@gmail.com", c("aut", "cre")),
-    person("Weston", "Steve", role = "ctb"),
-    person("Culp", "Mark", role = "ctb"),
-    person("Coulter", "Nathan", role = "ctb"),
-    person("Quinlan", "Ross", role = "aut", comment = "Author of imported C code"),
+    person("Steve", "Weston", role = "ctb"),
+    person("Mark", "Culp", role = "ctb"),
+    person("Nathan", "Coulter", role = "ctb"),
+    person("Ross", "Quinlan", role = "aut", comment = "Author of imported C code"),
     person("RuleQuest Research", role = "cph", comment = "Copyright holder of imported C code"),
     person("Rulequest Research Pty Ltd.", role = "cph", comment = "Copyright holder of imported C code")) 
 Maintainer: Max Kuhn <mxkuhn@gmail.com>
