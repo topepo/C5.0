@@ -122,7 +122,9 @@ model.frame.C5.0 <- function (formula, ...) {
   return(dat)
 }
 
+#' @method as.party C5.0
 #' @export
+#' @export as.party.C5.0
 as.party.C5.0 <- function(obj, trial = 0, ...) {
   out <- strsplit(obj$output, "\n")[[1]]
   out <- out[out != ""]
