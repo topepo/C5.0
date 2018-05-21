@@ -24,3 +24,10 @@ config.log
 config.status
 
 *.so
+
+revdep/*.noindex
+
+.DS_Store
+
+revdep/data.sqlite
+
