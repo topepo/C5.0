@@ -110,9 +110,8 @@ model.frame.C5.0 <- function (formula, ...) {
   x_names <- gsub("`", "", x_names)
   dat <- mf[, x_names, drop = FALSE]
   # Add the outcome column with the right name
-  y_name <-
-    attr(term_info, "predvars")[attr(term_info, "response") + 1]
-  y_name <- as.character(y_name[[1]])
+  all_names <- all.vars(attr(term_info, "predvars"))
+  y_name <- all_names[attr(term_info, "response")]
   dat[[y_name]] <- model.response(mf)
   # Potentially get weights
   wts <- model.weights(mf)
@@ -122,6 +121,12 @@ model.frame.C5.0 <- function (formula, ...) {
   return(dat)
 }
 
+#' Convert C5.0 object to party format
+#' @param obj A `C5.0` class object'
+#' @param trial An integer for the specific tree to plot. 
+#' @param ... Not currently used. 
+#' @return A `party` object
+#' @keywords internal
 #' @method as.party C5.0
 #' @export
 #' @export as.party.C5.0
@@ -444,9 +449,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
                 fitted = dat1 ,
                 terms = terms(fn))
   } else{
-    p1 <-
-      attr(obj$Terms, "predvars")[attr(obj$Terms, "response") + 1]
-    p1 <- as.character(p1[[1]])
+    p1 <- all.vars(attr(obj$Terms, "predvars"))[attr(obj$Terms, "response")]
     if (is.na(p1)) {
       stop("Error in Response")
     }
