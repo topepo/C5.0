@@ -244,8 +244,8 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
       valpred<-integer(0)
       vec<-strsplit(out[i],":")[[1]]
       vec<-vec[vec!=""]
-      varp<-as.vector(sapply(adj.pred,function(i){
-        ind<-grep(i,vec)
+      varp<-as.vector(sapply(adj.pred,function(j){
+        ind<-grep(paste0(j,' '),vec)
         if(length(ind)==0)return(-1)
         return(ind)
       }))
@@ -359,17 +359,8 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
                     xlevels[[i]]$varid))
           xlev <- xlevels[[ind1]]$lev
           lj = length(j)
-          a1s = sapply(j, function(i)
-            strsplit(i, ","))
-          
-          a1s <- sapply(j, function(i1) {
-            a1 = strsplit(i1, ",")[[1]]
-            if (length(a1) > 1) {
-              a1[1] <- strsplit(a1[1], "\\{")[[1]][2]
-              a1[length(a1)] <- strsplit(a1[length(a1)], "\\}")[[1]]
-            }
-            a1
-          })
+          j<- gsub('[\\}\\{]','',j)
+          a1s = sapply(j, function(i) strsplit(i, ","))
           index = rep(NA, length(xlev))
           for (i1 in 1:lj) {
             index[match(a1s[[i1]], xlev)] = as.integer(i1)
