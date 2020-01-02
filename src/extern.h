@@ -84,7 +84,7 @@ extern double *ClassFreq, **DFreq;
 
 extern float *Gain, *Info, *EstMaxGR;
 
-double *ClassSum;
+extern double *ClassSum;
 
 extern ContValue *Bar;
 
