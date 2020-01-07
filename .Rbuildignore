@@ -3,3 +3,5 @@
 ^pkgdown$
 ^README.md$
 ^revdep$
+^.*\.Rproj$
+^\.Rproj\.user$
