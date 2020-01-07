@@ -1,4 +1,4 @@
-# C50 0.1.2.9000
+# C50 0.1.3
 
 * Fixed CRAN issues for GCC 10 `-fno-common` flag.
 
