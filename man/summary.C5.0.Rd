@@ -37,9 +37,10 @@ lowered and the fractional usage is shown.
 }
 \examples{
 
-data(churn)
+library(modeldata)
+data(mlc_churn)
 
-treeModel <- C5.0(x = churnTrain[, -20], y = churnTrain$churn)
+treeModel <- C5.0(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])
 summary(treeModel)
 
 }

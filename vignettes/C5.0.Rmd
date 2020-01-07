@@ -10,7 +10,7 @@ output:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(C50)
-library(recipes)
+library(modeldata)
 ```
 
 The `C50` package contains an interface to the C5.0 classification model. The main two modes for this model are:
@@ -20,10 +20,10 @@ The `C50` package contains an interface to the C5.0 classification model. The ma
 
 Many of the details of this model can be found in [Quinlan (1993)](https://books.google.com/books?id=b3ujBQAAQBAJ&lpg=PP1&ots=sQ2nTTEpC1&dq=C4.5%3A%20Programs%20for%20Machine%20Learning&lr&pg=PR6#v=onepage&q=C4.5:%20Programs%20for%20Machine%20Learning&f=false) although the model has new features that are described in [Kuhn and Johnson (2013)](http://appliedpredictivemodeling.com/). The main public resource on this model comes from the [RuleQuest website](http://www.rulequest.com/see5-info.html). 
 
-To demonstrate a simple model, we'll use the [credit data](http://bit.ly/2kkBFrk) that can be accessed in the [`recipes` package](https://topepo.github.io/recipes/):
+To demonstrate a simple model, we'll use the [credit data](http://bit.ly/2kkBFrk) that can be accessed in the [`modeldata` package](https://github.com/tidymodels/modeldata):
 
 ```{r credit-data}
-library(recipes)
+library(modeldata)
 data(credit_data)
 ```
 The outcome is in a column called `Status` and, to demonstrate a simple model, the `Home` and `Seniority` predictors will be used. 

@@ -41,6 +41,7 @@ Rule 1: (60, lift 6.8)
          total_intl_calls <= 2
          ->  class yes  [0.984]
 
+
 Rule 5: (43/2, lift 6.4)
         international_plan = no
         voice_mail_plan = no

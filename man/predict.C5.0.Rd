@@ -4,9 +4,14 @@
 \alias{predict.C5.0}
 \title{Predict new samples using a C5.0 model}
 \usage{
-\method{predict}{C5.0}(object, newdata = NULL,
-  trials = object$trials["Actual"], type = "class", na.action = na.pass,
-  ...)
+\method{predict}{C5.0}(
+  object,
+  newdata = NULL,
+  trials = object$trials["Actual"],
+  type = "class",
+  na.action = na.pass,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class \code{C5.0}}
@@ -68,11 +73,12 @@ model using unequal costs will throw an error.
 }
 \examples{
 
-data(churn)
+library(modeldata)
+data(mlc_churn)
 
-treeModel <- C5.0(x = churnTrain[, -20], y = churnTrain$churn)
-predict(treeModel, head(churnTest[, -20]))
-predict(treeModel, head(churnTest[, -20]), type = "prob")
+treeModel <- C5.0(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])
+predict(treeModel, mlc_churn[3334:3350, -20])
+predict(treeModel, mlc_churn[3334:3350, -20], type = "prob")
 
 
 }

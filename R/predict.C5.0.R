@@ -1,17 +1,17 @@
 #' Predict new samples using a C5.0 model
-#' 
+#'
 #' This function produces predicted classes or confidence values
 #'  from a C5.0 model.
-#' 
+#'
 #' Note that the number of trials in the object my be less than
 #'  what was specified originally (unless `earlyStopping = FALSE`
 #'  was used in [C5.0Control()]. If the number requested
 #'  is larger than the actual number available, the maximum actual
 #'  is used and a warning is issued.
-#' 
+#'
 #'   Model confidence values reflect the distribution of the classes
 #'  in terminal nodes or within rules.
-#' 
+#'
 #'   For rule-based models (i.e. not boosted), the predicted
 #'  confidence value is the confidence value from the most specific,
 #'  active rule. Note that C4.5 sorts the rules, and uses the first
@@ -23,18 +23,18 @@
 #'  previous values would be converted to (0.3012, 0.6988) and (0,
 #'  1). There are also cases where no rule is activated. Here, equal
 #'  values are assigned to each class.
-#' 
+#'
 #'   For boosting, the per-class confidence values are aggregated
 #'  over all of the trees created during the boosting process and
 #'  these aggregate values are normalized so that the overall
 #'  per-class confidence values sum to one.
-#' 
+#'
 #'   When the `cost` argument is used in the main function, class
 #'  probabilities derived from the class distribution in the
 #'  terminal nodes may not be consistent with the final predicted
 #'  class. For this reason, requesting class probabilities from a
 #'  model using unequal costs will throw an error.
-#' 
+#'
 #' @param object an object of class `C5.0`
 #' @param newdata a matrix or data frame of predictors
 #' @param trials an integer for how many boosting iterations are
@@ -56,14 +56,15 @@
 #'  \url{http://www.rulequest.com/see5-unix.html}
 #' @keywords models
 #' @examples
-#' 
-#' data(churn)
-#' 
-#' treeModel <- C5.0(x = churnTrain[, -20], y = churnTrain$churn)
-#' predict(treeModel, head(churnTest[, -20]))
-#' predict(treeModel, head(churnTest[, -20]), type = "prob")
-#' 
-#' 
+#'
+#' library(modeldata)
+#' data(mlc_churn)
+#'
+#' treeModel <- C5.0(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])
+#' predict(treeModel, mlc_churn[3334:3350, -20])
+#' predict(treeModel, mlc_churn[3334:3350, -20], type = "prob")
+#'
+#'
 #' @export
 #' @rawNamespace export(predict.C5.0)
 #' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
@@ -75,7 +76,7 @@ predict.C5.0 <-
             na.action = na.pass,
             ...)  {
     if (!(type %in% c("class", "prob")))
-      stop("type should be either 'class', 'confidence' or 'prob'", 
+      stop("type should be either 'class', 'confidence' or 'prob'",
            call. = FALSE)
     if (object$cost != "" &
         type == "prob")
@@ -84,7 +85,7 @@ predict.C5.0 <-
            call. = FALSE)
     if (is.null(newdata))
       stop("newdata must be non-null", call. = FALSE)
-    
+
     if (!is.null(object$Terms)) {
       object$Terms <- delete.response(object$Terms)
       newdata <-
@@ -94,10 +95,10 @@ predict.C5.0 <-
                     xlev = object$xlevels)
     } else
       newdata <- newdata[, object$predictors, drop = FALSE]
-    
+
     if (is.null(colnames(newdata)))
       stop("column names are required", call. = FALSE)
-    
+
     if (length(trials) > 1)
       stop("only one value of trials is allowed")
     if (trials > object$trials["Actual"])
@@ -111,26 +112,26 @@ predict.C5.0 <-
         ),
         call. = FALSE
       )
-    
+
     ## If there are case weights used during training, the C code
-    ## will expect a column of weights in the new data but the 
-    ## values will be ignored. `makeDataFile` puts those last in 
-    ## the data when `C5.0.default` is run, so we will add a 
+    ## will expect a column of weights in the new data but the
+    ## values will be ignored. `makeDataFile` puts those last in
+    ## the data when `C5.0.default` is run, so we will add a
     ## column of NA values at the end here
     if (object$caseWeights)
       newdata$case_weight_pred <- NA
-    
+
     ## make cases file
     caseString <- makeDataFile(x = newdata, y = NULL)
-    
+
     ## When passing trials to the C code, convert to
     ## zero if the original version of trials is used
-    
+
     if (trials <= 0)
       stop("'trials should be a positive integer", call. = FALSE)
     if (trials == object$trials["Actual"])
       trials <- 0
-    
+
     ## Add trials (not object$trials) as an argument
     Z <- .C(
       "predictions",
@@ -147,7 +148,7 @@ predict.C5.0 <-
     )
     if(any(grepl("Error limit exceeded", Z$output)))
       stop(Z$output, call. = FALSE)
-    
+
     if (type == "class") {
       out <- factor(object$levels[Z$pred], levels = object$levels)
     } else {

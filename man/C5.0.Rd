@@ -4,14 +4,20 @@
 \alias{C5.0.default}
 \alias{C5.0.formula}
 \alias{C5.0}
-\alias{C5.0.formula}
 \title{C5.0 Decision Trees and Rule-Based Models}
 \usage{
-\method{C5.0}{default}(x, y, trials = 1, rules = FALSE, weights = NULL,
-  control = C5.0Control(), costs = NULL, ...)
+\method{C5.0}{default}(
+  x,
+  y,
+  trials = 1,
+  rules = FALSE,
+  weights = NULL,
+  control = C5.0Control(),
+  costs = NULL,
+  ...
+)
 
-\method{C5.0}{formula}(formula, data, weights, subset, na.action = na.pass,
-  ...)
+\method{C5.0}{formula}(formula, data, weights, subset, na.action = na.pass, ...)
 }
 \arguments{
 \item{x}{a data frame or matrix of predictors.}
@@ -118,13 +124,14 @@ factors are allowed as predictors.
 }
 \examples{
 
-data(churn)
+library(modeldata)
+data(mlc_churn)
 
-treeModel <- C5.0(x = churnTrain[, -20], y = churnTrain$churn)
+treeModel <- C5.0(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])
 treeModel
 summary(treeModel)
 
-ruleModel <- C5.0(churn ~ ., data = churnTrain, rules = TRUE)
+ruleModel <- C5.0(churn ~ ., data = mlc_churn[1:3333, ], rules = TRUE)
 ruleModel
 summary(ruleModel)
 

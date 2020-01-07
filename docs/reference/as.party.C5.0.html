@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Customer Churn Data — churn • C50</title>
+<title>Convert C5.0 object to party format — as.party.C5.0 • C50</title>
 
 
 <!-- jquery -->
@@ -37,17 +37,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Customer Churn Data — churn" />
-<meta property="og:description" content="A data set from the MLC++ machine learning software for modeling customer
-churn. There are 19 predictors, mostly numeric: state (categorical),
-account_length area_code international_plan (yes/no),
-voice_mail_plan (yes/no), number_vmail_messages
-total_day_minutes total_day_calls total_day_charge
-total_eve_minutes total_eve_calls total_eve_charge
-total_night_minutes total_night_calls
-total_night_charge total_intl_minutes
-total_intl_calls total_intl_charge, and
-number_customer_service_calls." />
+<meta property="og:title" content="Convert C5.0 object to party format — as.party.C5.0" />
+<meta property="og:description" content="Convert C5.0 object to party format" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,70 +102,45 @@ number_customer_service_calls." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Customer Churn Data</h1>
+    <h1>Convert C5.0 object to party format</h1>
     
-    <div class="hidden name"><code>churn.Rd</code></div>
+    <div class="hidden name"><code>as.party.C5.0.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A data set from the MLC++ machine learning software for modeling customer
-churn. There are 19 predictors, mostly numeric: <code>state</code> (categorical),
-<code>account_length</code> <code>area_code</code> <code>international_plan</code> (yes/no),
-<code>voice_mail_plan</code> (yes/no), <code>number_vmail_messages</code>
-<code>total_day_minutes</code> <code>total_day_calls</code> <code>total_day_charge</code>
-<code>total_eve_minutes</code> <code>total_eve_calls</code> <code>total_eve_charge</code>
-<code>total_night_minutes</code> <code>total_night_calls</code>
-<code>total_night_charge</code> <code>total_intl_minutes</code>
-<code>total_intl_calls</code> <code>total_intl_charge</code>, and
-<code>number_customer_service_calls</code>.</p>
+    <p>Convert C5.0 object to party format</p>
     </div>
 
+    <pre class="usage"><span class='co'># S3 method for C5.0</span>
+<span class='fu'>as.party</span>(<span class='no'>obj</span>, <span class='kw'>trial</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='no'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>obj</th>
+      <td><p>A <code>C5.0</code> class object'</p></td>
+    </tr>
+    <tr>
+      <th>trial</th>
+      <td><p>An integer for the specific tree to plot.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Not currently used.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='http://www.sgi.com/tech/mlc/'>http://www.sgi.com/tech/mlc/</a>,
-<a href='http://www.rulequest.com/see5-examples.html'>http://www.rulequest.com/see5-examples.html</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<dt>churnTrain</dt><dd><p>The training set</p></dd> <dt>churnTest</dt><dd><p>The test set.</p></dd>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The outcome is contained in a column called <code>churn</code> (also yes/no).</p>
-<p>The training data has 3333 samples and the test set contains 1667.</p>
-<p>A note in one of the source files states that the data are "artificial based
-on claims similar to real world".</p>
-<p>A rule-based model shown on the RuleQuest website contains 19 rules,
-including:</p><pre> 
-Rule 1: (60, lift 6.8)
-         international_plan = yes
-         total_intl_calls &lt;= 2
-         -&gt;  class yes  [0.984]
-
-
-Rule 5: (43/2, lift 6.4)
-        international_plan = no
-        voice_mail_plan = no
-        total_day_minutes &gt; 246.6
-        total_eve_charge &gt; 20.5
-        -&gt;  class yes  [0.933]
-
-Rule 10: (211/84, lift 4.1)
-         total_day_minutes &gt; 264.4
-          -&gt;  class yes  [0.601]
-</pre>
-
+    <p>A <code>party</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#source">Source</a></li>
+      <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
     </ul>
 
   </div>

@@ -4,10 +4,19 @@
 \alias{C5.0Control}
 \title{Control for C5.0 Models}
 \usage{
-C5.0Control(subset = TRUE, bands = 0, winnow = FALSE,
-  noGlobalPruning = FALSE, CF = 0.25, minCases = 2,
-  fuzzyThreshold = FALSE, sample = 0, seed = sample.int(4096, size = 1) -
-  1L, earlyStopping = TRUE, label = "outcome")
+C5.0Control(
+  subset = TRUE,
+  bands = 0,
+  winnow = FALSE,
+  noGlobalPruning = FALSE,
+  CF = 0.25,
+  minCases = 2,
+  fuzzyThreshold = FALSE,
+  sample = 0,
+  seed = sample.int(4096, size = 1) - 1L,
+  earlyStopping = TRUE,
+  label = "outcome"
+)
 }
 \arguments{
 \item{subset}{A logical: should the model evaluate groups of
@@ -58,11 +67,11 @@ output. @return A list of options.}
 Various parameters that control aspects of the C5.0 fit.
 }
 \examples{
+library(modeldata)
+data(mlc_churn)
 
-data(churn)
-
-treeModel <- C5.0(x = churnTrain[, -20], 
-                  y = churnTrain$churn,
+treeModel <- C5.0(x = mlc_churn[1:3333, -20],
+                  y = mlc_churn$churn[1:3333],
                   control = C5.0Control(winnow = TRUE))
 summary(treeModel)
 
