@@ -62,8 +62,6 @@ void initglobals(void)
   LabelAtt = 0; /* attribute to use as case ID */
   CWtAtt = 0;   /* attribute to use for case weight */
 
-  AvCWt; /* average case weight */
-
   ClassName = 0;  /* class names */
   AttName = 0;    /* att names */
   AttValName = 0; /* att value names */
@@ -72,8 +70,6 @@ void initglobals(void)
   IValsSize = 0;   /* size of above */
   IValsOffset = 0; /* index of first free char */
 
-  MaxAtt;          /* max att number */
-  MaxClass;        /* max class number */
   MaxDiscrVal = 3; /* max discrete values for any att */
   MaxLabel = 0;    /* max characters in case label */
   LineNo = 0;      /* input line number */
@@ -112,7 +108,7 @@ void initglobals(void)
   Pruned = 0; /* pruned trees */
   WTree = 0;  /* winnow tree */
 
-  Confidence;     /* set by classify() */
+  /* Confidence;     set by classify() */
   SampleFrac = 1; /* fraction used when sampling */
   Vote = 0;       /* total votes for classes */
   BVoteBlock = 0; /* boost voting block */
@@ -125,7 +121,6 @@ void initglobals(void)
   UnitWeights = 1; /* all weights are 1.0 */
   CostWeights = 0; /* reweight cases for costs */
 
-  Trial;       /* trial number for boosting */
   MaxTree = 0; /* max tree grown */
 
   TrialPred = 0; /* predictions for each boost trial */
@@ -140,7 +135,7 @@ void initglobals(void)
 
   Bar = 0; /* Bar[a]  = best threshold for contin att a */
 
-  GlobalBaseInfo; /* base information before split */
+  /* GlobalBaseInfo; base information before split */
   Bell = 0;       /* table of Bell numbers for subsets */
 
   Tested = 0; /* Tested[a] = att a already tested */
@@ -148,7 +143,6 @@ void initglobals(void)
   Subset = 0;  /* Subset[a][s] = subset s for att a */
   Subsets = 0; /* Subsets[a] = no. subsets for att a */
 
-  GEnv; /* environment block */
 
   /*************************************************************************/
   /*                                                                       */
@@ -158,8 +152,8 @@ void initglobals(void)
 
   Rule = 0; /* current rules */
 
-  NRules;    /* number of rules */
-  RuleSpace; /* space currently allocated for rules */
+  /* NRules;    number of rules */
+  /* RuleSpace;  space currently allocated for rules */
 
   /* Added for sample.c */
   RulesUsed = Nil; /* list of all rules used */
@@ -175,7 +169,7 @@ void initglobals(void)
   CovBy = Nil; /* entry numbers for Fires inverse */
   List = Nil;  /* temporary list of cases or rules */
 
-  AttTestBits;      /* average bits to encode tested attribute */
+  /* AttTestBits;      average bits to encode tested attribute */
   BranchBits = 0;   /* ditto attribute value */
   AttValues = 0;    /* number of attribute values in the data */
   PossibleCuts = 0; /* number of thresholds for an attribute */

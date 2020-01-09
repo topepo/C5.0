@@ -141,7 +141,7 @@ int ht_set(void *ht, const char *key, void *value, enum valuetype type) {
 
     /* Write the key name to the entry */
     memset(entry->key, 0, sizeof(entry->key));
-    strncpy(entry->key, key, sizeof(entry->key));
+    strncpy(entry->key, key, sizeof(entry->key) - 1);
 
     /* Add this new entry to the head of the appropriate list */
     entry->next = table->entries[i];
