@@ -10,13 +10,14 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |America/New_York             |
-|date     |2020-01-06                   |
+|date     |2020-01-07                   |
 
 # Dependencies
 
 |package |old   |new   |Δ  |
 |:-------|:-----|:-----|:--|
 |C50     |0.1.2 |0.1.3 |*  |
+|Cubist  |NA    |0.2.3 |*  |
 
 # Revdeps
 

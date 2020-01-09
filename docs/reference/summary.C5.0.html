@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">C50</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -163,19 +163,107 @@ Learning. Morgan Kaufmann Publishers,
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>modeldata</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>mlc_churn</span>)
 
-<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])</div><div class='output co'>#&gt; c50 code called exit with value 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>treeModel</span>)</div><div class='output co'>#&gt; 
+<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>treeModel</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; C5.0.default(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])
 #&gt; 
 #&gt; 
-#&gt; C5.0 [Release 2.07 GPL Edition]  	Mon Jan  6 21:53:30 2020
+#&gt; C5.0 [Release 2.07 GPL Edition]  	Tue Jan  7 11:21:35 2020
 #&gt; -------------------------------
 #&gt; 
 #&gt; Class specified by attribute `outcome'
 #&gt; 
-#&gt; *** line 1 of `undefined.data': bad value of `c(17, 36, 32, 36, 37, 2, 20, 25, 19, 50, 16, 40, 13, 27, 13, 35, 14, 47, 46, 44, 10, 6, 4, 41, 46, 30, 51, 27, 25, 12, 15, 31, 19, 4, 37, 11, 1, 20, 1, 32, 11, 21, 3, 14, 49, 38, 23, 9, 14, 51, 13, 16, 46, 45, 51, 16, 6, 6, 49, 37, 14, 5, 24, 42, 28, 48, 51, 24, 45, 44, 32, 24, 33, 34, 12, 24, 8, 35, 24, 21, 50, 38, 6, 11, 44, 47, 16, 50, 18, 32, 8, 19, 3, 22, 4, 1, 27, 4, 26, 14, 13, 20, 47, 18, 16, 4, 23, 33, 6, 45, 23, 20, 2, 9, 4, 22, 32, 34, 25, 14, 30, 44, 21, 26, 34, 4, 26, 26, 44, 30, 30,' for attribute `state'
+#&gt; Read 3333 cases (20 attributes) from undefined.data
 #&gt; 
-#&gt; Error limit exceeded
+#&gt; Decision tree:
+#&gt; 
+#&gt; total_day_minutes &gt; 264.4:
+#&gt; :...voice_mail_plan = yes:
+#&gt; :   :...international_plan = no: no (45/1)
+#&gt; :   :   international_plan = yes: yes (8/3)
+#&gt; :   voice_mail_plan = no:
+#&gt; :   :...total_eve_minutes &gt; 187.7:
+#&gt; :       :...total_night_minutes &gt; 126.9: yes (94/1)
+#&gt; :       :   total_night_minutes &lt;= 126.9:
+#&gt; :       :   :...total_day_minutes &lt;= 277: no (4)
+#&gt; :       :       total_day_minutes &gt; 277: yes (3)
+#&gt; :       total_eve_minutes &lt;= 187.7:
+#&gt; :       :...total_eve_charge &lt;= 12.26: no (15/1)
+#&gt; :           total_eve_charge &gt; 12.26:
+#&gt; :           :...total_day_minutes &lt;= 277:
+#&gt; :               :...total_night_minutes &lt;= 224.8: no (13)
+#&gt; :               :   total_night_minutes &gt; 224.8: yes (5/1)
+#&gt; :               total_day_minutes &gt; 277:
+#&gt; :               :...total_night_minutes &gt; 151.9: yes (18)
+#&gt; :                   total_night_minutes &lt;= 151.9:
+#&gt; :                   :...account_length &lt;= 123: no (4)
+#&gt; :                       account_length &gt; 123: yes (2)
+#&gt; total_day_minutes &lt;= 264.4:
+#&gt; :...number_customer_service_calls &gt; 3:
+#&gt;     :...total_day_minutes &lt;= 160.2:
+#&gt;     :   :...total_eve_charge &lt;= 19.83: yes (79/3)
+#&gt;     :   :   total_eve_charge &gt; 19.83:
+#&gt;     :   :   :...total_day_minutes &lt;= 120.5: yes (10)
+#&gt;     :   :       total_day_minutes &gt; 120.5: no (13/3)
+#&gt;     :   total_day_minutes &gt; 160.2:
+#&gt;     :   :...total_eve_charge &gt; 12.05: no (130/24)
+#&gt;     :       total_eve_charge &lt;= 12.05:
+#&gt;     :       :...total_eve_calls &lt;= 125: yes (16/2)
+#&gt;     :           total_eve_calls &gt; 125: no (3)
+#&gt;     number_customer_service_calls &lt;= 3:
+#&gt;     :...international_plan = yes:
+#&gt;         :...total_intl_calls &lt;= 2: yes (51)
+#&gt;         :   total_intl_calls &gt; 2:
+#&gt;         :   :...total_intl_minutes &lt;= 13.1: no (173/7)
+#&gt;         :       total_intl_minutes &gt; 13.1: yes (43)
+#&gt;         international_plan = no:
+#&gt;         :...total_day_minutes &lt;= 223.2: no (2221/60)
+#&gt;             total_day_minutes &gt; 223.2:
+#&gt;             :...total_eve_charge &lt;= 20.5: no (295/22)
+#&gt;                 total_eve_charge &gt; 20.5:
+#&gt;                 :...voice_mail_plan = yes: no (20)
+#&gt;                     voice_mail_plan = no:
+#&gt;                     :...total_night_minutes &gt; 174.2: yes (50/8)
+#&gt;                         total_night_minutes &lt;= 174.2:
+#&gt;                         :...total_day_minutes &lt;= 246.6: no (12)
+#&gt;                             total_day_minutes &gt; 246.6:
+#&gt;                             :...total_day_charge &lt;= 43.33: yes (4)
+#&gt;                                 total_day_charge &gt; 43.33: no (2)
+#&gt; 
+#&gt; 
+#&gt; Evaluation on training data (3333 cases):
+#&gt; 
+#&gt; 	    Decision Tree   
+#&gt; 	  ----------------  
+#&gt; 	  Size      Errors  
+#&gt; 
+#&gt; 	    27  136( 4.1%)   &lt;&lt;
+#&gt; 
+#&gt; 
+#&gt; 	   (a)   (b)    &lt;-classified as
+#&gt; 	  ----  ----
+#&gt; 	   365   118    (a): class yes
+#&gt; 	    18  2832    (b): class no
+#&gt; 
+#&gt; 
+#&gt; 	Attribute usage:
+#&gt; 
+#&gt; 	100.00%	total_day_minutes
+#&gt; 	 93.67%	number_customer_service_calls
+#&gt; 	 87.73%	international_plan
+#&gt; 	 20.73%	total_eve_charge
+#&gt; 	  8.97%	voice_mail_plan
+#&gt; 	  8.01%	total_intl_calls
+#&gt; 	  6.48%	total_intl_minutes
+#&gt; 	  6.33%	total_night_minutes
+#&gt; 	  4.74%	total_eve_minutes
+#&gt; 	  0.57%	total_eve_calls
+#&gt; 	  0.18%	account_length
+#&gt; 	  0.18%	total_day_charge
+#&gt; 
+#&gt; 
+#&gt; Time: 0.0 secs
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

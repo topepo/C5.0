@@ -72,7 +72,7 @@ C5.0 models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">C50</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -173,26 +173,46 @@ Kaufmann Publishers, <a href='http://www.rulequest.com/see5-unix.html'>http://ww
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>modeldata</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>mlc_churn</span>)
 
-<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])</div><div class='output co'>#&gt; c50 code called exit with value 1</div><div class='input'><span class='fu'>C5imp</span>(<span class='no'>treeModel</span>)</div><div class='output co'>#&gt; <span class='error'>Error in C5imp(treeModel): Error in parsing model output</span></div><div class='input'><span class='fu'>C5imp</span>(<span class='no'>treeModel</span>, <span class='kw'>metric</span> <span class='kw'>=</span> <span class='st'>"splits"</span>)</div><div class='output co'>#&gt;                               Overall
-#&gt; state                             NaN
-#&gt; account_length                    NaN
-#&gt; area_code                         NaN
-#&gt; international_plan                NaN
-#&gt; voice_mail_plan                   NaN
-#&gt; number_vmail_messages             NaN
-#&gt; total_day_minutes                 NaN
-#&gt; total_day_calls                   NaN
-#&gt; total_day_charge                  NaN
-#&gt; total_eve_minutes                 NaN
-#&gt; total_eve_calls                   NaN
-#&gt; total_eve_charge                  NaN
-#&gt; total_night_minutes               NaN
-#&gt; total_night_calls                 NaN
-#&gt; total_night_charge                NaN
-#&gt; total_intl_minutes                NaN
-#&gt; total_intl_calls                  NaN
-#&gt; total_intl_charge                 NaN
-#&gt; number_customer_service_calls     NaN</div><div class='input'>
+<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])
+<span class='fu'>C5imp</span>(<span class='no'>treeModel</span>)</div><div class='output co'>#&gt;                               Overall
+#&gt; total_day_minutes              100.00
+#&gt; number_customer_service_calls   93.67
+#&gt; international_plan              87.73
+#&gt; total_eve_charge                20.73
+#&gt; voice_mail_plan                  8.97
+#&gt; total_intl_calls                 8.01
+#&gt; total_intl_minutes               6.48
+#&gt; total_night_minutes              6.33
+#&gt; total_eve_minutes                4.74
+#&gt; total_eve_calls                  0.57
+#&gt; account_length                   0.18
+#&gt; total_day_charge                 0.18
+#&gt; state                            0.00
+#&gt; area_code                        0.00
+#&gt; number_vmail_messages            0.00
+#&gt; total_day_calls                  0.00
+#&gt; total_night_calls                0.00
+#&gt; total_night_charge               0.00
+#&gt; total_intl_charge                0.00</div><div class='input'><span class='fu'>C5imp</span>(<span class='no'>treeModel</span>, <span class='kw'>metric</span> <span class='kw'>=</span> <span class='st'>"splits"</span>)</div><div class='output co'>#&gt;                                 Overall
+#&gt; total_day_minutes             26.923077
+#&gt; total_eve_charge              15.384615
+#&gt; total_night_minutes           15.384615
+#&gt; international_plan             7.692308
+#&gt; voice_mail_plan                7.692308
+#&gt; account_length                 3.846154
+#&gt; number_customer_service_calls  3.846154
+#&gt; total_day_charge               3.846154
+#&gt; total_eve_calls                3.846154
+#&gt; total_eve_minutes              3.846154
+#&gt; total_intl_calls               3.846154
+#&gt; total_intl_minutes             3.846154
+#&gt; state                          0.000000
+#&gt; area_code                      0.000000
+#&gt; number_vmail_messages          0.000000
+#&gt; total_day_calls                0.000000
+#&gt; total_night_calls              0.000000
+#&gt; total_night_charge             0.000000
+#&gt; total_intl_charge              0.000000</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

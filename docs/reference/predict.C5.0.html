@@ -72,7 +72,7 @@ from a C5.0 model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">C50</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -204,7 +204,14 @@ Learning. Morgan Kaufmann Publishers,
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>modeldata</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>mlc_churn</span>)
 
-<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])</div><div class='output co'>#&gt; c50 code called exit with value 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>treeModel</span>, <span class='no'>mlc_churn</span>[<span class='fl'>3334</span>:<span class='fl'>3350</span>, -<span class='fl'>20</span>])</div><div class='output co'>#&gt; <span class='error'>Error in predict.C5.0(treeModel, mlc_churn[3334:3350, -20]): either a tree or rules must be provided</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>treeModel</span>, <span class='no'>mlc_churn</span>[<span class='fl'>3334</span>:<span class='fl'>3350</span>, -<span class='fl'>20</span>], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"prob"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in predict.C5.0(treeModel, mlc_churn[3334:3350, -20], type = "prob"): either a tree or rules must be provided</span></div><div class='input'>
+<span class='no'>treeModel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='C5.0.html'>C5.0</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>, -<span class='fl'>20</span>], <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mlc_churn</span>$<span class='no'>churn</span>[<span class='fl'>1</span>:<span class='fl'>3333</span>])
+<span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>treeModel</span>, <span class='no'>mlc_churn</span>[<span class='fl'>3334</span>:<span class='fl'>3350</span>, -<span class='fl'>20</span>])</div><div class='output co'>#&gt; <span class='error'>Error: </span>
+#&gt; <span class='error'>*** line 1 of `undefined.cases': bad value of `c(12, 27, 36, 33, 41, 13, 29, 19, 25, 44, 3, 44, 22, 29, 9, 24, 17)' for attribute `state'</span>
+#&gt; <span class='error'></span>
+#&gt; <span class='error'>Error limit exceeded</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>treeModel</span>, <span class='no'>mlc_churn</span>[<span class='fl'>3334</span>:<span class='fl'>3350</span>, -<span class='fl'>20</span>], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"prob"</span>)</div><div class='output co'>#&gt; <span class='error'>Error: </span>
+#&gt; <span class='error'>*** line 1 of `undefined.cases': bad value of `c(12, 27, 36, 33, 41, 13, 29, 19, 25, 44, 3, 44, 22, 29, 9, 24, 17)' for attribute `state'</span>
+#&gt; <span class='error'></span>
+#&gt; <span class='error'>Error limit exceeded</span></div><div class='input'>
 
 </div></pre>
   </div>

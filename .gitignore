@@ -32,3 +32,4 @@ revdep/*.noindex
 revdep/data.sqlite
 
 .Rproj.user
+.Rhistory
