@@ -169,6 +169,10 @@ C5.0.default <- function(x,
       !is.matrix(x))
     stop("x must be a matrix or data frame", call. = FALSE)
 
+  if (inherits(x, "tbl_df")) {
+    x <- as.data.frame(x)
+  }
+
   if (!is.null(weights) && !is.numeric(weights))
     stop("case weights must be numeric", call. = FALSE)
 
