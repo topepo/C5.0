@@ -98,7 +98,7 @@ predict(tree_boost, newdata = test_data[1:3, vars], type = "prob")
 
 # Cost-Sensitive Models
 
-A cost-matrix can also be used to emphasize certain classes over others. For example, to get model of the "bad" samples:
+A cost-matrix can also be used to emphasize certain classes over others. For example, to get more of the "bad" samples correct:
 
 ```{r cost}
 cost_mat <- matrix(c(0, 2, 1, 0), nrow = 2)
