@@ -76,7 +76,7 @@ predict.C5.0 <-
             na.action = na.pass,
             ...)  {
     if (!(type %in% c("class", "prob")))
-      stop("type should be either 'class', 'confidence' or 'prob'",
+      stop("type should be either 'class' or 'prob'",
            call. = FALSE)
     if (object$cost != "" &
         type == "prob")

@@ -19,7 +19,7 @@ to the largest value and a warning is given.}
 nodes below the specified split. See
 \code{\link[partykit:party]{partykit::party()}} for more details.}
 
-\item{...}{options passed to \code{\link[partykit:plot.party]{partykit::plot.party()}}}
+\item{...}{options passed to \code{\link[partykit:party-plot]{partykit::plot.party()}}}
 }
 \value{
 No value is returned; a plot is rendered.
