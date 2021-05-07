@@ -1,0 +1,8 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  C5.0: C5.0.html
+  Class_Probability_Calcs: Class_Probability_Calcs.html
+last_built: 2021-05-07T00:29Z
+
