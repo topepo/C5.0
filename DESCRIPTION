@@ -14,8 +14,12 @@ Maintainer: Max Kuhn <mxkuhn@gmail.com>
 Description: C5.0 decision trees and rule-based models for pattern recognition that extend the work of Quinlan (1993, ISBN:1-55860-238-0).
 Imports: partykit, Cubist (>= 0.2.3)
 Depends: R (>= 2.10.0)
-Suggests: knitr, modeldata
-URL: https://topepo.github.io/C5.0
+Suggests: 
+    covr,
+    knitr,
+    modeldata,
+    rmarkdown
+URL: https://topepo.github.io/C5.0/
 BugReports: https://github.com/topepo/C5.0/issues
 License: GPL-3
 LazyLoad: yes

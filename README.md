@@ -1,6 +1,7 @@
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/C50)](http://cran.r-project.org/web/packages/C50)
-[![Downloads](http://cranlogs.r-pkg.org/badges/C50)](http://cran.rstudio.com/package=C50)
+[![R-CMD-check](https://github.com/topepo/C5.0/workflows/R-CMD-check/badge.svg)](https://github.com/topepo/C5.0/actions)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/C50)](https://CRAN.r-project.org/package=C50)
+[![Downloads](http://cranlogs.r-pkg.org/badges/C50)](https://CRAN.r-project.org/package=C50)
 ![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
 
 The `C50` R package fits Quinlan's C5.0 classification model based on the source of from [`www.rulequest.com`](http://www.rulequest.com/see5-info.html). Some of the functionality is based on 
