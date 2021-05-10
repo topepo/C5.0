@@ -1,0 +1,3 @@
+# On GitHub Actions with Windows, git will use CRLF by default when checking out
+# the repo. If this file has CRLF line endings, R's check process will complain.
+configure.ac text eol=lf
