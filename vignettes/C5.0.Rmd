@@ -20,7 +20,7 @@ The `C50` package contains an interface to the C5.0 classification model. The ma
 
 Many of the details of this model can be found in [Quinlan (1993)](https://books.google.com/books?id=b3ujBQAAQBAJ&lpg=PP1&ots=sQ2nTTEpC1&dq=C4.5%3A%20Programs%20for%20Machine%20Learning&lr&pg=PR6#v=onepage&q=C4.5:%20Programs%20for%20Machine%20Learning&f=false) although the model has new features that are described in [Kuhn and Johnson (2013)](http://appliedpredictivemodeling.com/). The main public resource on this model comes from the [RuleQuest website](http://www.rulequest.com/see5-info.html). 
 
-To demonstrate a simple model, we'll use the [credit data](http://www.cs.upc.edu/~belanche/Docencia/mineria/English-september-2008/credsco profiling.txt) that can be accessed in the [`modeldata` package](https://github.com/tidymodels/modeldata):
+To demonstrate a simple model, we'll use the credit data that can be accessed in the [`modeldata` package](https://github.com/tidymodels/modeldata):
 
 ```{r credit-data}
 library(modeldata)
