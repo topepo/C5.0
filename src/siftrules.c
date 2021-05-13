@@ -178,13 +178,33 @@ void InvertFires()
 
   CovByPtr = Alloc(MaxCase + 2, Byte *);
   Extra = NRules / 128; /* max number of filler entries */
-  CovByPtr[0] = 0;
+  // C5.0 - edit start
+  // Note:
+  // Assigning `0` to a pointer, like `CovByPtr[0] = 0`, is an alias for
+  // assigning `NULL` to the pointer. Applying an offset to a `NULL` pointer,
+  // as in `CovByPtr[i - 1] + CovBy[i - 1] + Extra`, is undefined. Instead we
+  // collect the total size first, allocate the block of memory, then correctly
+  // assign the `CovByPtr` pointers in a second loop.
+  //
+  // CovByPtr[0] = 0;
+  // ForEach(i, 1, MaxCase + 1) {
+  //   CovByPtr[i] = CovByPtr[i - 1] + CovBy[i - 1] + Extra;
+  // }
+  //
+  // CovByBlock = Alloc((size_t)CovByPtr[MaxCase + 1], Byte);
+  // ForEach(i, 0, MaxCase) { CovByPtr[i] += (size_t)CovByBlock; }
+
+  size_t CovByBlockSize = 0;
+  ForEach(i, 1, MaxCase + 1) {
+    CovByBlockSize += CovBy[i - 1] + Extra;
+  }
+  CovByBlock = Alloc(CovByBlockSize, Byte);
+
+  CovByPtr[0] = CovByBlock;
   ForEach(i, 1, MaxCase + 1) {
     CovByPtr[i] = CovByPtr[i - 1] + CovBy[i - 1] + Extra;
   }
-
-  CovByBlock = Alloc((size_t)CovByPtr[MaxCase + 1], Byte);
-  ForEach(i, 0, MaxCase) { CovByPtr[i] += (size_t)CovByBlock; }
+  // C5.0 - edit stop
 
   LastCovBy = AllocZero(MaxCase + 1, RuleNo);
 
