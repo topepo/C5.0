@@ -2,6 +2,9 @@
 
  * Maintenance release to fix CRAN issues by adding `rmarkdown` to Suggests.
 
+* Fixed CRAN issues related to undefined behavior in the C code when requesting rules with `C5.0(rules = TRUE)`.
+
+
 # C50 0.1.3
 
 * Fixed CRAN issues for GCC 10 `-fno-common` flag.
