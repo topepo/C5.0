@@ -69,8 +69,9 @@ extern String FileStem;
 
 extern Tree *Raw, *Pruned, WTree;
 
-extern float Confidence, SampleFrac, *Vote, *BVoteBlock, **MCost, **NCost,
-    *WeightMul;
+extern float SampleFrac, *Vote, *BVoteBlock, **MCost, **NCost, *WeightMul;
+
+extern double Confidence;
 
 extern CRule *MostSpec;
 
