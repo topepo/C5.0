@@ -1,7 +1,9 @@
-# C50 (development version)
+# C50 0.1.4
 
-* Fixed CRAN issues related to undefined behavior in the C code when requesting
-  rules with `C5.0(rules = TRUE)`.
+ * Maintenance release to fix CRAN issues by adding `rmarkdown` to Suggests.
+
+* Fixed CRAN issues related to undefined behavior in the C code when requesting rules with `C5.0(rules = TRUE)`.
+
 
 # C50 0.1.3
 
