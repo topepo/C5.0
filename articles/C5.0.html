@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">C50</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
 <li>a rule-based model</li>
 </ul>
 <p>Many of the details of this model can be found in <a href="https://books.google.com/books?id=b3ujBQAAQBAJ&amp;lpg=PP1&amp;ots=sQ2nTTEpC1&amp;dq=C4.5%3A%20Programs%20for%20Machine%20Learning&amp;lr&amp;pg=PR6#v=onepage&amp;q=C4.5:%20Programs%20for%20Machine%20Learning&amp;f=false">Quinlan (1993)</a> although the model has new features that are described in <a href="http://appliedpredictivemodeling.com/">Kuhn and Johnson (2013)</a>. The main public resource on this model comes from the <a href="http://www.rulequest.com/see5-info.html">RuleQuest website</a>.</p>
-<p>To demonstrate a simple model, we’ll use the <a href="http://www.cs.upc.edu/~belanche/Docencia/mineria/English-september-2008/credsco%20profiling.txt">credit data</a> that can be accessed in the <a href="https://github.com/tidymodels/modeldata"><code>modeldata</code> package</a>:</p>
+<p>To demonstrate a simple model, we’ll use the credit data that can be accessed in the <a href="https://github.com/tidymodels/modeldata"><code>modeldata</code> package</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org">modeldata</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">)</span></code></pre></div>
@@ -129,7 +129,7 @@
 ## C5.0.default(x = train_data[, vars], y = train_data$Status)
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Wed May 26 17:36:11 2021
+## C5.0 [Release 2.07 GPL Edition]      Thu May 27 14:20:49 2021
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome'
@@ -182,7 +182,7 @@
 ## C5.0.default(x = train_data[, vars], y = train_data$Status, trials = 3)
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Wed May 26 17:36:11 2021
+## C5.0 [Release 2.07 GPL Edition]      Thu May 27 14:20:49 2021
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome'
@@ -271,7 +271,7 @@
 ## C5.0.default(x = train_data[, vars], y = train_data$Status, rules = TRUE)
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Wed May 26 17:36:11 2021
+## C5.0 [Release 2.07 GPL Edition]      Thu May 27 14:20:49 2021
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome'
@@ -356,7 +356,7 @@
 ## C5.0.default(x = train_data[, vars], y = train_data$Status, costs = cost_mat)
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Wed May 26 17:36:11 2021
+## C5.0 [Release 2.07 GPL Edition]      Thu May 27 14:20:50 2021
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome'
