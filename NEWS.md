@@ -1,8 +1,10 @@
-# C50 (development version)
+# C50 0.1.5
+
+* Maintenance release to fix CRAN issues related to compiler warnings. 
 
 # C50 0.1.4
 
- * Maintenance release to fix CRAN issues by adding `rmarkdown` to Suggests.
+* Maintenance release to fix CRAN issues by adding `rmarkdown` to Suggests.
 
 * Fixed CRAN issues related to undefined behavior in the C code when requesting rules with `C5.0(rules = TRUE)`.
 
