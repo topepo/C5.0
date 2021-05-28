@@ -12,7 +12,7 @@ Authors@R: c(
     person("Rulequest Research Pty Ltd.", role = "cph", comment = "Copyright holder of imported C code")) 
 Maintainer: Max Kuhn <mxkuhn@gmail.com>
 Description: C5.0 decision trees and rule-based models for pattern recognition that extend the work of Quinlan (1993, ISBN:1-55860-238-0).
-Imports: partykit, Cubist (>= 0.2.40.9000)
+Imports: partykit, Cubist (>= 0.3.0)
 Depends: R (>= 2.10.0)
 Suggests: 
     covr,
@@ -28,5 +28,3 @@ RoxygenNote: 7.1.1.9001
 VignetteBuilder: knitr
 Encoding: UTF-8
 Biarch: true
-Remotes:
-    topepo/Cubist
