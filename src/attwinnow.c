@@ -48,7 +48,7 @@ Boolean *Split = Nil, /* atts used in unpruned tree */
 /*                                                                       */
 /*************************************************************************/
 
-void WinnowAtts()
+void WinnowAtts(void)
 /*   ----------  */
 {
   Attribute Att, Removed = 0, Best;

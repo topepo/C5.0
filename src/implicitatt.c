@@ -223,7 +223,7 @@ void Append(char c)
 /*                                                                       */
 /*************************************************************************/
 
-Boolean Expression()
+Boolean Expression(void)
 /*      ----------  */
 {
   int Fi = BN;
@@ -246,7 +246,7 @@ Boolean Expression()
   return true;
 }
 
-Boolean Conjunct()
+Boolean Conjunct(void)
 /*      --------  */
 {
   int Fi = BN;
@@ -268,7 +268,7 @@ Boolean Conjunct()
 
 String RelOps[] = {">=", "<=", "!=", "<>", ">", "<", "=", (String)0};
 
-Boolean SExpression()
+Boolean SExpression(void)
 /*      -----------  */
 {
   int o, Fi = BN;
@@ -302,7 +302,7 @@ Boolean SExpression()
 
 String AddOps[] = {"+", "-", (String)0};
 
-Boolean AExpression()
+Boolean AExpression(void)
 /*      -----------  */
 {
   int o, Fi = BN;
@@ -334,7 +334,7 @@ Boolean AExpression()
 
 String MultOps[] = {"*", "/", "%", (String)0};
 
-Boolean Term()
+Boolean Term(void)
 /*      ----  */
 {
   int o, Fi = BN;
@@ -394,7 +394,7 @@ Boolean Primary()
 
 String Funcs[] = {"sin", "cos", "tan", "log", "exp", "int", (String)0};
 
-Boolean Atom()
+Boolean Atom(void)
 /*      ----  */
 {
   char *EndPtr, *Str, Date[11], Time[9];
@@ -540,7 +540,7 @@ int FindOne(String *Alt)
 /*                                                                       */
 /*************************************************************************/
 
-Attribute FindAttName()
+Attribute FindAttName(void)
 /*        -----------  */
 {
   Attribute Att, LongestAtt = 0;

@@ -507,7 +507,7 @@ int Which(String Val, String *List, int First, int Last)
 /*                                                                       */
 /*************************************************************************/
 
-void ListAttsUsed()
+void ListAttsUsed(void)
 /*   ------------  */
 {
   Attribute Att;
@@ -552,7 +552,7 @@ void ListAttsUsed()
 /*                                                                       */
 /*************************************************************************/
 
-void FreeNames()
+void FreeNames(void)
 /*   ---------  */
 {
   Attribute a, t;

@@ -624,7 +624,7 @@ void MarkActive(RuleTree RT, DataRec Case)
 /*                                                                       */
 /*************************************************************************/
 
-void SortActive()
+void SortActive(void)
 /*   ----------  */
 {
   RuleNo r;

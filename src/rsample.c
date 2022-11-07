@@ -56,7 +56,7 @@
 #include "defns.h"
 #include "extern.h"
 
-extern void FreeGlobals();
+extern void FreeGlobals(void);
 extern void Rprintf(const char *, ...);
 extern void SetTrials(int *internal, int user);
 

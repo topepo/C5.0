@@ -194,7 +194,7 @@ void ReadFilePrefix(String Extension)
 /*                                                                       */
 /*************************************************************************/
 
-void BinRecoverDiscreteNames()
+void BinRecoverDiscreteNames(void)
 /*   -----------------------  */
 {
   Attribute Att;
@@ -260,7 +260,7 @@ void PredictReadFilePrefix(String Extension)
 /*                                                                       */
 /*************************************************************************/
 
-void SaveDiscreteNames()
+void SaveDiscreteNames(void)
 /*   -----------------  */
 {
   Attribute Att;
@@ -445,7 +445,7 @@ void AsciiOut(String Pre, String S)
 /*            */
 /*************************************************************************/
 
-void ReadHeader()
+void ReadHeader(void)
 /*   ---------  */
 {
   Attribute Att;
@@ -518,7 +518,7 @@ void ReadHeader()
   }
 }
 
-void PredictReadHeader()
+void PredictReadHeader(void)
 /*   ---------  */
 {
   Attribute Att;
@@ -589,7 +589,7 @@ void PredictReadHeader()
 /*                                                                       */
 /*************************************************************************/
 
-Tree BinInTree()
+Tree BinInTree(void)
 /*   ---------  */
 {
   Tree T;
@@ -672,7 +672,7 @@ Tree GetTree(String Extension)
   return (BINARY ? BinInTree() : InTree());
 }
 
-Tree InTree()
+Tree InTree(void)
 /*   ------  */
 {
   Tree T;
@@ -775,7 +775,7 @@ Tree InTree()
 /*            */
 /*************************************************************************/
 
-CRuleSet BinInRules()
+CRuleSet BinInRules(void)
 /*       ----------  */
 {
   int ri, d, Bytes, Dummy;
@@ -863,7 +863,7 @@ CRuleSet GetRules(String Extension)
   }
 }
 
-CRuleSet InRules()
+CRuleSet InRules(void)
 /*  -------  */
 {
   CRuleSet RS;
@@ -905,7 +905,7 @@ CRuleSet InRules()
   return RS;
 }
 
-CRule InRule()
+CRule InRule(void)
 /*    ------  */
 {
   CRule R;
@@ -954,7 +954,7 @@ CRule InRule()
   return R;
 }
 
-Condition InCondition()
+Condition InCondition(void)
 /*        -----------  */
 {
   Condition C;

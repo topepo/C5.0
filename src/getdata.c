@@ -44,7 +44,7 @@
 /*  Alternative random number generator  */
 
 #define AltRandom my_rand()
-static double my_rand() {
+static double my_rand(void) {
   double dval;
   GetRNGstate();
   dval = runif(0, 1);
@@ -559,7 +559,7 @@ int StoreIVal(String S)
 /*                                                                       */
 /*************************************************************************/
 
-void FreeData()
+void FreeData(void)
 /*   --------  */
 {
   FreeCases();

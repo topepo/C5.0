@@ -7,7 +7,7 @@
 #include "rulebasedmodels.h"
 #include "strbuf.h"
 
-extern void c50main();
+extern void c50main(void);
 extern void sample(double *outputv);
 extern void FreeCases(void);
 

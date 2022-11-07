@@ -174,7 +174,7 @@ CRuleSet FormRules(Tree T)
 /*            */
 /*************************************************************************/
 
-void SetupNCost()
+void SetupNCost(void)
 /*   ----------  */
 {
   ClassNo Real, Pred;
@@ -285,7 +285,7 @@ void Scan(Tree T)
 /*            */
 /*************************************************************************/
 
-void PushCondition()
+void PushCondition(void)
 /*   -------------  */
 {
   int i;
@@ -297,7 +297,7 @@ void PushCondition()
   }
 }
 
-void PopCondition()
+void PopCondition(void)
 /*   -------------  */
 {
   int i;
@@ -472,7 +472,7 @@ void PruneRule(Condition Cond[], ClassNo TargetClass)
 /*            */
 /*************************************************************************/
 
-void ProcessLists()
+void ProcessLists(void)
 /*   ------------  */
 {
   CaseNo i, iNext, *Prev;
@@ -596,7 +596,7 @@ void Increment(int d, CaseNo i, double *Total, double *Errors)
 /*            */
 /*************************************************************************/
 
-void FreeFormRuleData()
+void FreeFormRuleData(void)
 /*   ----------------  */
 {
   if (!CondFailedBy)
