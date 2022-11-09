@@ -41,7 +41,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-void InitialiseBellNumbers()
+void InitialiseBellNumbers(void)
 /*   ---------------------  */
 {
   DiscrValue n, k;

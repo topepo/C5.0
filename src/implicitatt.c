@@ -354,7 +354,7 @@ Boolean Term(void)
   return true;
 }
 
-Boolean Factor()
+Boolean Factor(void)
 /*      ----  */
 {
   int Fi = BN;
@@ -374,7 +374,7 @@ Boolean Factor()
   return true;
 }
 
-Boolean Primary()
+Boolean Primary(void)
 /*      -------  */
 {
   if (Atom()) {
