@@ -668,7 +668,7 @@ int TStampToMins(String TS);
 void Check(float Val, float Low, float High);
 void CValToStr(ContValue CV, Attribute Att, String DS);
 double rint(double v);
-void FreeGlobals();
+void FreeGlobals(void);
 void Cleanup(void);
 #ifdef UTF8
 int UTF8CharWidth(unsigned char *U);
@@ -758,7 +758,7 @@ void OutTree(Tree T);
 void SaveRules(CRuleSet RS, String Extension);
 void AsciiOut(String Pre, String S);
 void ReadHeader(void);
-void PredictReadHeader();
+void PredictReadHeader(void);
 Tree GetTree(String Extension);
 Tree InTree(void);
 CRuleSet GetRules(String Extension);

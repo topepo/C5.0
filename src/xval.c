@@ -46,7 +46,7 @@ float **Result = Nil; /* Result[f][0] = tree/ruleset size
 /*                                                                       */
 /*************************************************************************/
 
-void CrossVal()
+void CrossVal(void)
 /*   --------  */
 {
   CaseNo i, Size, Start = 0, Next, SaveMaxCase;
@@ -180,7 +180,7 @@ void CrossVal()
 /*                                                                       */
 /*************************************************************************/
 
-void Prepare()
+void Prepare(void)
 /*   -------  */
 {
   CaseNo i, First = 0, Last, *Temp, Hold, Next = 0;
@@ -250,7 +250,7 @@ void Shuffle(int *Vec)
 
 char *FoldHead[] = {F_Fold, F_UFold, ""};
 
-void Summary()
+void Summary(void)
 /*   -------  */
 {
   int i, f, t;

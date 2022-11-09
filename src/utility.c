@@ -198,7 +198,7 @@ typedef struct _datablockrec {
 DataBlock DataMem = Nil;
 int DataBlockSize = 0;
 
-DataRec NewCase()
+DataRec NewCase(void)
 /*      -------  */
 {
   DataBlock Prev;
@@ -253,7 +253,7 @@ void PredictFreeLastCase(DataRec DVec)
 
 int KRFp = 0, KRSp = 0;
 
-double KRandom()
+double KRandom(void)
 /*     -------  */
 {
   static double URD[55];
@@ -543,7 +543,7 @@ FILE *GetFile(String Extension, String RW)
 
 #include <sys/time.h>
 
-double ExecTime()
+double ExecTime(void)
 /*      --------  */
 {
   struct timeval TV;
@@ -792,7 +792,7 @@ void Check(float Val, float Low, float High)
 /*                                                                       */
 /*************************************************************************/
 
-void FreeGlobals()
+void FreeGlobals(void)
 /*   -----------  */
 {
   /*  Free memory allocated for classifier  */
@@ -832,7 +832,7 @@ void FreeGlobals()
 /*                                                                       */
 /*************************************************************************/
 
-void Cleanup()
+void Cleanup(void)
 /*   -------  */
 {
   int t, r;

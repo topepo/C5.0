@@ -59,7 +59,7 @@ Attribute *Waiting = Nil, /* attribute wait list */
 /*           */
 /*************************************************************************/
 
-void InitialiseTreeData()
+void InitialiseTreeData(void)
 /*   ------------------  */
 {
   DiscrValue v;
@@ -169,7 +169,7 @@ void InitialiseTreeData()
   }
 }
 
-void FreeTreeData()
+void FreeTreeData(void)
 /*   ------------  */
 {
   Attribute Att;
@@ -263,7 +263,7 @@ void FreeTreeData()
 /*                                                                       */
 /*************************************************************************/
 
-void SetMinGainThresh()
+void SetMinGainThresh(void)
 /*   ----------------  */
 {
   float Frac;

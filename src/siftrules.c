@@ -168,7 +168,7 @@ label a theory's prediction for a case as an error or correct  */
 /*            */
 /*************************************************************************/
 
-void InvertFires()
+void InvertFires(void)
 /*   -----------  */
 {
   RuleNo r, Entry;
@@ -271,7 +271,7 @@ void InvertFires()
 /*            */
 /*************************************************************************/
 
-void FindTestCodes()
+void FindTestCodes(void)
 /*   -------------  */
 {
   Attribute Att;
@@ -380,7 +380,7 @@ float CondBits(Condition C)
 /*                                                                       */
 /*************************************************************************/
 
-void SetInitialTheory()
+void SetInitialTheory(void)
 /*   ----------------  */
 {
   ClassNo c;
@@ -490,7 +490,7 @@ int MessageLength(RuleNo NR, double RuleBits, float Errs)
 /*                                                                       */
 /*************************************************************************/
 
-void HillClimb()
+void HillClimb(void)
 /*   ---------  */
 {
   RuleNo r, RuleCount = 0, OriginalCount, Toggle, LastToggle = 0;
@@ -624,7 +624,7 @@ void HillClimb()
 /*                                                                       */
 /*************************************************************************/
 
-void InitialiseVotes()
+void InitialiseVotes(void)
 /*   ---------------  */
 {
   CaseNo i;
@@ -740,7 +740,7 @@ void UpdateDeltaErrs(CaseNo i, double Delta, RuleNo Toggle)
 /*                                                                       */
 /*************************************************************************/
 
-CaseCount CalculateDeltaErrs()
+CaseCount CalculateDeltaErrs(void)
 /*        ------------------  */
 {
   RuleNo r;
@@ -764,7 +764,7 @@ CaseCount CalculateDeltaErrs()
 /*                                                                       */
 /*************************************************************************/
 
-void PruneSubsets()
+void PruneSubsets(void)
 /*   ------------  */
 {
   Set *PossibleValues;
@@ -851,7 +851,7 @@ void PruneSubsets()
 /*                                                                       */
 /*************************************************************************/
 
-void SetDefaultClass()
+void SetDefaultClass(void)
 /*   ---------------  */
 {
   RuleNo r;
@@ -928,7 +928,7 @@ void SwapRule(RuleNo A, RuleNo B)
 /*                                                                       */
 /*************************************************************************/
 
-int OrderByUtility()
+int OrderByUtility(void)
 /*  --------------  */
 {
   RuleNo r, *Drop, NDrop = 0, NewNRules = 0, Toggle;
@@ -1015,7 +1015,7 @@ int OrderByUtility()
 /*                                                                       */
 /*************************************************************************/
 
-int OrderByClass()
+int OrderByClass(void)
 /*  ------------  */
 {
   RuleNo r, nr, NewNRules = 0;
@@ -1051,7 +1051,7 @@ int OrderByClass()
 /*                                                                       */
 /*************************************************************************/
 
-void OrderRules()
+void OrderRules(void)
 /*   ----------  */
 {
   RuleNo r, NewNRules;
@@ -1097,7 +1097,7 @@ void GenerateLogs(int MaxN)
   }
 }
 
-void FreeSiftRuleData()
+void FreeSiftRuleData(void)
 /*   ----------------  */
 {
   FreeUnlessNil(List);

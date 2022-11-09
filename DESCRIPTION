@@ -24,7 +24,7 @@ BugReports: https://github.com/topepo/C5.0/issues
 License: GPL-3
 LazyLoad: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9001
+RoxygenNote: 7.2.1.9000
 VignetteBuilder: knitr
 Encoding: UTF-8
 Biarch: true

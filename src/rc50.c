@@ -39,7 +39,7 @@
 #include "redefine.h"
 #include "transform.h"
 
-int c50main()
+int c50main(void)
 /*  -------  */
 {
   double StartTime;

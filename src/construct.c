@@ -59,7 +59,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-void ConstructClassifiers()
+void ConstructClassifiers(void)
 /*   --------------------  */
 {
   CaseNo i, Errs, Cases, Bp, Excl = 0;
@@ -347,7 +347,7 @@ void ConstructClassifiers()
 /*           */
 /*************************************************************************/
 
-void InitialiseWeights()
+void InitialiseWeights(void)
 /*   -----------------  */
 {
   CaseNo i;
@@ -377,7 +377,7 @@ void InitialiseWeights()
 /*           */
 /*************************************************************************/
 
-void SetAvCWt()
+void SetAvCWt(void)
 /*   --------  */
 {
   CaseNo i, NCWt = 0;
