@@ -1,4 +1,6 @@
-# C50 (development version)
+# C50 0.1.7
+
+* Maintenance release to fix CRAN issues related to compiler warnings. 
 
 # C50 0.1.6
 

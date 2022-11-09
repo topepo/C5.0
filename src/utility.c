@@ -215,7 +215,7 @@ DataRec NewCase(void)
   return DataMem->Head + (DataMem->Allocated++) * (MaxAtt + 2) + 1;
 }
 
-void FreeCases()
+void FreeCases(void)
 /*   ---------  */
 {
   DataBlock Prev;
