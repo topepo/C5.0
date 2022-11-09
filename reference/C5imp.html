@@ -58,24 +58,33 @@ C5.0 models.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">C5imp</span><span class="op">(</span><span class="va">object</span>, metric <span class="op">=</span> <span class="st">"usage"</span>, pct <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">C5imp</span><span class="op">(</span><span class="va">object</span>, metric <span class="op">=</span> <span class="st">"usage"</span>, pct <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>an object of class <code>C5.0</code></p></dd>
+
+
 <dt>metric</dt>
 <dd><p>either 'usage' or 'splits' (see Details below)</p></dd>
+
+
 <dt>pct</dt>
 <dd><p>a logical: should the importance values be converted to be
 between 0 and 100?</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other options (not currently used)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a data frame with a column <code>Overall</code> with the predictor usage
+    
+
+<p>a data frame with a column <code>Overall</code> with the predictor usage
 values. The row names indicate the predictor.</p>
     </div>
     <div id="details">
@@ -115,12 +124,12 @@ by Max Kuhn, Steve Weston and Nathan Coulter</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">C5imp</span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">C5imp</span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               Overall</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_day_minutes              100.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> number_customer_service_calls   93.67</span>
@@ -141,7 +150,7 @@ by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_night_calls                0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_night_charge               0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_intl_charge                0.00</span>
-<span class="r-in"><span class="fu">C5imp</span><span class="op">(</span><span class="va">treeModel</span>, metric <span class="op">=</span> <span class="st">"splits"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">C5imp</span><span class="op">(</span><span class="va">treeModel</span>, metric <span class="op">=</span> <span class="st">"splits"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                 Overall</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_day_minutes             26.923077</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_eve_charge              15.384615</span>
@@ -162,7 +171,7 @@ by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_night_calls              0.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_night_charge             0.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total_intl_charge              0.000000</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -177,7 +186,7 @@ by Max Kuhn, Steve Weston and Nathan Coulter</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

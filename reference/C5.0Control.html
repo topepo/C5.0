@@ -56,19 +56,19 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">C5.0Control</span><span class="op">(</span>
-  subset <span class="op">=</span> <span class="cn">TRUE</span>,
-  bands <span class="op">=</span> <span class="fl">0</span>,
-  winnow <span class="op">=</span> <span class="cn">FALSE</span>,
-  noGlobalPruning <span class="op">=</span> <span class="cn">FALSE</span>,
-  CF <span class="op">=</span> <span class="fl">0.25</span>,
-  minCases <span class="op">=</span> <span class="fl">2</span>,
-  fuzzyThreshold <span class="op">=</span> <span class="cn">FALSE</span>,
-  sample <span class="op">=</span> <span class="fl">0</span>,
-  seed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fl">4096</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span>,
-  earlyStopping <span class="op">=</span> <span class="cn">TRUE</span>,
-  label <span class="op">=</span> <span class="st">"outcome"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">C5.0Control</span><span class="op">(</span></span>
+<span>  subset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  bands <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  winnow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  noGlobalPruning <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  CF <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  minCases <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  fuzzyThreshold <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sample <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fl">4096</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span>,</span>
+<span>  earlyStopping <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  label <span class="op">=</span> <span class="st">"outcome"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -79,6 +79,8 @@ discrete predictors for splits? Note: the C5.0 command line
 version defaults this parameter to <code>FALSE</code>, meaning no
 attempted groupings will be evaluated during the tree growing
 stage.</p></dd>
+
+
 <dt>bands</dt>
 <dd><p>An integer between 2 and 1000. If <code>TRUE</code>, the
 model orders the rules by their affect on the error rate and
@@ -87,36 +89,55 @@ modifies the output so that the effect on the error rate can be
 seen for the groups of rules within a band. If this options is
 selected and <code>rules = FALSE</code>, a warning is issued and
 <code>rules</code> is changed to <code>TRUE</code>.</p></dd>
+
+
 <dt>winnow</dt>
 <dd><p>A logical: should predictor winnowing (i.e
 feature selection) be used?</p></dd>
+
+
 <dt>noGlobalPruning</dt>
 <dd><p>A logical to toggle whether the final,
 global pruning step to simplify the tree.</p></dd>
+
+
 <dt>CF</dt>
 <dd><p>A number in (0, 1) for the confidence factor.</p></dd>
+
+
 <dt>minCases</dt>
 <dd><p>an integer for the smallest number of samples
 that must be put in at least two of the splits.</p></dd>
+
+
 <dt>fuzzyThreshold</dt>
 <dd><p>A logical toggle to evaluate possible
 advanced splits of the data. See Quinlan (1993) for details and
 examples.</p></dd>
+
+
 <dt>sample</dt>
 <dd><p>A value between (0, .999) that specifies the
 random proportion of the data should be used to train the model.
 By default, all the samples are used for model training. Samples
 not used for training are used to evaluate the accuracy of the
 model in the printed output.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>An integer for the random number seed within the C
 code.</p></dd>
+
+
 <dt>earlyStopping</dt>
 <dd><p>A logical to toggle whether the internal
 method for stopping boosting should be used.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>A character label for the outcome used in the
 output. @return A list of options.</p></dd>
+
 </dl></div>
     <div id="references">
     <h2>References</h2>
@@ -137,20 +158,20 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>,</span>
-<span class="r-in">                  y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span>,</span>
-<span class="r-in">                  control <span class="op">=</span> <span class="fu">C5.0Control</span><span class="op">(</span>winnow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                  y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                  control <span class="op">=</span> <span class="fu">C5.0Control</span><span class="op">(</span>winnow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C5.0.default(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333], control</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  = C5.0Control(winnow = TRUE))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Mon Feb  7 00:41:04 2022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Wed Nov  9 00:13:48 2022</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Class specified by attribute `outcome'</span>
@@ -265,7 +286,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time: 0.1 secs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -280,7 +301,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

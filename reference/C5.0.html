@@ -58,108 +58,148 @@ Quinlan's C5.0 algorithm</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for default</span>
-<span class="fu">C5.0</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">y</span>,
-  trials <span class="op">=</span> <span class="fl">1</span>,
-  rules <span class="op">=</span> <span class="cn">FALSE</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  control <span class="op">=</span> <span class="fu"><a href="C5.0Control.html">C5.0Control</a></span><span class="op">(</span><span class="op">)</span>,
-  costs <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for formula</span>
-<span class="fu">C5.0</span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">subset</span>, na.action <span class="op">=</span> <span class="va">na.pass</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">C5.0</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  trials <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  rules <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="C5.0Control.html">C5.0Control</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  costs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for formula</span></span>
+<span><span class="fu">C5.0</span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span>, <span class="va">weights</span>, <span class="va">subset</span>, na.action <span class="op">=</span> <span class="va">na.pass</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a data frame or matrix of predictors.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>a factor vector with 2 or more levels</p></dd>
+
+
 <dt>trials</dt>
 <dd><p>an integer specifying the number of boosting
 iterations. A value of one indicates that a single model is
 used.</p></dd>
+
+
 <dt>rules</dt>
 <dd><p>A logical: should the tree be decomposed into a
 rule-based model?</p></dd>
+
+
 <dt>weights</dt>
 <dd><p>an optional numeric vector of case weights. Note
 that the data used for the case weights will not be used as a
 splitting variable in the model (see
 <a href="http://www.rulequest.com/see5-win.html#CASEWEIGHT" class="external-link">http://www.rulequest.com/see5-win.html#CASEWEIGHT</a> for
 Quinlan's notes on case weights).</p></dd>
+
+
 <dt>control</dt>
 <dd><p>a list of control parameters; see
 <code><a href="C5.0Control.html">C5.0Control()</a></code></p></dd>
+
+
 <dt>costs</dt>
 <dd><p>a matrix of costs associated with the possible
 errors. The matrix should have C columns and rows where C is the
 number of class levels.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other options to pass into the function (not
 currently used with default method)</p></dd>
+
+
 <dt>formula</dt>
 <dd><p>a formula, with a response and at least one predictor.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>an optional data frame in which to interpret the
 variables named in the formula.</p></dd>
+
+
 <dt>subset</dt>
 <dd><p>optional expression saying that only a subset of
 the rows of the data should be used in the fit.</p></dd>
+
+
 <dt>na.action</dt>
 <dd><p>a function which indicates what should happen
 when the data contain <code>NA</code>. The default is to include
 missing values since the model can accommodate them.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code>C5.0</code> with elements:</p>
+    
+
+<p>An object of class <code>C5.0</code> with elements:</p>
 <dl><dt>boostResults</dt>
 <dd><p>a parsed version of the boosting table(s)
 shown in the output</p></dd>
+
 <dt>call</dt>
 <dd><p>the function call</p></dd>
-<dt>caseWeights</dt>
+ <dt>caseWeights</dt>
 <dd><p>not
 currently supported.</p></dd>
+
 <dt>control</dt>
 <dd><p>an echo of the specifications from
 <code><a href="C5.0Control.html">C5.0Control()</a></code></p></dd>
+
 <dt>cost</dt>
 <dd><p>the text version of the cost matrix (or "")</p></dd>
+
 <dt>costMatrix</dt>
 <dd><p>an echo of the model argument</p></dd>
+
 <dt>dims</dt>
 <dd><p>original dimensions of the predictor matrix or
 data frame</p></dd>
+
 <dt>levels</dt>
 <dd><p>a character vector of factor levels for the
 outcome</p></dd>
+
 <dt>names</dt>
 <dd><p>a string version of the names file</p></dd>
+
 <dt>output</dt>
 <dd><p>a string version of the command line output</p></dd>
+
 <dt>predictors</dt>
 <dd><p>a character vector of predictor names</p></dd>
+
 <dt>rbm</dt>
 <dd><p>a logical for rules</p></dd>
+
 <dt>rules</dt>
 <dd><p>a character version of the rules file</p></dd>
+
 <dt>size</dt>
 <dd><p>n integer vector of the tree/rule size (or sizes
 in the case of boosting)</p></dd>
+
 </dl><p>.</p>
 <dl><dt>tree</dt>
 <dd><p>a string version of the tree file</p></dd>
+
 <dt>trials</dt>
 <dd><p>a named vector with elements <code>Requested</code>
 (an echo of the function call) and <code>Actual</code> (how many the
 model used)</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -211,12 +251,12 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu">C5.0</span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">treeModel</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mlc_churn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">treeModel</span> <span class="op">&lt;-</span> <span class="fu">C5.0</span><span class="op">(</span>x <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">-</span><span class="fl">20</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">$</span><span class="va">churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">treeModel</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C5.0.default(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])</span>
@@ -229,13 +269,13 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Non-standard options: attempt to group attributes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">treeModel</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C5.0.default(x = mlc_churn[1:3333, -20], y = mlc_churn$churn[1:3333])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Mon Feb  7 00:41:03 2022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Wed Nov  9 00:13:47 2022</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Class specified by attribute `outcome'</span>
@@ -331,9 +371,9 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time: 0.0 secs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ruleModel</span> <span class="op">&lt;-</span> <span class="fu">C5.0</span><span class="op">(</span><span class="va">churn</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">]</span>, rules <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ruleModel</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ruleModel</span> <span class="op">&lt;-</span> <span class="fu">C5.0</span><span class="op">(</span><span class="va">churn</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mlc_churn</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3333</span>, <span class="op">]</span>, rules <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ruleModel</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C5.0.formula(formula = churn ~ ., data = mlc_churn[1:3333, ], rules = TRUE)</span>
@@ -346,13 +386,13 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Non-standard options: attempt to group attributes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">ruleModel</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">ruleModel</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C5.0.formula(formula = churn ~ ., data = mlc_churn[1:3333, ], rules = TRUE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Mon Feb  7 00:41:03 2022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Wed Nov  9 00:13:47 2022</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Class specified by attribute `outcome'</span>
@@ -506,7 +546,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time: 0.1 secs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -521,7 +561,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

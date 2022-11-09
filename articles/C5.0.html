@@ -88,164 +88,164 @@
 <p>Many of the details of this model can be found in <a href="https://books.google.com/books?id=b3ujBQAAQBAJ&amp;lpg=PP1&amp;ots=sQ2nTTEpC1&amp;dq=C4.5%3A%20Programs%20for%20Machine%20Learning&amp;lr&amp;pg=PR6#v=onepage&amp;q=C4.5:%20Programs%20for%20Machine%20Learning&amp;f=false" class="external-link">Quinlan (1993)</a> although the model has new features that are described in <a href="http://appliedpredictivemodeling.com/" class="external-link">Kuhn and Johnson (2013)</a>. The main public resource on this model comes from the <a href="http://www.rulequest.com/see5-info.html" class="external-link">RuleQuest website</a>.</p>
 <p>To demonstrate a simple model, we’ll use the credit data that can be accessed in the <a href="https://github.com/tidymodels/modeldata" class="external-link"><code>modeldata</code> package</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeldata.tidymodels.org" class="external-link">modeldata</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">)</span></span></code></pre></div>
 <p>The outcome is in a column called <code>Status</code> and, to demonstrate a simple model, the <code>Home</code> and <code>Seniority</code> predictors will be used.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Home"</span>, <span class="st">"Seniority"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">vars</span>, <span class="st">"Status"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## 'data.frame':    4454 obs. of  3 variables:</span>
-<span class="co">##  $ Home     : Factor w/ 6 levels "ignore","other",..: 6 6 3 6 6 3 3 4 3 4 ...</span>
-<span class="co">##  $ Seniority: int  9 17 10 0 0 1 29 9 0 0 ...</span>
-<span class="co">##  $ Status   : Factor w/ 2 levels "bad","good": 2 2 1 2 2 2 2 2 2 1 ...</span></code></pre>
+<code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Home"</span>, <span class="st">"Seniority"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">vars</span>, <span class="st">"Status"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## 'data.frame':    4454 obs. of  3 variables:</span></span>
+<span><span class="co">##  $ Home     : Factor w/ 6 levels "ignore","other",..: 6 6 3 6 6 3 3 4 3 4 ...</span></span>
+<span><span class="co">##  $ Seniority: int  9 17 10 0 0 1 29 9 0 0 ...</span></span>
+<span><span class="co">##  $ Status   : Factor w/ 2 levels "bad","good": 2 2 1 2 2 2 2 2 2 1 ...</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># a simple split</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2411</span><span class="op">)</span>
-<span class="va">in_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>
-<span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">credit_data</span><span class="op">[</span> <span class="va">in_train</span>,<span class="op">]</span>
-<span class="va">test_data</span>  <span class="op">&lt;-</span> <span class="va">credit_data</span><span class="op">[</span><span class="op">-</span><span class="va">in_train</span>,<span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># a simple split</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2411</span><span class="op">)</span></span>
+<span><span class="va">in_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">credit_data</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">credit_data</span><span class="op">[</span> <span class="va">in_train</span>,<span class="op">]</span></span>
+<span><span class="va">test_data</span>  <span class="op">&lt;-</span> <span class="va">credit_data</span><span class="op">[</span><span class="op">-</span><span class="va">in_train</span>,<span class="op">]</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="classification-trees">Classification Trees<a class="anchor" aria-label="anchor" href="#classification-trees"></a>
 </h3>
 <p>To fit a simple classification tree model, we can start with the non-formula method:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://topepo.github.io/C5.0/" class="external-link">C50</a></span><span class="op">)</span>
-<span class="va">tree_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span><span class="op">)</span>
-<span class="va">tree_mod</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status)</span>
-<span class="co">## </span>
-<span class="co">## Classification Tree</span>
-<span class="co">## Number of samples: 3000 </span>
-<span class="co">## Number of predictors: 2 </span>
-<span class="co">## </span>
-<span class="co">## Tree size: 4 </span>
-<span class="co">## </span>
-<span class="co">## Non-standard options: attempt to group attributes</span></code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://topepo.github.io/C5.0/" class="external-link">C50</a></span><span class="op">)</span></span>
+<span><span class="va">tree_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span><span class="op">)</span></span>
+<span><span class="va">tree_mod</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Classification Tree</span></span>
+<span><span class="co">## Number of samples: 3000 </span></span>
+<span><span class="co">## Number of predictors: 2 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Tree size: 4 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Non-standard options: attempt to group attributes</span></span></code></pre>
 <p>To understand the model, the <code>summary</code> method can be used to get the default <code>C5.0</code> command-line output:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">tree_mod</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## C5.0 [Release 2.07 GPL Edition]      Mon Feb  7 00:41:12 2022</span>
-<span class="co">## -------------------------------</span>
-<span class="co">## </span>
-<span class="co">## Class specified by attribute `outcome'</span>
-<span class="co">## </span>
-<span class="co">## Read 3000 cases (3 attributes) from undefined.data</span>
-<span class="co">## </span>
-<span class="co">## Decision tree:</span>
-<span class="co">## </span>
-<span class="co">## Home in {owner,parents}: good (1946.3/421.6)</span>
-<span class="co">## Home in {ignore,other,priv,rent}:</span>
-<span class="co">## :...Seniority &gt; 5: good (447.4/100.4)</span>
-<span class="co">##     Seniority &lt;= 5:</span>
-<span class="co">##     :...Seniority &lt;= 0: bad (148/46)</span>
-<span class="co">##         Seniority &gt; 0: good (458.4/204)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Evaluation on training data (3000 cases):</span>
-<span class="co">## </span>
-<span class="co">##      Decision Tree   </span>
-<span class="co">##    ----------------  </span>
-<span class="co">##    Size      Errors  </span>
-<span class="co">## </span>
-<span class="co">##       4  772(25.7%)   &lt;&lt;</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##     (a)   (b)    &lt;-classified as</span>
-<span class="co">##    ----  ----</span>
-<span class="co">##     102   726    (a): class bad</span>
-<span class="co">##      46  2126    (b): class good</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##  Attribute usage:</span>
-<span class="co">## </span>
-<span class="co">##   99.93% Home</span>
-<span class="co">##   35.17% Seniority</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Time: 0.0 secs</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">tree_mod</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## C5.0 [Release 2.07 GPL Edition]      Wed Nov  9 00:13:56 2022</span></span>
+<span><span class="co">## -------------------------------</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Class specified by attribute `outcome'</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Read 3000 cases (3 attributes) from undefined.data</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Decision tree:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Home in {owner,parents}: good (1946.3/421.6)</span></span>
+<span><span class="co">## Home in {ignore,other,priv,rent}:</span></span>
+<span><span class="co">## :...Seniority &gt; 5: good (447.4/100.4)</span></span>
+<span><span class="co">##     Seniority &lt;= 5:</span></span>
+<span><span class="co">##     :...Seniority &lt;= 0: bad (148/46)</span></span>
+<span><span class="co">##         Seniority &gt; 0: good (458.4/204)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Evaluation on training data (3000 cases):</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##      Decision Tree   </span></span>
+<span><span class="co">##    ----------------  </span></span>
+<span><span class="co">##    Size      Errors  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##       4  772(25.7%)   &lt;&lt;</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     (a)   (b)    &lt;-classified as</span></span>
+<span><span class="co">##    ----  ----</span></span>
+<span><span class="co">##     102   726    (a): class bad</span></span>
+<span><span class="co">##      46  2126    (b): class good</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Attribute usage:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   99.93% Home</span></span>
+<span><span class="co">##   35.17% Seniority</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Time: 0.0 secs</span></span></code></pre>
 <p>A graphical method for examining the model can be generated by the <code>plot</code> method:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tree_mod</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tree_mod</span><span class="op">)</span></span></code></pre></div>
 <p><img src="C5.0_files/figure-html/tree-plot-1.png" width="960"></p>
 <p>A variety of options are outlines in the documentation for <code>C5.0Control</code> function. Another option that can be used is the <code>trials</code> argument which enables a boosting procedure. This method is model similar to AdaBoost than to more statistical approaches such as stochastic gradient boosting.</p>
 <p>For example, using three iterations of boosting:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tree_boost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, trials <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">tree_boost</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, trials = 3)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## C5.0 [Release 2.07 GPL Edition]      Mon Feb  7 00:41:13 2022</span>
-<span class="co">## -------------------------------</span>
-<span class="co">## </span>
-<span class="co">## Class specified by attribute `outcome'</span>
-<span class="co">## </span>
-<span class="co">## Read 3000 cases (3 attributes) from undefined.data</span>
-<span class="co">## </span>
-<span class="co">## -----  Trial 0:  -----</span>
-<span class="co">## </span>
-<span class="co">## Decision tree:</span>
-<span class="co">## </span>
-<span class="co">## Home in {owner,parents}: good (1946.3/421.6)</span>
-<span class="co">## Home in {ignore,other,priv,rent}:</span>
-<span class="co">## :...Seniority &gt; 5: good (447.4/100.4)</span>
-<span class="co">##     Seniority &lt;= 5:</span>
-<span class="co">##     :...Seniority &lt;= 0: bad (148/46)</span>
-<span class="co">##         Seniority &gt; 0: good (458.4/204)</span>
-<span class="co">## </span>
-<span class="co">## -----  Trial 1:  -----</span>
-<span class="co">## </span>
-<span class="co">## Decision tree:</span>
-<span class="co">## </span>
-<span class="co">## Seniority &gt; 5: good (1330.8/319.3)</span>
-<span class="co">## Seniority &lt;= 5:</span>
-<span class="co">## :...Home in {ignore,other,priv,rent}: bad (666/280.5)</span>
-<span class="co">##     Home in {owner,parents}: good (1003.2/448.8)</span>
-<span class="co">## </span>
-<span class="co">## -----  Trial 2:  -----</span>
-<span class="co">## </span>
-<span class="co">## Decision tree:</span>
-<span class="co">## </span>
-<span class="co">## Home in {owner,parents}: good (1113.9)</span>
-<span class="co">## Home in {ignore,other,priv,rent}:</span>
-<span class="co">## :...Seniority &lt;= 0: bad (74.5)</span>
-<span class="co">##     Seniority &gt; 0: good (1243.5/262.2)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Evaluation on training data (3000 cases):</span>
-<span class="co">## </span>
-<span class="co">## Trial        Decision Tree   </span>
-<span class="co">## -----      ----------------  </span>
-<span class="co">##    Size      Errors  </span>
-<span class="co">## </span>
-<span class="co">##    0      4  772(25.7%)</span>
-<span class="co">##    1      3  822(27.4%)</span>
-<span class="co">##    2      3  772(25.7%)</span>
-<span class="co">## boost            772(25.7%)   &lt;&lt;</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##     (a)   (b)    &lt;-classified as</span>
-<span class="co">##    ----  ----</span>
-<span class="co">##     102   726    (a): class bad</span>
-<span class="co">##      46  2126    (b): class good</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##  Attribute usage:</span>
-<span class="co">## </span>
-<span class="co">##  100.00% Seniority</span>
-<span class="co">##   99.93% Home</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Time: 0.0 secs</span></code></pre>
+<code class="sourceCode R"><span><span class="va">tree_boost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, trials <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">tree_boost</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, trials = 3)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## C5.0 [Release 2.07 GPL Edition]      Wed Nov  9 00:13:56 2022</span></span>
+<span><span class="co">## -------------------------------</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Class specified by attribute `outcome'</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Read 3000 cases (3 attributes) from undefined.data</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## -----  Trial 0:  -----</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Decision tree:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Home in {owner,parents}: good (1946.3/421.6)</span></span>
+<span><span class="co">## Home in {ignore,other,priv,rent}:</span></span>
+<span><span class="co">## :...Seniority &gt; 5: good (447.4/100.4)</span></span>
+<span><span class="co">##     Seniority &lt;= 5:</span></span>
+<span><span class="co">##     :...Seniority &lt;= 0: bad (148/46)</span></span>
+<span><span class="co">##         Seniority &gt; 0: good (458.4/204)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## -----  Trial 1:  -----</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Decision tree:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Seniority &gt; 5: good (1330.8/319.3)</span></span>
+<span><span class="co">## Seniority &lt;= 5:</span></span>
+<span><span class="co">## :...Home in {ignore,other,priv,rent}: bad (666/280.5)</span></span>
+<span><span class="co">##     Home in {owner,parents}: good (1003.2/448.8)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## -----  Trial 2:  -----</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Decision tree:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Home in {owner,parents}: good (1113.9)</span></span>
+<span><span class="co">## Home in {ignore,other,priv,rent}:</span></span>
+<span><span class="co">## :...Seniority &lt;= 0: bad (74.5)</span></span>
+<span><span class="co">##     Seniority &gt; 0: good (1243.5/262.2)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Evaluation on training data (3000 cases):</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Trial        Decision Tree   </span></span>
+<span><span class="co">## -----      ----------------  </span></span>
+<span><span class="co">##    Size      Errors  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##    0      4  772(25.7%)</span></span>
+<span><span class="co">##    1      3  822(27.4%)</span></span>
+<span><span class="co">##    2      3  772(25.7%)</span></span>
+<span><span class="co">## boost            772(25.7%)   &lt;&lt;</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     (a)   (b)    &lt;-classified as</span></span>
+<span><span class="co">##    ----  ----</span></span>
+<span><span class="co">##     102   726    (a): class bad</span></span>
+<span><span class="co">##      46  2126    (b): class good</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Attribute usage:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  100.00% Seniority</span></span>
+<span><span class="co">##   99.93% Home</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Time: 0.0 secs</span></span></code></pre>
 <p>Note that the counting is zero-based. The <code>plot</code> method can also show a specific tree in the ensemble using the <code>trial</code> option.</p>
 </div>
 <div class="section level2">
@@ -253,73 +253,73 @@
 </h2>
 <p>C5.0 can create an initial tree model then decompose the tree structure into a set of mutually exclusive rules. These rules can then be pruned and modified into a smaller set of <em>potentially</em> overlapping rules. The rules can be created using the <code>rules</code> option:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rule_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, rules <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">rule_mod</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, rules = TRUE)</span>
-<span class="co">## </span>
-<span class="co">## Rule-Based Model</span>
-<span class="co">## Number of samples: 3000 </span>
-<span class="co">## Number of predictors: 2 </span>
-<span class="co">## </span>
-<span class="co">## Number of Rules: 3 </span>
-<span class="co">## </span>
-<span class="co">## Non-standard options: attempt to group attributes</span></code></pre>
+<code class="sourceCode R"><span><span class="va">rule_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, rules <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">rule_mod</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, rules = TRUE)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Rule-Based Model</span></span>
+<span><span class="co">## Number of samples: 3000 </span></span>
+<span><span class="co">## Number of predictors: 2 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Rules: 3 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Non-standard options: attempt to group attributes</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rule_mod</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, rules = TRUE)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## C5.0 [Release 2.07 GPL Edition]      Mon Feb  7 00:41:13 2022</span>
-<span class="co">## -------------------------------</span>
-<span class="co">## </span>
-<span class="co">## Class specified by attribute `outcome'</span>
-<span class="co">## </span>
-<span class="co">## Read 3000 cases (3 attributes) from undefined.data</span>
-<span class="co">## </span>
-<span class="co">## Rules:</span>
-<span class="co">## </span>
-<span class="co">## Rule 1: (148/46, lift 2.5)</span>
-<span class="co">##  Home in {ignore, other, priv, rent}</span>
-<span class="co">##  Seniority &lt;= 0</span>
-<span class="co">##  -&gt;  class bad  [0.687]</span>
-<span class="co">## </span>
-<span class="co">## Rule 2: (1945/421, lift 1.1)</span>
-<span class="co">##  Home in {owner, parents}</span>
-<span class="co">##  -&gt;  class good  [0.783]</span>
-<span class="co">## </span>
-<span class="co">## Rule 3: (2651/641, lift 1.0)</span>
-<span class="co">##  Seniority &gt; 0</span>
-<span class="co">##  -&gt;  class good  [0.758]</span>
-<span class="co">## </span>
-<span class="co">## Default class: good</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Evaluation on training data (3000 cases):</span>
-<span class="co">## </span>
-<span class="co">##          Rules     </span>
-<span class="co">##    ----------------</span>
-<span class="co">##      No      Errors</span>
-<span class="co">## </span>
-<span class="co">##       3  772(25.7%)   &lt;&lt;</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##     (a)   (b)    &lt;-classified as</span>
-<span class="co">##    ----  ----</span>
-<span class="co">##     102   726    (a): class bad</span>
-<span class="co">##      46  2126    (b): class good</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##  Attribute usage:</span>
-<span class="co">## </span>
-<span class="co">##   93.30% Seniority</span>
-<span class="co">##   69.77% Home</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Time: 0.0 secs</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rule_mod</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, rules = TRUE)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## C5.0 [Release 2.07 GPL Edition]      Wed Nov  9 00:13:56 2022</span></span>
+<span><span class="co">## -------------------------------</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Class specified by attribute `outcome'</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Read 3000 cases (3 attributes) from undefined.data</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Rules:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Rule 1: (148/46, lift 2.5)</span></span>
+<span><span class="co">##  Home in {ignore, other, priv, rent}</span></span>
+<span><span class="co">##  Seniority &lt;= 0</span></span>
+<span><span class="co">##  -&gt;  class bad  [0.687]</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Rule 2: (1945/421, lift 1.1)</span></span>
+<span><span class="co">##  Home in {owner, parents}</span></span>
+<span><span class="co">##  -&gt;  class good  [0.783]</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Rule 3: (2651/641, lift 1.0)</span></span>
+<span><span class="co">##  Seniority &gt; 0</span></span>
+<span><span class="co">##  -&gt;  class good  [0.758]</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Default class: good</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Evaluation on training data (3000 cases):</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##          Rules     </span></span>
+<span><span class="co">##    ----------------</span></span>
+<span><span class="co">##      No      Errors</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##       3  772(25.7%)   &lt;&lt;</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     (a)   (b)    &lt;-classified as</span></span>
+<span><span class="co">##    ----  ----</span></span>
+<span><span class="co">##     102   726    (a): class bad</span></span>
+<span><span class="co">##      46  2126    (b): class good</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Attribute usage:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   93.30% Seniority</span></span>
+<span><span class="co">##   69.77% Home</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Time: 0.0 secs</span></span></code></pre>
 <p>Note that no pruning was warranted for this model.</p>
 <p>There is no <code>plot</code> method for rule-based models.</p>
 </div>
@@ -328,88 +328,88 @@
 </h2>
 <p>The <code>predict</code> method can be used to get hard class predictions or class probability estimates (aka “confidence values” in documentation).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rule_mod</span>, newdata <span class="op">=</span> <span class="va">test_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] good good good</span>
-<span class="co">## Levels: bad good</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rule_mod</span>, newdata <span class="op">=</span> <span class="va">test_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] good good good</span></span>
+<span><span class="co">## Levels: bad good</span></span></code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree_boost</span>, newdata <span class="op">=</span> <span class="va">test_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">vars</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##          bad      good</span>
-<span class="co">## 2  0.0000000 1.0000000</span>
-<span class="co">## 12 0.0000000 1.0000000</span>
-<span class="co">## 21 0.3008402 0.6991598</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree_boost</span>, newdata <span class="op">=</span> <span class="va">test_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">vars</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          bad      good</span></span>
+<span><span class="co">## 2  0.0000000 1.0000000</span></span>
+<span><span class="co">## 12 0.0000000 1.0000000</span></span>
+<span><span class="co">## 21 0.3008402 0.6991598</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="cost-sensitive-models">Cost-Sensitive Models<a class="anchor" aria-label="anchor" href="#cost-sensitive-models"></a>
 </h2>
 <p>A cost-matrix can also be used to emphasize certain classes over others. For example, to get more of the “bad” samples correct:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cost_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cost_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">cost_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bad"</span>, <span class="st">"good"</span><span class="op">)</span>
-<span class="va">cost_mat</span></code></pre></div>
-<pre><code><span class="co">##      bad good</span>
-<span class="co">## bad    0    1</span>
-<span class="co">## good   2    0</span></code></pre>
+<code class="sourceCode R"><span><span class="va">cost_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cost_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">cost_mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bad"</span>, <span class="st">"good"</span><span class="op">)</span></span>
+<span><span class="va">cost_mat</span></span></code></pre></div>
+<pre><code><span><span class="co">##      bad good</span></span>
+<span><span class="co">## bad    0    1</span></span>
+<span><span class="co">## good   2    0</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cost_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, 
-                 costs <span class="op">=</span> <span class="va">cost_mat</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cost_mod</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, costs = cost_mat)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## C5.0 [Release 2.07 GPL Edition]      Mon Feb  7 00:41:13 2022</span>
-<span class="co">## -------------------------------</span>
-<span class="co">## </span>
-<span class="co">## Class specified by attribute `outcome'</span>
-<span class="co">## </span>
-<span class="co">## Read 3000 cases (3 attributes) from undefined.data</span>
-<span class="co">## Read misclassification costs from undefined.costs</span>
-<span class="co">## </span>
-<span class="co">## Decision tree:</span>
-<span class="co">## </span>
-<span class="co">## Seniority &gt; 5: good (1426/217)</span>
-<span class="co">## Seniority &lt;= 5:</span>
-<span class="co">## :...Home in {ignore,other,priv,rent}: bad (606.4/300.4)</span>
-<span class="co">##     Home in {owner,parents}:</span>
-<span class="co">##     :...Seniority &lt;= 2: bad (606/383)</span>
-<span class="co">##         Seniority &gt; 2: good (361.6/82)</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Evaluation on training data (3000 cases):</span>
-<span class="co">## </span>
-<span class="co">##         Decision Tree       </span>
-<span class="co">##    -----------------------  </span>
-<span class="co">##    Size      Errors   Cost  </span>
-<span class="co">## </span>
-<span class="co">##       4  983(32.8%)   0.43   &lt;&lt;</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##     (a)   (b)    &lt;-classified as</span>
-<span class="co">##    ----  ----</span>
-<span class="co">##     529   299    (a): class bad</span>
-<span class="co">##     684  1488    (b): class good</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">##  Attribute usage:</span>
-<span class="co">## </span>
-<span class="co">##  100.00% Seniority</span>
-<span class="co">##   52.43% Home</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Time: 0.0 secs</span></code></pre>
+<code class="sourceCode R"><span><span class="va">cost_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C5.0.html">C5.0</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">train_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train_data</span><span class="op">$</span><span class="va">Status</span>, </span>
+<span>                 costs <span class="op">=</span> <span class="va">cost_mat</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cost_mod</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## C5.0.default(x = train_data[, vars], y = train_data$Status, costs = cost_mat)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## C5.0 [Release 2.07 GPL Edition]      Wed Nov  9 00:13:57 2022</span></span>
+<span><span class="co">## -------------------------------</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Class specified by attribute `outcome'</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Read 3000 cases (3 attributes) from undefined.data</span></span>
+<span><span class="co">## Read misclassification costs from undefined.costs</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Decision tree:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Seniority &gt; 5: good (1426/217)</span></span>
+<span><span class="co">## Seniority &lt;= 5:</span></span>
+<span><span class="co">## :...Home in {ignore,other,priv,rent}: bad (606.4/300.4)</span></span>
+<span><span class="co">##     Home in {owner,parents}:</span></span>
+<span><span class="co">##     :...Seniority &lt;= 2: bad (606/383)</span></span>
+<span><span class="co">##         Seniority &gt; 2: good (361.6/82)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Evaluation on training data (3000 cases):</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##         Decision Tree       </span></span>
+<span><span class="co">##    -----------------------  </span></span>
+<span><span class="co">##    Size      Errors   Cost  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##       4  983(32.8%)   0.43   &lt;&lt;</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     (a)   (b)    &lt;-classified as</span></span>
+<span><span class="co">##    ----  ----</span></span>
+<span><span class="co">##     529   299    (a): class bad</span></span>
+<span><span class="co">##     684  1488    (b): class good</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Attribute usage:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  100.00% Seniority</span></span>
+<span><span class="co">##   52.43% Home</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Time: 0.0 secs</span></span></code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># more samples predicted as "bad"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cost_mod</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">##  bad good </span>
-<span class="co">##  591  863</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># more samples predicted as "bad"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cost_mod</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  bad good </span></span>
+<span><span class="co">##  591  863</span></span></code></pre>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># that previously</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree_mod</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">##  bad good </span>
-<span class="co">##   61 1393</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># that previously</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree_mod</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="va">vars</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  bad good </span></span>
+<span><span class="co">##   61 1393</span></span></code></pre>
 </div>
   </div>
 
@@ -430,7 +430,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
