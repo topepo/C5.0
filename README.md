@@ -1,5 +1,5 @@
 
-[![R-CMD-check](https://github.com/topepo/C5.0/workflows/R-CMD-check/badge.svg)](https://github.com/topepo/C5.0/actions)
+[![R-CMD-check](https://github.com/topepo/C5.0/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/topepo/C5.0/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/C50)](https://CRAN.r-project.org/package=C50)
 [![Downloads](http://cranlogs.r-pkg.org/badges/C50)](https://CRAN.r-project.org/package=C50)
 ![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
