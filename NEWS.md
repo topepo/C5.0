@@ -1,3 +1,9 @@
+# C50 0.1.8
+
+* Maintenance release to fix CRAN issues related to compiler issues.
+
+* Updated GHA and tests
+
 # C50 0.1.7
 
 * Maintenance release to fix CRAN issues related to compiler warnings. 
