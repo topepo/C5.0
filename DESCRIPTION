@@ -18,7 +18,8 @@ Suggests:
     covr,
     knitr,
     modeldata,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 URL: https://topepo.github.io/C5.0/
 BugReports: https://github.com/topepo/C5.0/issues
 License: GPL-3
@@ -28,3 +29,4 @@ RoxygenNote: 7.2.1.9000
 VignetteBuilder: knitr
 Encoding: UTF-8
 Biarch: true
+Config/testthat/edition: 3
