@@ -26,4 +26,6 @@ test_that("basic execution", {
 
   pred_fm <- predict(c5_fm, dat_te[, -1], type = "prob")
   expect_equal(nrow(pred_fm), nrow(dat_tr))
+
+  expect_snapshot(C5.0Control())
 })

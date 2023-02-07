@@ -34,3 +34,42 @@
       Non-standard options: attempt to group attributes
       
 
+---
+
+    Code
+      C5.0Control()
+    Output
+      $subset
+      [1] TRUE
+      
+      $bands
+      [1] 0
+      
+      $winnow
+      [1] FALSE
+      
+      $noGlobalPruning
+      [1] FALSE
+      
+      $CF
+      [1] 0.25
+      
+      $minCases
+      [1] 2
+      
+      $fuzzyThreshold
+      [1] FALSE
+      
+      $sample
+      [1] 0
+      
+      $earlyStopping
+      [1] TRUE
+      
+      $label
+      [1] "outcome"
+      
+      $seed
+      [1] 974
+      
+
