@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">C50</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@
 
       
 
-      </header><script src="Class_Probability_Calcs_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Class Probability Calculations</h1>
@@ -80,16 +80,18 @@
 
     
     
-<p>This document describes exactly how the model computes class probabilities using the data in the terminal nodes. Here is an example model using the iris data:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(C50)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="op">&gt;</span><span class="st"> </span>mod &lt;-<span class="st"> </span><span class="kw">C5.0</span>(Species <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> iris)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">summary</span>(mod)</span></code></pre></div>
+<p>This document describes exactly how the model computes class
+probabilities using the data in the terminal nodes. Here is an example
+model using the iris data:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(C50)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> mod <span class="ot">&lt;-</span> <span class="fu">C5.0</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">summary</span>(mod)</span></code></pre></div>
 <pre><code>
 Call:
 C5.0.formula(formula = Species ~ ., data = iris)
 
 
-C5.0 [Release 2.07 GPL Edition]     Wed Nov  9 19:24:26 2022
+C5.0 [Release 2.07 GPL Edition]     Wed Feb  8 19:59:28 2023
 -------------------------------
 
 Class specified by attribute `outcome'
@@ -129,48 +131,86 @@ Evaluation on training data (150 cases):
 
 
 Time: 0.0 secs</code></pre>
-<p>Suppose that we are predicting the sample in row 130 with a petal length of 5.8 and a petal width of 1.6. From this tree, the terminal node shows <code>virginica (6/2)</code> which means a predicted class of the virginica species with a probability of 4/6 = 0.66667. However, we get a different predicted probability:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">predict</span>(mod, iris[<span class="dv">130</span>,], <span class="dt">type =</span> <span class="st">"prob"</span>)</span></code></pre></div>
+<p>Suppose that we are predicting the sample in row 130 with a petal
+length of 5.8 and a petal width of 1.6. From this tree, the terminal
+node shows <code>virginica (6/2)</code> which means a predicted class of
+the virginica species with a probability of 4/6 = 0.66667. However, we
+get a different predicted probability:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">predict</span>(mod, iris[<span class="dv">130</span>,], <span class="at">type =</span> <span class="st">"prob"</span>)</span></code></pre></div>
 <pre><code>        setosa versicolor virginica
 130 0.04761905  0.3333333 0.6190476</code></pre>
-<p>When we wanted to describe the technical aspects of the <a href="https://www.rulequest.com/see5-info.html" class="external-link">C5.0</a> and <a href="https://www.rulequest.com/cubist-info.html" class="external-link">cubist</a> models, the main source of information on these models was the raw C source code from the <a href="https://www.rulequest.com/download.html" class="external-link">RuleQuest website</a>. For many years, both of these models were proprietary commercial products and we only recently open-sourced. Our intuition is that Quinlan quietly evolved these models from the versions described in the most recent publications to what they are today. For example, it would not be unreasonable to assume that C5.0 uses <a href="https://en.wikipedia.org/wiki/AdaBoost" class="external-link">AdaBoost</a>. From the sources, a similar reweighting scheme is used but it does not appear to be the same.</p>
+<p>When we wanted to describe the technical aspects of the <a href="https://www.rulequest.com/see5-info.html" class="external-link">C5.0</a> and <a href="https://www.rulequest.com/cubist-info.html" class="external-link">cubist</a> models, the
+main source of information on these models was the raw C source code
+from the <a href="https://www.rulequest.com/download.html" class="external-link">RuleQuest
+website</a>. For many years, both of these models were proprietary
+commercial products and we only recently open-sourced. Our intuition is
+that Quinlan quietly evolved these models from the versions described in
+the most recent publications to what they are today. For example, it
+would not be unreasonable to assume that C5.0 uses <a href="https://en.wikipedia.org/wiki/AdaBoost" class="external-link">AdaBoost</a>. From the
+sources, a similar reweighting scheme is used but it does not appear to
+be the same.</p>
 <p>For classifying new samples, the C sources have</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1"></a>ClassNo PredictTreeClassify(DataRec Case, Tree DecisionTree){</span>
-<span id="cb5-2"><a href="#cb5-2"></a>  ClassNo   c, C;</span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="dt">double</span>    Prior;</span>
-<span id="cb5-4"><a href="#cb5-4"></a>  </span>
-<span id="cb5-5"><a href="#cb5-5"></a>  <span class="co">/*  Save total leaf count in ClassSum[0]  */</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a>  ForEach(c, <span class="dv">0</span>, MaxClass) {</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    ClassSum[c] = <span class="dv">0</span>;</span>
-<span id="cb5-8"><a href="#cb5-8"></a>  }</span>
-<span id="cb5-9"><a href="#cb5-9"></a>  </span>
-<span id="cb5-10"><a href="#cb5-10"></a>  PredictFindLeaf(Case, DecisionTree, Nil, <span class="fl">1.0</span>);</span>
-<span id="cb5-11"><a href="#cb5-11"></a>  </span>
-<span id="cb5-12"><a href="#cb5-12"></a>  C = SelectClassGen(DecisionTree-&gt;Leaf, (Boolean)(MCost != Nil), ClassSum);</span>
-<span id="cb5-13"><a href="#cb5-13"></a>  </span>
-<span id="cb5-14"><a href="#cb5-14"></a>  <span class="co">/*  Set all confidence values in ClassSum  */</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a>  ForEach(c, <span class="dv">1</span>, MaxClass){</span>
-<span id="cb5-16"><a href="#cb5-16"></a>    Prior = DecisionTree-&gt;ClassDist[c] / DecisionTree-&gt;Cases;</span>
-<span id="cb5-17"><a href="#cb5-17"></a>    ClassSum[c] = (ClassSum[<span class="dv">0</span>] * ClassSum[c] + Prior) / (ClassSum[<span class="dv">0</span>] + <span class="dv">1</span>);</span>
-<span id="cb5-18"><a href="#cb5-18"></a>  }</span>
-<span id="cb5-19"><a href="#cb5-19"></a>  Confidence = ClassSum[C];</span>
-<span id="cb5-20"><a href="#cb5-20"></a>  </span>
-<span id="cb5-21"><a href="#cb5-21"></a>  <span class="cf">return</span> C;</span>
-<span id="cb5-22"><a href="#cb5-22"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ClassNo PredictTreeClassify<span class="op">(</span>DataRec Case<span class="op">,</span> Tree DecisionTree<span class="op">){</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  ClassNo   c<span class="op">,</span> C<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span>    Prior<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*  Save total leaf count in ClassSum[0]  */</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> MaxClass<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  PredictFindLeaf<span class="op">(</span>Case<span class="op">,</span> DecisionTree<span class="op">,</span> Nil<span class="op">,</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  C <span class="op">=</span> SelectClassGen<span class="op">(</span>DecisionTree<span class="op">-&gt;</span>Leaf<span class="op">,</span> <span class="op">(</span>Boolean<span class="op">)(</span>MCost <span class="op">!=</span> Nil<span class="op">),</span> ClassSum<span class="op">);</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*  Set all confidence values in ClassSum  */</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> MaxClass<span class="op">){</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    Prior <span class="op">=</span> DecisionTree<span class="op">-&gt;</span>ClassDist<span class="op">[</span>c<span class="op">]</span> <span class="op">/</span> DecisionTree<span class="op">-&gt;</span>Cases<span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">*</span> ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">+</span> Prior<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  Confidence <span class="op">=</span> ClassSum<span class="op">[</span>C<span class="op">];</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> C<span class="op">;</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Here:</p>
 <ul>
 <li>The predicted probability is the “confidence” value</li>
-<li>The prior is the class probabilities from the training set. For the iris data, this value is 1/3 for each of the classes</li>
-<li>The array <code>ClassSum</code> is the probabilities of each class in the terminal node although <code>ClassSum[0]</code> is the number of samples in the terminal node (which, if there are missing values, can be fractional).</li>
+<li>The prior is the class probabilities from the training set. For the
+iris data, this value is 1/3 for each of the classes</li>
+<li>The array <code>ClassSum</code> is the probabilities of each class
+in the terminal node although <code>ClassSum[0]</code> is the number of
+samples in the terminal node (which, if there are missing values, can be
+fractional).</li>
 </ul>
 <p>For sample 130, the virginica values are:</p>
 <pre><code>  (ClassSum[0] * ClassSum[c] + Prior) / (ClassSum[0] + 1)
 = (          6 *       (4/6) + (1/3)) / (          6 + 1) 
 = 0.6190476</code></pre>
-<p>Why is it doing this? This will tend to avoid class predictions that are absolute zero or one.</p>
-<p>Basically, it can be viewed to be <em>similar</em> to how Bayesian methods operate where the simple probability estimates are “shrunken” towards the prior probabilities. Note that, as the number of samples in the terminal nodes (<code>ClassSum[0]</code>) becomes large, this operation has less effect on the final results. Suppose <code>ClassSum[0] = 10000</code>, then the predicted virginica probability would be 0.6663337, which is closer to the simple estimate.</p>
-<p>This is very much related to the <a href="https://en.wikipedia.org/wiki/Additive_smoothing" class="external-link">Laplace Correction</a>. Traditionally, we would add a value of one to the denominator of the simple estimate and add the number of classes to the bottom, resulting in <code>(4+1)/(6+3) = 0.5555556</code>. C5.0 is substituting the prior probabilities and their sum (always one) into this equation instead.</p>
-<p>To be fair, there are well known Bayesian estimates of the sample proportions under different prior distributions for the two class case. For example, if there were two classes, the estimate of the class probability under a uniform prior would be the same as the basic Laplace correction (using the integers and not the fractions). A more flexible Bayesian approach is the <a href="https://en.wikipedia.org/wiki/Beta-binomial_distribution" class="external-link">Beta-Binomial model</a>, which uses a Beta prior instead of the uniform. The downside here is that two extra parameters need to be estimated (and it only is defined for two classes)</p>
+<p>Why is it doing this? This will tend to avoid class predictions that
+are absolute zero or one.</p>
+<p>Basically, it can be viewed to be <em>similar</em> to how Bayesian
+methods operate where the simple probability estimates are “shrunken”
+towards the prior probabilities. Note that, as the number of samples in
+the terminal nodes (<code>ClassSum[0]</code>) becomes large, this
+operation has less effect on the final results. Suppose
+<code>ClassSum[0] = 10000</code>, then the predicted virginica
+probability would be 0.6663337, which is closer to the simple
+estimate.</p>
+<p>This is very much related to the <a href="https://en.wikipedia.org/wiki/Additive_smoothing" class="external-link">Laplace
+Correction</a>. Traditionally, we would add a value of one to the
+denominator of the simple estimate and add the number of classes to the
+bottom, resulting in <code>(4+1)/(6+3) = 0.5555556</code>. C5.0 is
+substituting the prior probabilities and their sum (always one) into
+this equation instead.</p>
+<p>To be fair, there are well known Bayesian estimates of the sample
+proportions under different prior distributions for the two class case.
+For example, if there were two classes, the estimate of the class
+probability under a uniform prior would be the same as the basic Laplace
+correction (using the integers and not the fractions). A more flexible
+Bayesian approach is the <a href="https://en.wikipedia.org/wiki/Beta-binomial_distribution" class="external-link">Beta-Binomial
+model</a>, which uses a Beta prior instead of the uniform. The downside
+here is that two extra parameters need to be estimated (and it only is
+defined for two classes)</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -188,7 +228,7 @@ Time: 0.0 secs</code></pre>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
