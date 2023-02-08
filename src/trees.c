@@ -173,7 +173,9 @@ void ShowBranch(int Sh, Tree T, DiscrValue v, DiscrValue BrNo)
   Attribute Att;
   Boolean FirstValue;
   int TextWidth, Skip, Values, i, Extra;
-  char CVS1[20], CVS2[20];
+  size_t size = 20;
+  char CVS1[size];
+  char CVS2[size];
 
   Att = T->Tested;
 
@@ -196,16 +198,16 @@ void ShowBranch(int Sh, Tree T, DiscrValue v, DiscrValue BrNo)
       fprintf(Of, " = N/A:");
     } else if (T->Lower != T->Upper) {
       if (v == 2) {
-        CValToStr(T->Lower, Att, CVS1);
-        CValToStr(T->Mid, Att, CVS2);
+        CValToStr(T->Lower, Att, CVS1, size);
+        CValToStr(T->Mid, Att, CVS2, size);
         fprintf(Of, " <= %s (%s):", CVS1, CVS2);
       } else {
-        CValToStr(T->Upper, Att, CVS1);
-        CValToStr(T->Mid, Att, CVS2);
+        CValToStr(T->Upper, Att, CVS1, size);
+        CValToStr(T->Mid, Att, CVS2, size);
         fprintf(Of, " >= %s (%s):", CVS1, CVS2);
       }
     } else {
-      CValToStr(T->Cut, Att, CVS1);
+      CValToStr(T->Cut, Att, CVS1, size);
       fprintf(Of, " %s %s:", (v == 2 ? "<=" : ">"), CVS1);
     }
 

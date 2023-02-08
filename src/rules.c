@@ -411,7 +411,8 @@ void PrintCondition(Condition C)
   Boolean First = true;
   Attribute Att;
   int Col, Base, Entry;
-  char CVS[20];
+  size_t size = 20;
+  char CVS[size];
 
   v = C->TestValue;
   Att = C->Tested;
@@ -432,7 +433,7 @@ void PrintCondition(Condition C)
     if (v == 1) {
       fprintf(Of, " = N/A\n");
     } else {
-      CValToStr(C->Cut, Att, CVS);
+      CValToStr(C->Cut, Att, CVS, size);
       fprintf(Of, " %s %s\n", (v == 2 ? "<=" : ">"), CVS);
     }
     break;
