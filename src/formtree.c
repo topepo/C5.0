@@ -48,7 +48,7 @@ DiscrValue MaxLeaves; /* target maximum tree size */
 #define SAMPLEUNIT 2000
 
 float ValThresh; /* minimum GR when evaluating sampled atts */
-Boolean Sampled; /* true if sampling used */
+Boolean Sampled; /* bintrue if sampling used */
 
 Attribute *Waiting = Nil, /* attribute wait list */
     NWaiting = 0;
@@ -122,7 +122,7 @@ void InitialiseTreeData(void)
 
   /*  Check whether all attributes have many discrete values  */
 
-  MultiVal = true;
+  MultiVal = bintrue;
   if (!SUBSET) {
     for (Att = 1; MultiVal && Att <= MaxAtt; Att++) {
       if (!Skip(Att) && Att != ClassAtt) {
@@ -133,7 +133,7 @@ void InitialiseTreeData(void)
 
   /*  See whether there are continuous attributes for subsampling  */
 
-  Subsample = false;
+  Subsample = binfalse;
 
   /*  Set parameters for RawExtraErrs() */
 
@@ -371,9 +371,9 @@ Must expect at least 10 of least prevalent class  */
   if (Subsample && No(Fp, Lp) > 5 * MaxClass * SAMPLEUNIT &&
       (ClassFreq[Least] * MaxClass * SAMPLEUNIT) / No(Fp, Lp) >= 10) {
     SampleEstimate(Fp, Lp, Cases);
-    Sampled = true;
+    Sampled = bintrue;
   } else {
-    Sampled = false;
+    Sampled = binfalse;
   }
 
   BestAtt = ChooseSplit(Fp, Lp, Cases, Sampled);
@@ -726,7 +726,7 @@ void Divide(Tree T, CaseNo Fp, CaseNo Lp, int Level)
   KnownCases = T->Cases - (MissingCases = CountCases(Fp, Ep));
 
   if (Missing) {
-    UnitWeights = false;
+    UnitWeights = binfalse;
 
     /*  If using costs, must adjust branch factors to undo effects of
         reweighting cases  */

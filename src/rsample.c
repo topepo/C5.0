@@ -75,7 +75,7 @@ int rpredictmain(int *trials, int *outputv, double *confidencev)
       CurrentPosition, RealTrials;
   double TotalConf = 0, NumClasses = 0;
   ClassNo Predict, c;
-  //    Boolean  XRefForm=false;
+  //    Boolean  XRefForm=binfalse;
   //    void  ShowRules(int);
   int i;
 
@@ -99,7 +99,7 @@ determine the number of trials, then allocate space for
 trees or rulesets  */
 
   if (RULES) {
-    CheckFile(".rules", false);
+    CheckFile(".rules", binfalse);
     SetTrials(&TRIALS, *trials);
     RuleSet = AllocZero(TRIALS + 1, CRuleSet);
     // Rprintf("TRIALS: %4d\n", TRIALS);
@@ -117,7 +117,7 @@ trees or rulesets  */
 
     MostSpec = Alloc(MaxClass + 1, CRule);
   } else {
-    CheckFile(".tree", false);
+    CheckFile(".tree", binfalse);
     SetTrials(&TRIALS, *trials);
     Pruned = AllocZero(TRIALS + 1, Tree);
 
@@ -165,7 +165,7 @@ the class can be "?" to indicate that it is unknown.  */
 
   i = 0; // XXX added this at least temporarily
 
-  while ((Case = PredictGetDataRec(F, false))) {
+  while ((Case = PredictGetDataRec(F, binfalse))) {
     /*  For this case, find the class predicted by See5/C5.0 model  */
 
     Predict = PredictClassify(Case);

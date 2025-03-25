@@ -309,7 +309,7 @@ void ConstructClassifiers(void)
       }
     }
 
-    UnitWeights = false;
+    UnitWeights = binfalse;
   }
 
   FreeUnlessNil(SaveCase);
@@ -356,17 +356,17 @@ void InitialiseWeights(void)
     /*  Make weights proportional to average error cost  */
 
     ForEach(i, 0, MaxCase) { Weight(Case[i]) = WeightMul[Class(Case[i])]; }
-    UnitWeights = false;
+    UnitWeights = binfalse;
   } else {
     ForEach(i, 0, MaxCase) { Weight(Case[i]) = 1.0; }
-    UnitWeights = true;
+    UnitWeights = bintrue;
   }
 
   /*  Adjust when using case weights  */
 
   if (CWtAtt) {
     ForEach(i, 0, MaxCase) { Weight(Case[i]) *= RelCWt(Case[i]); }
-    UnitWeights = false;
+    UnitWeights = binfalse;
   }
 }
 
@@ -713,7 +713,7 @@ void RecordAttUsage(DataRec Case, int *Usage)
       Usage[Att]++;
 
       if (AttDef[Att]) {
-        ForEach(i, 1, AttDefUses[Att][0]) { Tested[AttDefUses[Att][i]] = true; }
+        ForEach(i, 1, AttDefUses[Att][0]) { Tested[AttDefUses[Att][i]] = bintrue; }
       }
     }
   }

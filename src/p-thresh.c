@@ -85,7 +85,7 @@ void ResubErrs(Tree T, CaseNo Fp, CaseNo Lp)
 
   PrevUnitWeights = UnitWeights;
   if (Missing)
-    UnitWeights = false;
+    UnitWeights = binfalse;
 
   T->Errors = 0;
   Bp = Fp;
@@ -240,7 +240,7 @@ void FindBounds(Tree T, CaseNo Fp, CaseNo Lp)
 
   PrevUnitWeights = UnitWeights;
   if (Missing > 0)
-    UnitWeights = false;
+    UnitWeights = binfalse;
 
   Bp = Fp;
 

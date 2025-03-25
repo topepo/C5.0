@@ -183,7 +183,7 @@ RuleTree GrowRT(RuleNo *RR, int RRN, CRule *Rule)
   /*  Choose test for this node  */
 
   TI = SelectTest(RR, RRN, Rule);
-  TestUsed[TI] = true;
+  TestUsed[TI] = bintrue;
 
   Node->CondTest = Test[TI];
 
@@ -229,7 +229,7 @@ goes to branch 0.  */
     }
   }
 
-  TestUsed[TI] = false;
+  TestUsed[TI] = binfalse;
 
   /*  Free local storage  */
 

@@ -54,7 +54,7 @@ static double my_rand(void) {
 
 #define Inc 2048
 
-Boolean SuppressErrorMessages = false;
+Boolean SuppressErrorMessages = binfalse;
 #define XError(a, b, c)                                                        \
   if (MODE == m_build) {                                                       \
     if (!SuppressErrorMessages)                                                \
@@ -80,7 +80,7 @@ void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
 {
   DataRec DVec;
   CaseNo CaseSpace, WantTrain, LeftTrain, WantTest, LeftTest;
-  Boolean FirstIgnore = true, SelectTrain;
+  Boolean FirstIgnore = bintrue, SelectTrain;
 
   LineNo = 0;
   SuppressErrorMessages = SAMPLE && !Train;
@@ -152,7 +152,7 @@ void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
     } else {
       if (FirstIgnore && Of) {
         fprintf(Of, T_IgnoreBadClass);
-        FirstIgnore = false;
+        FirstIgnore = binfalse;
       }
 
       FreeLastCase(DVec);
@@ -184,7 +184,7 @@ DataRec GetDataRec(FILE *Df, Boolean Train)
   int Dv, Chars;
   DataRec DVec;
   ContValue Cv;
-  Boolean FirstValue = true;
+  Boolean FirstValue = bintrue;
 
   if (ReadName(Df, Name, 1000, '\00')) {
     Case[MaxCase] = DVec = NewCase();
@@ -211,7 +211,7 @@ DataRec GetDataRec(FILE *Df, Boolean Train)
         FreeLastCase(DVec);
         return Nil;
       }
-      FirstValue = false;
+      FirstValue = binfalse;
 
       if (Exclude(Att)) {
         if (Att == LabelAtt) {
@@ -224,13 +224,13 @@ DataRec GetDataRec(FILE *Df, Boolean Train)
 
         DVal(DVec, Att) = UNKNOWN;
         if (SomeMiss)
-          SomeMiss[Att] = true;
+          SomeMiss[Att] = bintrue;
       } else if (Att != ClassAtt && !strcmp(Name, "N/A")) {
         /*  Set marker to indicate not applicable  */
 
         DVal(DVec, Att) = NA;
         if (SomeNA)
-          SomeNA[Att] = true;
+          SomeNA[Att] = bintrue;
       } else if (Discrete(Att)) {
         /*  Discrete attribute  */
 
@@ -344,7 +344,7 @@ DataRec PredictGetDataRec(FILE *Df, Boolean Train)
   int Dv;
   DataRec Dummy, DVec;
   ContValue Cv;
-  Boolean FirstValue = true;
+  Boolean FirstValue = bintrue;
 
   if (ReadName(Df, Name, 1000, '\00')) {
     Dummy = AllocZero(MaxAtt + 2, AttValue);
@@ -372,7 +372,7 @@ DataRec PredictGetDataRec(FILE *Df, Boolean Train)
         PredictFreeLastCase(DVec);
         return Nil;
       }
-      FirstValue = false;
+      FirstValue = binfalse;
 
       if (Exclude(Att)) {
         if (Att == LabelAtt) {
@@ -385,13 +385,13 @@ DataRec PredictGetDataRec(FILE *Df, Boolean Train)
 
         DVal(DVec, Att) = UNKNOWN;
         if (SomeMiss)
-          SomeMiss[Att] = true;
+          SomeMiss[Att] = bintrue;
       } else if (Att != ClassAtt && !strcmp(Name, "N/A")) {
         /*  Set marker to indicate not applicable  */
 
         DVal(DVec, Att) = NA;
         if (SomeNA)
-          SomeNA[Att] = true;
+          SomeNA[Att] = bintrue;
       } else if (Discrete(Att)) {
         /*  Discrete attribute  */
 
@@ -498,7 +498,7 @@ CaseNo CountData(FILE *Df)
   char Last = ',';
   int Count = 0, Next;
 
-  while (true) {
+  while (bintrue) {
     if ((Next = getc(Df)) == EOF) {
       if (Last != ',')
         Count++;

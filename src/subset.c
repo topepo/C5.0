@@ -107,7 +107,7 @@ and total info of a split on discrete attribute Att  */
 
   Verbosity(2, fprintf(Of, "\tAtt %s", AttName[Att]))
       Verbosity(3, PrintDistribution(Att, 0, MaxAttVal[Att], GEnv.Freq,
-                                     GEnv.ValFreq, true))
+                                     GEnv.ValFreq, bintrue))
           Verbosity(2, fprintf(Of, "\tinitial inf %.3f, gain %.3f, val=%.3f\n",
                                PrevInfo, PrevGain, BestVal))
 
@@ -190,7 +190,7 @@ and total info of a split on discrete attribute Att  */
                         PrevInfo, PrevGain, Val, (Better ? " **" : ""),
                         (VERBOSITY > 2 ? "" : "\n"));
                 Verbosity(3, PrintDistribution(Att, 0, GEnv.Blocks, GEnv.Freq,
-                                               GEnv.ValFreq, false))
+                                               GEnv.ValFreq, binfalse))
               })
 
         if (Better) {
@@ -278,7 +278,7 @@ and total info of a split on discrete attribute Att  */
                       GEnv.Blocks, BestInfo, BestGain, Val,
                       (Val > BestVal ? " **" : ""));
               Verbosity(3, PrintDistribution(Att, 0, GEnv.Blocks, GEnv.Freq,
-                                             GEnv.ValFreq, false)))
+                                             GEnv.ValFreq, binfalse)))
 
         if (Val >= BestVal) {
       Subsets[Att] = GEnv.Blocks;
@@ -407,11 +407,11 @@ Boolean SameDistribution(DiscrValue V1, DiscrValue V2)
 
   ForEach(c, 1, MaxClass) {
     if (fabs(GEnv.Freq[V1][c] / D1 - GEnv.Freq[V2][c] / D2) > 0.001) {
-      return false;
+      return binfalse;
     }
   }
 
-  return true;
+  return bintrue;
 }
 
 /*************************************************************************/
@@ -467,12 +467,12 @@ void PrintSubset(Attribute Att, Set Ss)
 /*   -----------  */
 {
   DiscrValue V1;
-  Boolean First = true;
+  Boolean First = bintrue;
 
   ForEach(V1, 1, MaxAttVal[Att]) {
     if (In(V1, Ss)) {
       if (First) {
-        First = false;
+        First = binfalse;
       } else {
         fprintf(Of, ", ");
       }

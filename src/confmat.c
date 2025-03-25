@@ -136,12 +136,12 @@ void PrintUsageInfo(CaseNo *Usage)
 {
   Attribute Att, Best;
   float Tests;
-  Boolean First = true;
+  Boolean First = bintrue;
   double varUsage;
 
   Tests = Max(1, MaxCase + 1);
 
-  while (true) {
+  while (bintrue) {
     Best = 0;
 
     ForEach(Att, 1, MaxAtt) {
@@ -157,7 +157,7 @@ void PrintUsageInfo(CaseNo *Usage)
 
     if (First) {
       fprintf(Of, T_Usage);
-      First = false;
+      First = binfalse;
     }
 
     /* MK edit; print a percentage with 2 decimal places for

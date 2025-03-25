@@ -66,7 +66,7 @@ CaseCount MINITEMS = 2, /* minimum cases each side of a cut */
 float CF = 0.25,  /* confidence limit for tree pruning */
     SAMPLE = 0.0; /* sample training proportion */
 
-Boolean LOCK = false; /* sample locked */
+Boolean LOCK = binfalse; /* sample locked */
 
 /*************************************************************************/
 /*                                                                       */

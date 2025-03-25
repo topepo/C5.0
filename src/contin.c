@@ -141,7 +141,7 @@ per class)  */
               "\t\tCut at %.3f  (gain %.3f):", (GEnv.LowVal + GEnv.HighVal) / 2,
               (1 - GEnv.UnknownRate) *
                   (GEnv.BaseInfo - (GEnv.NAInfo + LHInfo) / GEnv.KnownCases));
-          PrintDistribution(Att, 2, 3, GEnv.Freq, GEnv.ValFreq, true);
+          PrintDistribution(Att, 2, 3, GEnv.Freq, GEnv.ValFreq, bintrue);
         })
       }
 
@@ -273,7 +273,7 @@ value of GEnv.MinSplit to allow for sampling  */
         Verbosity(3, {
           fprintf(Of, "\t\tCut at %.3f  (gain %.3f):",
                   (GEnv.LowVal + GEnv.HighVal) / 2, ThisGain);
-          PrintDistribution(Att, 2, 3, GEnv.Freq, GEnv.ValFreq, true);
+          PrintDistribution(Att, 2, 3, GEnv.Freq, GEnv.ValFreq, bintrue);
         })
       }
 
@@ -339,7 +339,7 @@ void PrepareForContin(Attribute Att, CaseNo Fp, CaseNo Lp)
     GEnv.NAInfo = TotalInfo(GEnv.Freq[1], 1, MaxClass);
     GEnv.FixedSplitInfo = PartInfo(GEnv.ValFreq[0]) + PartInfo(GEnv.ValFreq[1]);
 
-    Verbosity(3, PrintDistribution(Att, 0, 1, GEnv.Freq, GEnv.ValFreq, true))
+    Verbosity(3, PrintDistribution(Att, 0, 1, GEnv.Freq, GEnv.ValFreq, bintrue))
   } else {
     GEnv.Xp = Fp;
 

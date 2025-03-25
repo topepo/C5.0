@@ -74,7 +74,7 @@ void EvalDiscreteAtt(Attribute Att, CaseCount Cases)
   Verbosity(2, {
     fprintf(Of, "\tAtt %s", AttName[Att]);
     Verbosity(3, PrintDistribution(Att, 0, MaxAttVal[Att], GEnv.Freq,
-                                   GEnv.ValFreq, true))
+                                   GEnv.ValFreq, bintrue))
         fprintf(Of, "\tinf %.3f, gain %.3f\n", Info[Att], Gain[Att]);
   })
 }
@@ -104,7 +104,7 @@ void EvalOrderedAtt(Attribute Att, CaseCount Cases)
 
   Verbosity(2, fprintf(Of, "\tAtt %s", AttName[Att]))
       Verbosity(3, PrintDistribution(Att, 0, MaxAttVal[Att], GEnv.Freq,
-                                     GEnv.ValFreq, true))
+                                     GEnv.ValFreq, bintrue))
 
       /*  Move elts of Freq[] starting with the third up one place
    and aggregate class frequencies  */
@@ -140,7 +140,7 @@ void EvalOrderedAtt(Attribute Att, CaseCount Cases)
 
       Verbosity(3, {
         fprintf(Of, "\t\tFrom %s (gain %.3f)", AttValName[Att][v], ThisGain);
-        PrintDistribution(Att, 0, 3, GEnv.Freq, GEnv.ValFreq, false);
+        PrintDistribution(Att, 0, 3, GEnv.Freq, GEnv.ValFreq, binfalse);
       })
     }
 

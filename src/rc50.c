@@ -85,12 +85,12 @@ int c50main(void)
 
   if (!(F = GetFile(".data", "r")))
     Error(NOFILE, "", "");
-  GetData(F, true, false);
+  GetData(F, bintrue, binfalse);
   fprintf(Of, TX_ReadData(MaxCase + 1, MaxAtt, FileStem));
 
   if (XVAL && (F = GetFile(".test", "r"))) {
     SaveMaxCase = MaxCase;
-    GetData(F, false, false);
+    GetData(F, binfalse, binfalse);
     fprintf(Of, TX_ReadTest(MaxCase - SaveMaxCase, FileStem));
   }
 
@@ -156,7 +156,7 @@ int c50main(void)
       fprintf(Of, "\n");
 
       FreeData();
-      GetData(F, false, false);
+      GetData(F, binfalse, binfalse);
 
       fprintf(Of, T_EvalTest, MaxCase + 1);
 
