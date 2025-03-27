@@ -51,7 +51,7 @@ Boolean NewRule(Condition Cond[], int NCond, ClassNo TargetClass,
   CaseNo i;
   CRule R;
   Condition *Lhs;
-  Boolean Exclude = false;
+  Boolean Exclude = binfalse;
   int Vote;
 
   /*  Sort and copy the conditions if required  */
@@ -82,7 +82,7 @@ Boolean NewRule(Condition Cond[], int NCond, ClassNo TargetClass,
         memcpy(Lhs[d]->Subset, Cond[dd]->Subset, Bytes);
       }
 
-      Deleted[dd] = true;
+      Deleted[dd] = bintrue;
     }
   } else {
     Lhs = Cond;
@@ -103,7 +103,7 @@ Boolean NewRule(Condition Cond[], int NCond, ClassNo TargetClass,
         Rule[r]->Vote = Vote;
       }
 
-      Exclude = true;
+      Exclude = bintrue;
     }
   }
 
@@ -116,7 +116,7 @@ Boolean NewRule(Condition Cond[], int NCond, ClassNo TargetClass,
       FreeVector((void **)Lhs, 1, Size);
     }
 
-    return false;
+    return binfalse;
   }
 
   /*  Make sure there is enough room for the new rule  */
@@ -157,7 +157,7 @@ Boolean NewRule(Condition Cond[], int NCond, ClassNo TargetClass,
 
   Verbosity(1, if (!Existing) PrintRule(R))
 
-      return true;
+      return bintrue;
 }
 
 /*************************************************************************/
@@ -288,26 +288,26 @@ Boolean SameRule(RuleNo r, Condition Cond[], int NConds, ClassNo TargetClass)
   int d, i, Bytes;
 
   if (Rule[r]->Size != NConds || Rule[r]->Rhs != TargetClass) {
-    return false;
+    return binfalse;
   }
 
   ForEach(d, 1, NConds) {
     if (Rule[r]->Lhs[d]->NodeType != Cond[d]->NodeType ||
         Rule[r]->Lhs[d]->Tested != Cond[d]->Tested) {
-      return false;
+      return binfalse;
     }
 
     switch (Cond[d]->NodeType) {
     case BrDiscr:
       if (Rule[r]->Lhs[d]->TestValue != Cond[d]->TestValue) {
-        return false;
+        return binfalse;
       }
       break;
 
     case BrThresh:
       if (Rule[r]->Lhs[d]->TestValue != Cond[d]->TestValue ||
           Rule[r]->Lhs[d]->Cut != Cond[d]->Cut) {
-        return false;
+        return binfalse;
       }
       break;
 
@@ -315,13 +315,13 @@ Boolean SameRule(RuleNo r, Condition Cond[], int NConds, ClassNo TargetClass)
       Bytes = (MaxAttVal[Cond[d]->Tested] >> 3) + 1;
       ForEach(i, 0, Bytes - 1) {
         if (Rule[r]->Lhs[d]->Subset[i] != Cond[d]->Subset[i]) {
-          return false;
+          return binfalse;
         }
       }
     }
   }
 
-  return true;
+  return bintrue;
 }
 
 /*************************************************************************/
@@ -408,7 +408,7 @@ void PrintCondition(Condition C)
 /*  --------------  */
 {
   DiscrValue v, pv, Last, Values;
-  Boolean First = true;
+  Boolean First = bintrue;
   Attribute Att;
   int Col, Base, Entry;
   size_t size = 20;
@@ -468,7 +468,7 @@ void PrintCondition(Condition C)
         Entry = CharWidth(AttValName[Att][pv]);
 
         if (First) {
-          First = false;
+          First = binfalse;
         } else if (Col + Entry + 2 >= Width) {
           Col = Base;
           fprintf(Of, ",\n%*s", Col, "");

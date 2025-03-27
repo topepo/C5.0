@@ -44,7 +44,7 @@
 #define UPDATE 1         /* flag: change tree */
 #define REGROW 2         /*       regrow branches */
 #define REPORTPROGRESS 4 /*  original tree */
-#define UNITWEIGHTS 8    /*  UnitWeights is true*/
+#define UNITWEIGHTS 8    /*  UnitWeights is bintrue*/
 
 Set *PossibleValues;
 
@@ -90,7 +90,7 @@ void Prune(Tree T)
     /*  Insert information on parents and recalculate errors, noting
         whether fractional cases might have appeared (for GlobalPrune)  */
 
-    RecalculateErrs = false;
+    RecalculateErrs = binfalse;
     InsertParents(T, Nil);
 
     /*  Possible global pruning phase  */
@@ -111,7 +111,7 @@ First record possible values for discrete attributes  */
     }
   }
 
-  CheckSubsets(T, true);
+  CheckSubsets(T, bintrue);
 
   FreeVector((void **)PossibleValues, 1, MaxAtt);
   PossibleValues = Nil;
@@ -545,7 +545,7 @@ void InsertParents(Tree T, Tree P)
     }
 
     if (SomeMiss[T->Tested])
-      RecalculateErrs = true;
+      RecalculateErrs = bintrue;
   } else if (T->Cases > 1E-3) {
     T->Errors = T->Cases - T->ClassDist[T->Leaf];
     T->Leaves = 1;
@@ -750,7 +750,7 @@ float RawExtraErrs(CaseCount N, CaseCount E)
 /*                                                                       */
 /* If there are differential misclassification costs, the weights  */
 /* may have been artificially adjusted.  Fix the distributions so  */
-/* that they represent the "true" (possibly boosted) weights  */
+/* that they represent the "bintrue" (possibly boosted) weights  */
 /*                                                                       */
 /*************************************************************************/
 
@@ -775,7 +775,7 @@ void RestoreDistribs(Tree T)
       ForEach(c, 1, MaxClass) { ClassSum[c] = T->ClassDist[c]; }
     }
 
-    T->Leaf = SelectClass(1, true);
+    T->Leaf = SelectClass(1, bintrue);
     T->Errors = T->Cases - T->ClassDist[T->Leaf];
   }
 }

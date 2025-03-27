@@ -50,7 +50,7 @@ void initglobals(void)
   CF = 0.25;    /* confidence limit for tree pruning */
   SAMPLE = 0.0; /* sample training proportion */
 
-  LOCK = false; /* sample locked */
+  LOCK = binfalse; /* sample locked */
 
   /*************************************************************************/
   /*                                                                       */
@@ -211,19 +211,19 @@ void setglobals(int subset, int rules, int utility, int trials, int winnow,
   // and the NOCOSTS global variable is always left at the
   // default value.
 
-  SUBSET = subset != 0 ? true : false;               /* Logical */
-  RULES = rules != 0 ? true : false;                 /* Logical */
+  SUBSET = subset != 0 ? bintrue : binfalse;               /* Logical */
+  RULES = rules != 0 ? bintrue : binfalse;                 /* Logical */
   UTILITY = utility;                                 /* Int */
   TRIALS = trials;                                   /* Int */
-  BOOST = trials > 1 ? true : false;                 /* Logical */
-  EARLYSTOPPING = earlyStopping != 0 ? true : false; /* Logical */
-  WINNOW = winnow != 0 ? true : false;               /* Logical */
+  BOOST = trials > 1 ? bintrue : binfalse;                 /* Logical */
+  EARLYSTOPPING = earlyStopping != 0 ? bintrue : binfalse; /* Logical */
+  WINNOW = winnow != 0 ? bintrue : binfalse;               /* Logical */
   SAMPLE = sample;                                   /* Real */
   KRInit = seed;                                     /* Int */
-  GLOBAL = noGlobalPruning != 0 ? false : true;      /* Logical */
+  GLOBAL = noGlobalPruning != 0 ? binfalse : bintrue;      /* Logical */
   CF = cf;                                           /* Real */
   MINITEMS = minCases;                               /* Int */
-  PROBTHRESH = fuzzyThreshold != 0 ? true : false;   /* Logical */
+  PROBTHRESH = fuzzyThreshold != 0 ? bintrue : binfalse;   /* Logical */
 }
 
 void setrules(int val) { RULES = val; }

@@ -90,8 +90,8 @@
 #define THEORYFRAC 0.23 /* discount rate for estimated coding cost */
 
 #define Nil 0 /* null pointer */
-#define false 0
-#define true 1
+#define binfalse 0
+#define bintrue 1
 #define None -1
 #define Epsilon 1E-4
 #define MinLeaf 0.05 /* minimum weight for non-null leaf */

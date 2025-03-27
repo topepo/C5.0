@@ -35,7 +35,7 @@
 #include "redefine.h"
 #include "transform.h"
 
-Boolean BINARY = false;
+Boolean BINARY = binfalse;
 int Entry;
 
 char *Prop[] = {"null",    "att",   "class",   "cut",   "conds",  "elts",
@@ -76,7 +76,7 @@ char *LastExt = "";
 
 void modelfilesinit(void) {
   modelfilesfreeglobals();
-  BINARY = false;
+  BINARY = binfalse;
   PropVal = Nil;
   PropValSize = 0;
   LastExt = "";
@@ -245,10 +245,10 @@ void PredictReadFilePrefix(String Extension)
 
   StreamIn((char *)&TRIALS, sizeof(int));
   if (memcmp((char *)&TRIALS, "id=", 3) != 0) {
-    BINARY = true;
+    BINARY = bintrue;
     BinRecoverDiscreteNames();
   } else {
-    BINARY = false;
+    BINARY = binfalse;
     rewind(TRf);
     PredictReadHeader();
   }
@@ -287,7 +287,7 @@ void SaveDiscreteNames(void)
 void SaveTree(Tree T, String Extension)
 /*   --------  */
 {
-  CheckFile(Extension, true);
+  CheckFile(Extension, bintrue);
 
   OutTree(T);
 }
@@ -325,12 +325,12 @@ void OutTree(Tree T)
 
     case BrSubset:
       ForEach(v, 1, T->Forks) {
-        First = true;
+        First = bintrue;
         ForEach(vv, 1, MaxAttVal[T->Tested]) {
           if (In(vv, T->Subset[v])) {
             if (First) {
               AsciiOut(" elts=", AttValName[T->Tested][vv]);
-              First = false;
+              First = binfalse;
             } else {
               AsciiOut(",", AttValName[T->Tested][vv]);
             }
@@ -366,7 +366,7 @@ void SaveRules(CRuleSet RS, String Extension)
   DiscrValue v;
   Boolean First;
 
-  CheckFile(Extension, true);
+  CheckFile(Extension, bintrue);
 
   fprintf(TRf, "rules=\"%d\"", RS->SNRules);
   AsciiOut(" default=", ClassName[RS->SDefault]);
@@ -402,12 +402,12 @@ void SaveRules(CRuleSet RS, String Extension)
         break;
 
       case BrSubset:
-        First = true;
+        First = bintrue;
         ForEach(v, 1, MaxAttVal[C->Tested]) {
           if (In(v, C->Subset)) {
             if (First) {
               AsciiOut(" elts=", AttValName[C->Tested][v]);
-              First = false;
+              First = binfalse;
             } else {
               AsciiOut(",", AttValName[C->Tested][v]);
             }
@@ -454,7 +454,7 @@ void ReadHeader(void)
   int Year, Month, Day;
   FILE *F;
 
-  while (true) {
+  while (bintrue) {
     switch (ReadProp(&Dummy)) {
     case ERRORP:
       return;
@@ -527,7 +527,7 @@ void PredictReadHeader(void)
   int Year, Month, Day;
   FILE *F;
 
-  while (true) {
+  while (bintrue) {
     switch (ReadProp(&Dummy)) {
     case ERRORP:
       return;
@@ -667,7 +667,7 @@ Tree BinInTree(void)
 Tree GetTree(String Extension)
 /*   -------  */
 {
-  CheckFile(Extension, false);
+  CheckFile(Extension, binfalse);
 
   return (BINARY ? BinInTree() : InTree());
 }
@@ -854,7 +854,7 @@ CRuleSet BinInRules(void)
 CRuleSet GetRules(String Extension)
 /*  --------  */
 {
-  CheckFile(Extension, false);
+  CheckFile(Extension, binfalse);
 
   if (MODE == m_build) {
     return InRules();
@@ -1024,7 +1024,7 @@ int ReadProp(char *Delim)
 {
   int c, i;
   char *p;
-  Boolean Quote = false;
+  Boolean Quote = binfalse;
 
   for (p = PropName; (c = fgetc(TRf)) != '=';) {
     if (p - PropName >= 19 || c == EOF) {

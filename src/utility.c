@@ -310,7 +310,7 @@ void ResetKR(int KRInit)
 void Error(int ErrNo, String S1, String S2)
 /*   -----  */
 {
-  Boolean Quit = false, WarningOnly = false;
+  Boolean Quit = binfalse, WarningOnly = binfalse;
   size_t size = 10000;
   char Buffer[size];
   char *Msg = Buffer;
@@ -328,7 +328,7 @@ void Error(int ErrNo, String S1, String S2)
   switch (ErrNo) {
   case NOFILE:
     snprintf(Msg, size,E_NOFILE(Fn, S2));
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADCLASSTHRESH:
@@ -373,17 +373,17 @@ void Error(int ErrNo, String S1, String S2)
 
   case BADCOSTCLASS:
     snprintf(Msg, size,E_BADCOSTCLASS, S1);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADCOST:
     snprintf(Msg, size,E_BADCOST, S1);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case NOMEM:
     snprintf(Msg, size,E_NOMEM);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case TOOMANYVALS:
@@ -396,22 +396,22 @@ void Error(int ErrNo, String S1, String S2)
 
   case NOTARGET:
     snprintf(Msg, size,E_NOTARGET, S1);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADCTARGET:
     snprintf(Msg, size,E_BADCTARGET, S1);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADDTARGET:
     snprintf(Msg, size,E_BADDTARGET, S1);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case LONGNAME:
     snprintf(Msg, size,E_LONGNAME);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case HITEOF:
@@ -448,7 +448,7 @@ void Error(int ErrNo, String S1, String S2)
 
   case SAMEATT:
     snprintf(Msg, size,E_SAMEATT(AttName[MaxAtt], S1));
-    WarningOnly = true;
+    WarningOnly = bintrue;
     break;
 
   case BADDEF3:
@@ -457,28 +457,28 @@ void Error(int ErrNo, String S1, String S2)
 
   case BADDEF4:
     snprintf(Msg, size,E_BADDEF4, AttName[MaxAtt]);
-    WarningOnly = true;
+    WarningOnly = bintrue;
     break;
 
   case MODELFILE:
     snprintf(Msg, size,EX_MODELFILE(Fn));
     snprintf(Msg, size,"    (%s `%s')\n", S1, S2);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADTRIALS:
     snprintf(Msg, size,S1, S2);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case BADOPTION:
     snprintf(Msg, size,S1, S2);
-    Quit = true;
+    Quit = bintrue;
     break;
 
   case OLDFORMAT:
     snprintf(Msg, size,S1, S2);
-    Quit = true;
+    Quit = bintrue;
     break;
   }
 
@@ -493,7 +493,7 @@ void Error(int ErrNo, String S1, String S2)
     if (MODE == m_build) {
       MaxCase--;
     }
-    Quit = true;
+    Quit = bintrue;
   }
 
   if (Quit && Of) {

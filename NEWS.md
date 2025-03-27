@@ -1,3 +1,7 @@
+# C50 (development version)
+
+* Updated C code to stop overwriting keyword symbols. 
+
 # C50 0.1.8
 
 * Maintenance release to fix CRAN issues related to compiler issues.

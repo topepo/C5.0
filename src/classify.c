@@ -112,7 +112,7 @@ void FindLeaf(DataRec Case, Tree T, Tree PT, float Fraction)
   }
 
   if (T->NodeType && Tested) {
-    Tested[T->Tested] = true; /* for usage */
+    Tested[T->Tested] = bintrue; /* for usage */
   }
 
   switch (T->NodeType) {
@@ -366,7 +366,7 @@ ClassNo RuleClassify(DataRec Case, CRuleSet RS)
 
     if (Tested) {
       ForEach(d, 1, R->Size) {
-        Tested[R->Lhs[d]->Tested] = true; /* for usage */
+        Tested[R->Lhs[d]->Tested] = bintrue; /* for usage */
       }
     }
     if (UtilBand)
@@ -399,7 +399,7 @@ ClassNo RuleClassify(DataRec Case, CRuleSet RS)
 
   ForEach(c, 1, MaxClass) { ClassSum[c] /= TotWeight; }
 
-  Best = SelectClass(RS->SDefault, false);
+  Best = SelectClass(RS->SDefault, binfalse);
 
   /*  Set Confidence to the vote for the most specific rule of class Best  */
 
@@ -471,7 +471,7 @@ ClassNo PredictRuleClassify(DataRec Case, CRuleSet RS)
     return RS->SDefault;
   }
 
-  Best = SelectClassGen(RS->SDefault, false, ClassSum);
+  Best = SelectClassGen(RS->SDefault, binfalse, ClassSum);
 
   /*  Set Confidence to the maximum of the most specific applicable
 rule for class Best or the scaled ClassSum[Best] value  */
@@ -559,11 +559,11 @@ Boolean Matches(CRule R, DataRec Case)
 
   ForEach(d, 1, R->Size) {
     if (!Satisfies(Case, R->Lhs[d])) {
-      return false;
+      return binfalse;
     }
   }
 
-  return true;
+  return bintrue;
 }
 
 /*************************************************************************/
@@ -657,7 +657,7 @@ void CheckUtilityBand(int *u, RuleNo r, ClassNo Actual, ClassNo Default)
   ClassNo c;
 
   while (*u < UTILITY && r > UtilBand[*u]) {
-    c = SelectClass(Default, false);
+    c = SelectClass(Default, binfalse);
     if (c != Actual) {
       UtilErr[*u]++;
       if (MCost)
@@ -705,7 +705,7 @@ ClassNo BoostClassify(DataRec Case, int MaxTrial)
 
   ForEach(c, 1, MaxClass) { ClassSum[c] = Vote[c] / Total; }
 
-  return SelectClass(Default, false);
+  return SelectClass(Default, binfalse);
 }
 
 ClassNo PredictBoostClassify(DataRec Case, int MaxTrial)
@@ -729,7 +729,7 @@ ClassNo PredictBoostClassify(DataRec Case, int MaxTrial)
 
   ForEach(c, 1, MaxClass) { ClassSum[c] = Vote[c] / Total; }
 
-  Best = SelectClassGen(Default, false, ClassSum);
+  Best = SelectClassGen(Default, binfalse, ClassSum);
 
   Confidence = ClassSum[Best];
 

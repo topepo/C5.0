@@ -254,7 +254,7 @@ void Summary(void)
 /*   -------  */
 {
   int i, f, t;
-  Boolean PrintSize = true;
+  Boolean PrintSize = bintrue;
   float Sum[3], SumSq[3];
   extern char *StdP[], *StdPC[], *Extra[], *ExtraC[];
 
@@ -264,7 +264,7 @@ void Summary(void)
 
   ForEach(f, 0, FOLDS - 1) {
     if (Result[f][0] < 1)
-      PrintSize = false;
+      PrintSize = binfalse;
   }
 
   fprintf(Of, "\n\n[ " T_Summary " ]\n\n");

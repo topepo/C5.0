@@ -329,7 +329,7 @@ void PruneRule(Condition Cond[], ClassNo TargetClass)
   double Base, Gain, Cost = 0;
 
   ForEach(d, 0, NCond) {
-    Deleted[d] = false;
+    Deleted[d] = binfalse;
     Total[d] = Errors[d] = 0;
 
     if (d)
@@ -353,7 +353,7 @@ void PruneRule(Condition Cond[], ClassNo TargetClass)
 
   Verbosity(1, fprintf(Of, "\n  Pruning rule for %s", ClassName[TargetClass]))
 
-      while (true) {
+      while (bintrue) {
     /*  Find the condition, deleting which would most improve
         the pessimistic accuracy of the rule.
         Note: d = 0 means all conditions are satisfied  */
@@ -404,7 +404,7 @@ void PruneRule(Condition Cond[], ClassNo TargetClass)
 
     Verbosity(1, fprintf(Of, "\teliminate test %d\n", Bestid))
 
-        Deleted[Bestd] = true;
+        Deleted[Bestd] = bintrue;
     Remaining--;
     Cost -= CondCost[Bestd] - LogFact[Remaining + 1] + LogFact[Remaining];
 
