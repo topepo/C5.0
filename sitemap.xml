@@ -1,48 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/C5.0.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Class_Probability_Calcs.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/C5.0.html</loc>
-  </url>
-  <url>
-    <loc>/reference/C5.0Control.html</loc>
-  </url>
-  <url>
-    <loc>/reference/C5imp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.party.C5.0.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.C5.0.html</loc>
-  </url>
-  <url>
-    <loc>/reference/predict.C5.0.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary.C5.0.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/C5.0.html</loc></url>
+<url><loc>/articles/Class_Probability_Calcs.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/C5.0.html</loc></url>
+<url><loc>/reference/C5.0Control.html</loc></url>
+<url><loc>/reference/C5imp.html</loc></url>
+<url><loc>/reference/as.party.C5.0.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/plot.C5.0.html</loc></url>
+<url><loc>/reference/predict.C5.0.html</loc></url>
+<url><loc>/reference/summary.C5.0.html</loc></url>
 </urlset>
+

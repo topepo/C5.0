@@ -6,21 +6,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Class Probability Calculations • C50</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Class Probability Calculations">
-<meta property="og:description" content="C50">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -54,7 +53,7 @@
 <li>
   <a href="https://github.com/topepo/C5.0/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -65,7 +64,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -73,7 +72,7 @@
       <h1 data-toc-skip>Class Probability Calculations</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/topepo/C5.0/blob/HEAD/vignettes/Class_Probability_Calcs.Rmd" class="external-link"><code>vignettes/Class_Probability_Calcs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/topepo/C5.0/blob/master/vignettes/Class_Probability_Calcs.Rmd" class="external-link"><code>vignettes/Class_Probability_Calcs.Rmd</code></a></small>
       <div class="hidden name"><code>Class_Probability_Calcs.Rmd</code></div>
 
     </div>
@@ -83,15 +82,15 @@
 <p>This document describes exactly how the model computes class
 probabilities using the data in the terminal nodes. Here is an example
 model using the iris data:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(C50)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> mod <span class="ot">&lt;-</span> <span class="fu">C5.0</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">summary</span>(mod)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(C50)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="sc">&gt;</span> mod <span class="ot">&lt;-</span> <span class="fu">C5.0</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">summary</span>(mod)</span></code></pre></div>
 <pre><code>
 Call:
 C5.0.formula(formula = Species ~ ., data = iris)
 
 
-C5.0 [Release 2.07 GPL Edition]     Wed Feb  8 19:59:28 2023
+C5.0 [Release 2.07 GPL Edition]     Thu Mar 27 10:55:04 2025
 -------------------------------
 
 Class specified by attribute `outcome'
@@ -136,7 +135,7 @@ length of 5.8 and a petal width of 1.6. From this tree, the terminal
 node shows <code>virginica (6/2)</code> which means a predicted class of
 the virginica species with a probability of 4/6 = 0.66667. However, we
 get a different predicted probability:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">predict</span>(mod, iris[<span class="dv">130</span>,], <span class="at">type =</span> <span class="st">"prob"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">predict</span>(mod, iris[<span class="dv">130</span>,], <span class="at">type =</span> <span class="st">"prob"</span>)</span></code></pre></div>
 <pre><code>        setosa versicolor virginica
 130 0.04761905  0.3333333 0.6190476</code></pre>
 <p>When we wanted to describe the technical aspects of the <a href="https://www.rulequest.com/see5-info.html" class="external-link">C5.0</a> and <a href="https://www.rulequest.com/cubist-info.html" class="external-link">cubist</a> models, the
@@ -150,28 +149,28 @@ would not be unreasonable to assume that C5.0 uses <a href="https://en.wikipedia
 sources, a similar reweighting scheme is used but it does not appear to
 be the same.</p>
 <p>For classifying new samples, the C sources have</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ClassNo PredictTreeClassify<span class="op">(</span>DataRec Case<span class="op">,</span> Tree DecisionTree<span class="op">){</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  ClassNo   c<span class="op">,</span> C<span class="op">;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span>    Prior<span class="op">;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*  Save total leaf count in ClassSum[0]  */</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> MaxClass<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  PredictFindLeaf<span class="op">(</span>Case<span class="op">,</span> DecisionTree<span class="op">,</span> Nil<span class="op">,</span> <span class="fl">1.0</span><span class="op">);</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  C <span class="op">=</span> SelectClassGen<span class="op">(</span>DecisionTree<span class="op">-&gt;</span>Leaf<span class="op">,</span> <span class="op">(</span>Boolean<span class="op">)(</span>MCost <span class="op">!=</span> Nil<span class="op">),</span> ClassSum<span class="op">);</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*  Set all confidence values in ClassSum  */</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> MaxClass<span class="op">){</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    Prior <span class="op">=</span> DecisionTree<span class="op">-&gt;</span>ClassDist<span class="op">[</span>c<span class="op">]</span> <span class="op">/</span> DecisionTree<span class="op">-&gt;</span>Cases<span class="op">;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">*</span> ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">+</span> Prior<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  Confidence <span class="op">=</span> ClassSum<span class="op">[</span>C<span class="op">];</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> C<span class="op">;</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>ClassNo PredictTreeClassify<span class="op">(</span>DataRec Case<span class="op">,</span> Tree DecisionTree<span class="op">){</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  ClassNo   c<span class="op">,</span> C<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="dt">double</span>    Prior<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  </span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="co">/*  Save total leaf count in ClassSum[0]  */</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> MaxClass<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  PredictFindLeaf<span class="op">(</span>Case<span class="op">,</span> DecisionTree<span class="op">,</span> Nil<span class="op">,</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  </span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  C <span class="op">=</span> SelectClassGen<span class="op">(</span>DecisionTree<span class="op">-&gt;</span>Leaf<span class="op">,</span> <span class="op">(</span>Boolean<span class="op">)(</span>MCost <span class="op">!=</span> Nil<span class="op">),</span> ClassSum<span class="op">);</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  </span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>  <span class="co">/*  Set all confidence values in ClassSum  */</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  ForEach<span class="op">(</span>c<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> MaxClass<span class="op">){</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    Prior <span class="op">=</span> DecisionTree<span class="op">-&gt;</span>ClassDist<span class="op">[</span>c<span class="op">]</span> <span class="op">/</span> DecisionTree<span class="op">-&gt;</span>Cases<span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>    ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">*</span> ClassSum<span class="op">[</span>c<span class="op">]</span> <span class="op">+</span> Prior<span class="op">)</span> <span class="op">/</span> <span class="op">(</span>ClassSum<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>  Confidence <span class="op">=</span> ClassSum<span class="op">[</span>C<span class="op">];</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  </span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>  <span class="cf">return</span> C<span class="op">;</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Here:</p>
 <ul>
 <li>The predicted probability is the “confidence” value</li>
@@ -228,16 +227,16 @@ defined for two classes)</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
