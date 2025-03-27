@@ -34,7 +34,7 @@
 #include <signal.h>
 
 #include <sys/time.h>
-#include <sys/unistd.h>
+#include <unistd.h>
 
 #include "redefine.h"
 #include "transform.h"
