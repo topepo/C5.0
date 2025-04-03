@@ -317,7 +317,7 @@ void PopCondition(void)
 /*                                                                       */
 /*************************************************************************/
 
-#define TI(a, b) (((a) + (b)) * Log((a) + (b)) - (a)*Log(a) - (b)*Log(b))
+#define TI(a, b) (((a) + (b)) * Log((a) + (b)) - (a) * Log(a) - (b) * Log(b))
 
 void PruneRule(Condition Cond[], ClassNo TargetClass)
 /*   ---------  */

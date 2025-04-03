@@ -79,10 +79,10 @@ char ProcessOption(int Argc, char *Argv[], char *Options)
 
   for (i = 0; Options[i]; i++) {
     if (Options[i] == Option[1]) {
-      OptArg = (char *)(Options[i + 1] != '+'
-                            ? Nil
-                            : Option[2] ? Option + 2
-                                        : OptNo < Argc ? Argv[OptNo++] : "0");
+      OptArg = (char *)(Options[i + 1] != '+' ? Nil
+                        : Option[2]           ? Option + 2
+                        : OptNo < Argc        ? Argv[OptNo++]
+                                              : "0");
       return Option[1];
     }
   }
@@ -104,10 +104,10 @@ char PredictProcessOption(int Argc, char *Argv[], char *Options)
 
   for (i = 0; Options[i]; i++) {
     if (Options[i] == Option[1]) {
-      OptArg = (char *)(Options[i + 1] != '+'
-                            ? Nil
-                            : Option[2] ? Option + 2
-                                        : OptNo < Argc ? Argv[OptNo++] : "0");
+      OptArg = (char *)(Options[i + 1] != '+' ? Nil
+                        : Option[2]           ? Option + 2
+                        : OptNo < Argc        ? Argv[OptNo++]
+                                              : "0");
       return Option[1];
     }
   }
@@ -319,165 +319,165 @@ void Error(int ErrNo, String S1, String S2)
     fprintf(Of, "\n");
 
   if (ErrNo == NOFILE || ErrNo == NOMEM || ErrNo == MODELFILE) {
-    snprintf(Msg, size,"*** ");
+    snprintf(Msg, size, "*** ");
   } else {
-    snprintf(Msg, size,TX_Line(LineNo, Fn));
+    snprintf(Msg, size, TX_Line(LineNo, Fn));
   }
   Msg += strlen(Buffer);
 
   switch (ErrNo) {
   case NOFILE:
-    snprintf(Msg, size,E_NOFILE(Fn, S2));
+    snprintf(Msg, size, E_NOFILE(Fn, S2));
     Quit = bintrue;
     break;
 
   case BADCLASSTHRESH:
-    snprintf(Msg, size,E_BADCLASSTHRESH, S1);
+    snprintf(Msg, size, E_BADCLASSTHRESH, S1);
     break;
 
   case LEQCLASSTHRESH:
-    snprintf(Msg, size,E_LEQCLASSTHRESH, S1);
+    snprintf(Msg, size, E_LEQCLASSTHRESH, S1);
     break;
 
   case BADATTNAME:
-    snprintf(Msg, size,E_BADATTNAME, S1);
+    snprintf(Msg, size, E_BADATTNAME, S1);
     break;
 
   case EOFINATT:
-    snprintf(Msg, size,E_EOFINATT, S1);
+    snprintf(Msg, size, E_EOFINATT, S1);
     break;
 
   case SINGLEATTVAL:
-    snprintf(Msg, size,E_SINGLEATTVAL(S1, S2));
+    snprintf(Msg, size, E_SINGLEATTVAL(S1, S2));
     break;
 
   case DUPATTNAME:
-    snprintf(Msg, size,E_DUPATTNAME, S1);
+    snprintf(Msg, size, E_DUPATTNAME, S1);
     break;
 
   case CWTATTERR:
-    snprintf(Msg, size,E_CWTATTERR);
+    snprintf(Msg, size, E_CWTATTERR);
     break;
 
   case BADATTVAL:
-    snprintf(Msg, size,E_BADATTVAL(S2, S1));
+    snprintf(Msg, size, E_BADATTVAL(S2, S1));
     break;
 
   case BADNUMBER:
-    snprintf(Msg, size,E_BADNUMBER(S1));
+    snprintf(Msg, size, E_BADNUMBER(S1));
     break;
 
   case BADCLASS:
-    snprintf(Msg, size,E_BADCLASS, S2);
+    snprintf(Msg, size, E_BADCLASS, S2);
     break;
 
   case BADCOSTCLASS:
-    snprintf(Msg, size,E_BADCOSTCLASS, S1);
+    snprintf(Msg, size, E_BADCOSTCLASS, S1);
     Quit = bintrue;
     break;
 
   case BADCOST:
-    snprintf(Msg, size,E_BADCOST, S1);
+    snprintf(Msg, size, E_BADCOST, S1);
     Quit = bintrue;
     break;
 
   case NOMEM:
-    snprintf(Msg, size,E_NOMEM);
+    snprintf(Msg, size, E_NOMEM);
     Quit = bintrue;
     break;
 
   case TOOMANYVALS:
-    snprintf(Msg, size,E_TOOMANYVALS(S1, (int)(intptr_t)S2));
+    snprintf(Msg, size, E_TOOMANYVALS(S1, (int)(intptr_t)S2));
     break;
 
   case BADDISCRETE:
-    snprintf(Msg, size,E_BADDISCRETE, S1);
+    snprintf(Msg, size, E_BADDISCRETE, S1);
     break;
 
   case NOTARGET:
-    snprintf(Msg, size,E_NOTARGET, S1);
+    snprintf(Msg, size, E_NOTARGET, S1);
     Quit = bintrue;
     break;
 
   case BADCTARGET:
-    snprintf(Msg, size,E_BADCTARGET, S1);
+    snprintf(Msg, size, E_BADCTARGET, S1);
     Quit = bintrue;
     break;
 
   case BADDTARGET:
-    snprintf(Msg, size,E_BADDTARGET, S1);
+    snprintf(Msg, size, E_BADDTARGET, S1);
     Quit = bintrue;
     break;
 
   case LONGNAME:
-    snprintf(Msg, size,E_LONGNAME);
+    snprintf(Msg, size, E_LONGNAME);
     Quit = bintrue;
     break;
 
   case HITEOF:
-    snprintf(Msg, size,E_HITEOF);
+    snprintf(Msg, size, E_HITEOF);
     break;
 
   case MISSNAME:
-    snprintf(Msg, size,E_MISSNAME, S2);
+    snprintf(Msg, size, E_MISSNAME, S2);
     break;
 
   case BADTSTMP:
-    snprintf(Msg, size,E_BADTSTMP(S2, S1));
+    snprintf(Msg, size, E_BADTSTMP(S2, S1));
     break;
 
   case BADDATE:
-    snprintf(Msg, size,E_BADDATE(S2, S1));
+    snprintf(Msg, size, E_BADDATE(S2, S1));
     break;
 
   case BADTIME:
-    snprintf(Msg, size,E_BADTIME(S2, S1));
+    snprintf(Msg, size, E_BADTIME(S2, S1));
     break;
 
   case UNKNOWNATT:
-    snprintf(Msg, size,E_UNKNOWNATT, S1);
+    snprintf(Msg, size, E_UNKNOWNATT, S1);
     break;
 
   case BADDEF1:
-    snprintf(Msg, size,E_BADDEF1(AttName[MaxAtt], S1, S2));
+    snprintf(Msg, size, E_BADDEF1(AttName[MaxAtt], S1, S2));
     break;
 
   case BADDEF2:
-    snprintf(Msg, size,E_BADDEF2(AttName[MaxAtt], S1, S2));
+    snprintf(Msg, size, E_BADDEF2(AttName[MaxAtt], S1, S2));
     break;
 
   case SAMEATT:
-    snprintf(Msg, size,E_SAMEATT(AttName[MaxAtt], S1));
+    snprintf(Msg, size, E_SAMEATT(AttName[MaxAtt], S1));
     WarningOnly = bintrue;
     break;
 
   case BADDEF3:
-    snprintf(Msg, size,E_BADDEF3, AttName[MaxAtt]);
+    snprintf(Msg, size, E_BADDEF3, AttName[MaxAtt]);
     break;
 
   case BADDEF4:
-    snprintf(Msg, size,E_BADDEF4, AttName[MaxAtt]);
+    snprintf(Msg, size, E_BADDEF4, AttName[MaxAtt]);
     WarningOnly = bintrue;
     break;
 
   case MODELFILE:
-    snprintf(Msg, size,EX_MODELFILE(Fn));
-    snprintf(Msg, size,"    (%s `%s')\n", S1, S2);
+    snprintf(Msg, size, EX_MODELFILE(Fn));
+    snprintf(Msg, size, "    (%s `%s')\n", S1, S2);
     Quit = bintrue;
     break;
 
   case BADTRIALS:
-    snprintf(Msg, size,S1, S2);
+    snprintf(Msg, size, S1, S2);
     Quit = bintrue;
     break;
 
   case BADOPTION:
-    snprintf(Msg, size,S1, S2);
+    snprintf(Msg, size, S1, S2);
     Quit = bintrue;
     break;
 
   case OLDFORMAT:
-    snprintf(Msg, size,S1, S2);
+    snprintf(Msg, size, S1, S2);
     Quit = bintrue;
     break;
   }
@@ -618,8 +618,8 @@ int DateToDay(String DS) /*  Day 1 is 0000/03/01  */
       Year < 0 || Month < 1 || Day < 1 || Month > 12 || Day > 31 ||
       (Day > 30 && (Month == 4 || Month == 6 || Month == 9 || Month == 11)) ||
       (Month == 2 &&
-          (Day > 29 ||
-           (Day > 28 && (Year % 4 != 0 || (Year % 100 == 0 && Year % 400 != 0)))))) {
+       (Day > 29 || (Day > 28 && (Year % 4 != 0 ||
+                                  (Year % 100 == 0 && Year % 400 != 0)))))) {
     return 0;
   }
 
@@ -649,8 +649,8 @@ void DayToDate(int Day, String Date, size_t DT_size)
     Year--;
     Day = OrigDay - (Year * 365 + Year / 4 - Year / 100 + Year / 400);
   } else if (Day > 366 ||
-             (Day == 366 && ((Year + 1) % 4 != 0 ||
-                            ((Year + 1) % 100 == 0 && (Year + 1) % 400 != 0)))) {
+             (Day == 366 && ((Year + 1) % 4 != 0 || ((Year + 1) % 100 == 0 &&
+                                                     (Year + 1) % 400 != 0)))) {
     Year++;
     Day = OrigDay - (Year * 365 + Year / 4 - Year / 100 + Year / 400);
   }
@@ -668,9 +668,8 @@ void DayToDate(int Day, String Date, size_t DT_size)
     Year++;
   }
 
-  snprintf(Date, DT_size,
-           "%d/%d%d/%d%d",
-           Year, Month / 10, Month % 10, Day / 10, Day % 10);
+  snprintf(Date, DT_size, "%d/%d%d/%d%d", Year, Month / 10, Month % 10,
+           Day / 10, Day % 10);
 }
 
 /*************************************************************************/
@@ -707,9 +706,8 @@ void SecsToTime(int Secs, String Time, size_t DT_size)
   Mins = (Secs % 3600) / 60;
   Secs = Secs % 60;
 
-  snprintf(Time, DT_size,
-           "%d%d:%d%d:%d%d",
-           Hour / 10, Hour % 10, Mins / 10, Mins % 10, Secs / 10, Secs % 10);
+  snprintf(Time, DT_size, "%d%d:%d%d:%d%d", Hour / 10, Hour % 10, Mins / 10,
+           Mins % 10, Secs / 10, Secs % 10);
 }
 
 void SetTSBase(int y)
@@ -758,7 +756,7 @@ int TStampToMins(String TS)
 /*************************************************************************/
 
 void CValToStr(ContValue CV, Attribute Att, String DS, size_t DS_size)
-  /*   ---------  */
+/*   ---------  */
 {
   int Mins;
 
@@ -1008,7 +1006,7 @@ int UTF8CharWidth(unsigned char *U)
  * Markus Kuhn -- 2000-02-08 -- public domain
  */
 
-//#include <wchar.h>
+// #include <wchar.h>
 
 /* These functions define the column width of an ISO 10646 character
  * as follows:

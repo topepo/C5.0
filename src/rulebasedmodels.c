@@ -136,13 +136,12 @@ void initglobals(void)
   Bar = 0; /* Bar[a]  = best threshold for contin att a */
 
   /* GlobalBaseInfo; base information before split */
-  Bell = 0;       /* table of Bell numbers for subsets */
+  Bell = 0; /* table of Bell numbers for subsets */
 
   Tested = 0; /* Tested[a] = att a already tested */
 
   Subset = 0;  /* Subset[a][s] = subset s for att a */
   Subsets = 0; /* Subsets[a] = no. subsets for att a */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -213,16 +212,16 @@ void setglobals(int subset, int rules, int utility, int trials, int winnow,
 
   SUBSET = subset != 0 ? bintrue : binfalse;               /* Logical */
   RULES = rules != 0 ? bintrue : binfalse;                 /* Logical */
-  UTILITY = utility;                                 /* Int */
-  TRIALS = trials;                                   /* Int */
+  UTILITY = utility;                                       /* Int */
+  TRIALS = trials;                                         /* Int */
   BOOST = trials > 1 ? bintrue : binfalse;                 /* Logical */
   EARLYSTOPPING = earlyStopping != 0 ? bintrue : binfalse; /* Logical */
   WINNOW = winnow != 0 ? bintrue : binfalse;               /* Logical */
-  SAMPLE = sample;                                   /* Real */
-  KRInit = seed;                                     /* Int */
+  SAMPLE = sample;                                         /* Real */
+  KRInit = seed;                                           /* Int */
   GLOBAL = noGlobalPruning != 0 ? binfalse : bintrue;      /* Logical */
-  CF = cf;                                           /* Real */
-  MINITEMS = minCases;                               /* Int */
+  CF = cf;                                                 /* Real */
+  MINITEMS = minCases;                                     /* Int */
   PROBTHRESH = fuzzyThreshold != 0 ? bintrue : binfalse;   /* Logical */
 }
 

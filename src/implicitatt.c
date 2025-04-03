@@ -53,12 +53,12 @@ AttValue _UNK, /* quasi-constant for unknown value */
 #define FailSyn(Msg)                                                           \
   {                                                                            \
     DefSyntaxError(Msg);                                                       \
-    return binfalse;                                                              \
+    return binfalse;                                                           \
   }
 #define FailSem(Msg)                                                           \
   {                                                                            \
     DefSemanticsError(Fi, Msg, OpCode);                                        \
-    return binfalse;                                                              \
+    return binfalse;                                                           \
   }
 
 typedef union _xstack_elt {
@@ -282,18 +282,13 @@ Boolean SExpression(void)
     if (!AExpression())
       FailSyn("expression");
 
-    DumpOp((o == 0
-                ? OP_GE
-                : o == 1 ? OP_LE
-                         : o == 4 ? OP_GT
-                                  : o == 5 ? OP_LT
-                                           : o == 2 || o == 3
-                                                 ? (TStack[TSN - 1].Type == 'S'
-                                                        ? OP_SNE
-                                                        : OP_NE)
-                                                 : (TStack[TSN - 1].Type == 'S'
-                                                        ? OP_SEQ
-                                                        : OP_EQ)),
+    DumpOp((o == 0   ? OP_GE
+            : o == 1 ? OP_LE
+            : o == 4 ? OP_GT
+            : o == 5 ? OP_LT
+            : o == 2 || o == 3
+                ? (TStack[TSN - 1].Type == 'S' ? OP_SNE : OP_NE)
+                : (TStack[TSN - 1].Type == 'S' ? OP_SEQ : OP_EQ)),
            Fi);
   }
 
@@ -926,16 +921,20 @@ AttValue EvaluateDef(Definition D, DataRec Case)
     case OP_SEQ:
       sv1 = XStack[XSN - 2].sval;
       sv2 = XStack[XSN - 1].sval;
-      XStack[XSN - 2].dval =
-          (!sv1 && !sv2 ? 2 : !sv1 || !sv2 ? 3 : !strcmp(sv1, sv2) ? 2 : 3);
+      XStack[XSN - 2].dval = (!sv1 && !sv2        ? 2
+                              : !sv1 || !sv2      ? 3
+                              : !strcmp(sv1, sv2) ? 2
+                                                  : 3);
       XSN--;
       break;
 
     case OP_SNE:
       sv1 = XStack[XSN - 2].sval;
       sv2 = XStack[XSN - 1].sval;
-      XStack[XSN - 2].dval =
-          (!sv1 && !sv2 ? 3 : !sv1 || !sv2 ? 2 : strcmp(sv1, sv2) ? 2 : 3);
+      XStack[XSN - 2].dval = (!sv1 && !sv2       ? 3
+                              : !sv1 || !sv2     ? 2
+                              : strcmp(sv1, sv2) ? 2
+                                                 : 3);
       XSN--;
       break;
 

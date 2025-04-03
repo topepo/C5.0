@@ -31,7 +31,7 @@
 
 /*  General stuff  */
 
-//#define UTF8    /* uncomment if using UTF-8 */
+// #define UTF8    /* uncomment if using UTF-8 */
 
 #ifdef UTF8
 #define CharWidth(S) UTF8CharWidth(S)

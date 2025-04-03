@@ -98,9 +98,8 @@ void ResubErrs(Tree T, CaseNo Fp, CaseNo Lp)
 
     BranchCases = CountCases(Bp + Missing, Ep);
 
-    Factor = (!Missing ? 0
-                       : !CostWeights
-                             ? BranchCases / KnownCases
+    Factor = (!Missing       ? 0
+              : !CostWeights ? BranchCases / KnownCases
                              : SumNocostWeights(Bp + Missing, Ep) / KnownCases);
 
     if (BranchCases + Factor * MissingCases >= MinLeaf) {

@@ -107,9 +107,11 @@ void PrintDistribution(Attribute Att, DiscrValue MinVal, DiscrValue MaxVal,
 
   ForEach(v, MinVal, MaxVal) {
     if (ShowNames) {
-      Val = (!v ? "unknown"
-                : MaxAttVal[Att] ? AttValName[Att][v]
-                                 : v == 1 ? "N/A" : v == 2 ? "below" : "above");
+      Val = (!v               ? "unknown"
+             : MaxAttVal[Att] ? AttValName[Att][v]
+             : v == 1         ? "N/A"
+             : v == 2         ? "below"
+                              : "above");
       fprintf(Of, "\t\t[%-7.7s:", Val);
     } else {
       fprintf(Of, "\t\t[%-7d:", v);

@@ -334,12 +334,13 @@ void GetNames(FILE *Nf)
       ClassName[1] = strdup(Buffer);
 
       ForEach(c, 2, MaxClass - 1) {
-        snprintf(Buffer, size, "%g < %s <= %g", ClassThresh[c - 1], AttName[ClassAtt],
-                ClassThresh[c]);
+        snprintf(Buffer, size, "%g < %s <= %g", ClassThresh[c - 1],
+                 AttName[ClassAtt], ClassThresh[c]);
         ClassName[c] = strdup(Buffer);
       }
 
-      snprintf(Buffer, size, "%s > %g", AttName[ClassAtt], ClassThresh[MaxClass - 1]);
+      snprintf(Buffer, size, "%s > %g", AttName[ClassAtt],
+               ClassThresh[MaxClass - 1]);
       ClassName[MaxClass] = strdup(Buffer);
     }
   }

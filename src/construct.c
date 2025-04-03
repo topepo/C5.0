@@ -487,8 +487,9 @@ void EvaluateSingle(int Flags)
     if (RULES) {
       PredClass = RuleClassify(Case[i], RuleSet[0]);
     } else {
-      Verbosity(1, PredClass = TreeClassify(Case[i], Raw[0]);
-                if (PredClass != RealClass) { RawErrs++; })
+      Verbosity(
+          1, PredClass = TreeClassify(Case[i], Raw[0]);
+          if (PredClass != RealClass) { RawErrs++; })
 
           PredClass = TreeClassify(Case[i], Pruned[0]);
     }
@@ -713,7 +714,9 @@ void RecordAttUsage(DataRec Case, int *Usage)
       Usage[Att]++;
 
       if (AttDef[Att]) {
-        ForEach(i, 1, AttDefUses[Att][0]) { Tested[AttDefUses[Att][i]] = bintrue; }
+        ForEach(i, 1, AttDefUses[Att][0]) {
+          Tested[AttDefUses[Att][i]] = bintrue;
+        }
       }
     }
   }

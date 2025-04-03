@@ -195,9 +195,7 @@ void InvertFires(void)
   // ForEach(i, 0, MaxCase) { CovByPtr[i] += (size_t)CovByBlock; }
 
   size_t CovByBlockSize = 0;
-  ForEach(i, 1, MaxCase + 1) {
-    CovByBlockSize += CovBy[i - 1] + Extra;
-  }
+  ForEach(i, 1, MaxCase + 1) { CovByBlockSize += CovBy[i - 1] + Extra; }
   CovByBlock = Alloc(CovByBlockSize, Byte);
 
   CovByPtr[0] = CovByBlock;
