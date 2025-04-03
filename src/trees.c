@@ -400,7 +400,9 @@ void Indent(int Sh, int BrNo)
   fprintf(Of, "\n");
   for (i = 1; i <= Sh; i++) {
     fprintf(Of, "%s",
-            (i == Sh && BrNo == 1 ? ":..." : LastBranch[i] ? "    " : ":   "));
+            (i == Sh && BrNo == 1 ? ":..."
+             : LastBranch[i]      ? "    "
+                                  : ":   "));
   }
 }
 

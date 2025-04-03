@@ -35,7 +35,7 @@
 #include "redefine.h"
 #include "transform.h"
 
-#define PartInfo(n) (-(n)*Log((n) / GEnv.Cases))
+#define PartInfo(n) (-(n) * Log((n) / GEnv.Cases))
 
 /*************************************************************************/
 /*            */

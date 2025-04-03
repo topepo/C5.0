@@ -75,8 +75,8 @@ void Prune(Tree T)
   /*  Local pruning phase  */
 
   Options = (Now == WINNOWATTS ? (UPDATE | REGROW)
-                               : Regrow ? (UPDATE | REGROW | REPORTPROGRESS)
-                                        : (UPDATE | REPORTPROGRESS));
+             : Regrow          ? (UPDATE | REGROW | REPORTPROGRESS)
+                               : (UPDATE | REPORTPROGRESS));
   if (UnitWeights)
     Options |= UNITWEIGHTS;
 
@@ -232,9 +232,8 @@ void EstimateErrs(Tree T, CaseNo Fp, CaseNo Lp, int Sh, int Flags)
 
     BranchCases[v] = CountCases(Bp + Missing, Ep);
 
-    Factor = (!Missing ? 0
-                       : !CostWeights
-                             ? BranchCases[v] / KnownCases
+    Factor = (!Missing       ? 0
+              : !CostWeights ? BranchCases[v] / KnownCases
                              : SumNocostWeights(Bp + Missing, Ep) / KnownCases);
 
     if ((BranchCases[v] += Factor * MissingCases) >= MinLeaf) {

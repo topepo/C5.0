@@ -197,9 +197,9 @@ the selected test go down branch 0; at classification time,
 any case with an unknown outcome for the selected test also
 goes to branch 0.  */
 
-  Node->Forks =
-      (Test[TI]->NodeType == BrDiscr ? MaxAttVal[Test[TI]->Tested]
-                                     : Test[TI]->NodeType == BrSubset ? 1 : 3);
+  Node->Forks = (Test[TI]->NodeType == BrDiscr    ? MaxAttVal[Test[TI]->Tested]
+                 : Test[TI]->NodeType == BrSubset ? 1
+                                                  : 3);
 
   Node->Branch = Alloc(Node->Forks + 1, RuleTree);
 

@@ -516,11 +516,10 @@ int FindOutcome(DataRec Case, Condition OneCond)
 
   case BrThresh: /* test of continuous attribute */
 
-    Outcome =
-        (Unknown(Case, Att)
-             ? -1
-             : NotApplic(Case, Att) ? 1
-                                    : CVal(Case, Att) <= OneCond->Cut ? 2 : 3);
+    Outcome = (Unknown(Case, Att)                ? -1
+               : NotApplic(Case, Att)            ? 1
+               : CVal(Case, Att) <= OneCond->Cut ? 2
+                                                 : 3);
     break;
 
   case BrSubset: /* subset test on discrete attribute  */
@@ -828,8 +827,8 @@ ClassNo Classify(DataRec Case)
 {
 
   return (TRIALS > 1 ? BoostClassify(Case, TRIALS - 1)
-                     : RULES ? RuleClassify(Case, RuleSet[0])
-                             : TreeClassify(Case, Pruned[0]));
+          : RULES    ? RuleClassify(Case, RuleSet[0])
+                     : TreeClassify(Case, Pruned[0]));
 }
 
 ClassNo PredictClassify(DataRec Case)
@@ -838,8 +837,8 @@ ClassNo PredictClassify(DataRec Case)
   NRulesUsed = 0;
 
   return (TRIALS > 1 ? PredictBoostClassify(Case, TRIALS - 1)
-                     : RULES ? PredictRuleClassify(Case, RuleSet[0])
-                             : PredictTreeClassify(Case, Pruned[0]));
+          : RULES    ? PredictRuleClassify(Case, RuleSet[0])
+                     : PredictTreeClassify(Case, Pruned[0]));
 }
 
 /*************************************************************************/
@@ -853,14 +852,11 @@ ClassNo PredictClassify(DataRec Case)
 float Interpolate(Tree T, ContValue Val)
 /*    -----------  */
 {
-  return (Val <= T->Lower
-              ? 1.0
-              : Val >= T->Upper
-                    ? 0.0
-                    : Val <= T->Mid ? 1 - 0.5 * (Val - T->Lower) /
-                                              (T->Mid - T->Lower + 1E-6)
-                                    : 0.5 - 0.5 * (Val - T->Mid) /
-                                                (T->Upper - T->Mid + 1E-6));
+  return (Val <= T->Lower   ? 1.0
+          : Val >= T->Upper ? 0.0
+          : Val <= T->Mid
+              ? 1 - 0.5 * (Val - T->Lower) / (T->Mid - T->Lower + 1E-6)
+              : 0.5 - 0.5 * (Val - T->Mid) / (T->Upper - T->Mid + 1E-6));
 }
 
 /*************************************************************************/
@@ -872,14 +868,11 @@ float Interpolate(Tree T, ContValue Val)
 float PredictInterpolate(Tree T, ContValue Val)
 /*    -----------  */
 {
-  return (
-      Val <= T->Lower
-          ? 1.0
-          : Val >= T->Upper
-                ? 0.0
-                : Val <= T->Cut
-                      ? 1 - 0.5 * (Val - T->Lower) / (T->Cut - T->Lower + 1E-10)
-                      : 0.5 * (Val - T->Upper) / (T->Cut - T->Upper + 1E-10));
+  return (Val <= T->Lower   ? 1.0
+          : Val >= T->Upper ? 0.0
+          : Val <= T->Cut
+              ? 1 - 0.5 * (Val - T->Lower) / (T->Cut - T->Lower + 1E-10)
+              : 0.5 * (Val - T->Upper) / (T->Cut - T->Upper + 1E-10));
 }
 
 /*************************************************************************/

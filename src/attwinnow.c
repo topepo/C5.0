@@ -251,10 +251,11 @@ float TrialTreeCost(Boolean FirstTime)
     ForEach(Att, 1, MaxAtt) {
 
       if (!Used[Att]) {
-        Verbosity(1,
-                  if (Att != ClassAtt && !Skip(Att)) {
-                    fprintf(Of, "  %s not used\n", AttName[Att]);
-                  })
+        Verbosity(
+            1,
+            if (Att != ClassAtt && !Skip(Att)) {
+              fprintf(Of, "  %s not used\n", AttName[Att]);
+            })
 
             if (Split[Att]) {
           AttImp[Att] = 1;
@@ -287,7 +288,7 @@ float TrialTreeCost(Boolean FirstTime)
 
 /*************************************************************************/
 /*                                                                       */
-/* Determine the error rate or cost of T on cases Fp through Lp  */
+/* Determine the error rate or cost of T on cases Fp through Lp          */
 /*                                                                       */
 /*************************************************************************/
 
@@ -317,7 +318,7 @@ float ErrCost(Tree T, CaseNo Fp, CaseNo Lp)
 
 /*************************************************************************/
 /*                                                                       */
-/* Find attributes used in tree T      */
+/* Find attributes used in tree T                                        */
 /*                                                                       */
 /*************************************************************************/
 
