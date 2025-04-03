@@ -1,7 +1,7 @@
 Type: Package
 Package: C50
 Title: C5.0 Decision Trees and Rule-Based Models
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: c(
     person("Max", "Kuhn", , "mxkuhn@gmail.com", role = c("aut", "cre")),
     person("Steve", "Weston", role = "ctb"),
