@@ -1,4 +1,4 @@
-# C50 (development version)
+# C50 0.2.0
 
 * Updated C code to stop overwriting keyword symbols. 
 
