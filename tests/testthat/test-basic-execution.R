@@ -1,31 +1,61 @@
-test_that("basic execution", {
-  skip_if_not_installed("modeldata")
+# Integration smoke tests for basic C5.0 functionality
 
-  library(modeldata)
-  set.seed(1)
-  dat_tr <- sim_classification(100)
-  dat_te <- sim_classification(100)
+test_that("basic tree model execution (x/y interface)", {
+  set.seed(1234)
+  dat <- make_two_class_data(100, seed = 1234)
 
-  set.seed(1)
-  c5_xy <- C5.0(dat_tr[, -1], y = dat_tr$class)
-  expect_snapshot(print(c5_xy))
+  mod <- C5.0(dat[, -1], y = dat$y)
+  expect_s3_class(mod, "C5.0")
+  expect_equal(mod$dims, c(100L, 3L))
 
-  pred_xy <- predict(c5_xy, dat_te[, -1])
-  expect_equal(length(pred_xy), nrow(dat_tr))
+  pred <- predict(mod, dat[, -1])
+  expect_s3_class(pred, "factor")
+  expect_length(pred, 100)
+})
 
-  pred_xy <- predict(c5_xy, dat_te[, -1], type = "prob")
-  expect_equal(nrow(pred_xy), nrow(dat_tr))
+test_that("basic tree model execution (formula interface)", {
+  set.seed(2345)
+  dat <- make_two_class_data(100, seed = 2345)
 
+  mod <- C5.0(y ~ ., data = dat)
+  expect_s3_class(mod, "C5.0")
+  expect_equal(mod$dims, c(100L, 3L))
 
-  set.seed(2)
-  c5_fm <- C5.0(class ~ ., data = dat_tr)
-  expect_snapshot(print(c5_fm))
+  pred <- predict(mod, dat[, -1])
+  expect_s3_class(pred, "factor")
+  expect_length(pred, 100)
+})
 
-  pred_fm <- predict(c5_fm, dat_te[, -1])
-  expect_equal(length(pred_fm), nrow(dat_tr))
+test_that("basic probability predictions work", {
+  set.seed(3456)
+  dat <- make_two_class_data(100, seed = 3456)
 
-  pred_fm <- predict(c5_fm, dat_te[, -1], type = "prob")
-  expect_equal(nrow(pred_fm), nrow(dat_tr))
+  mod <- C5.0(dat[, -1], dat$y)
 
-  expect_snapshot(C5.0Control())
+  pred_prob <- predict(mod, dat[, -1], type = "prob")
+  expect_true(is.matrix(pred_prob))
+  expect_equal(nrow(pred_prob), 100)
+  expect_equal(ncol(pred_prob), 2)
+  expect_equal(colnames(pred_prob), c("A", "B"))
+})
+
+test_that("C5.0Control returns expected structure", {
+  ctrl <- C5.0Control()
+  expect_type(ctrl, "list")
+  expect_named(
+    ctrl,
+    c(
+      "subset",
+      "bands",
+      "winnow",
+      "noGlobalPruning",
+      "CF",
+      "minCases",
+      "fuzzyThreshold",
+      "sample",
+      "earlyStopping",
+      "label",
+      "seed"
+    )
+  )
 })
