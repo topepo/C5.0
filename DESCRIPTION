@@ -23,16 +23,18 @@ URL: https://topepo.github.io/C5.0/, https://github.com/topepo/C5.0/
 BugReports: https://github.com/topepo/C5.0/issues
 Depends: 
     R (>= 2.10.0)
-Imports: 
+Imports:
+    cli,
     Cubist (>= 0.3.0),
     partykit,
-    tibble
+    rlang
 Suggests: 
     covr,
     knitr,
     modeldata,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble
 VignetteBuilder: 
     knitr
 Biarch: true

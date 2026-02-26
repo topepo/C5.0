@@ -4,5 +4,5 @@
       C5imp(mod, metric = "invalid")
     Condition
       Error in `C5imp()`:
-      ! metric should be either 'usage' or 'splits'
+      ! `metric` must be "usage" or "splits", not a string.
 

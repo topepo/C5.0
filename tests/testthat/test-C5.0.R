@@ -538,3 +538,14 @@ test_that("C5.0 with boosting and early stopping disabled runs more trials", {
   # Without early stopping, should use all requested trials
   expect_equal(mod_no_early$trials["Actual"], c(Actual = 20L))
 })
+
+
+test_that("failed model", {
+  iris_zv <- iris
+  iris_zv$zv <- "a"
+
+  expect_snapshot(
+    C5.0(Species ~ zv, data = iris_zv),
+    error = TRUE
+  )
+})

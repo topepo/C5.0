@@ -68,6 +68,7 @@
 #' @export
 #' @rawNamespace export(predict.C5.0)
 #' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
+#' @importFrom cli cli_abort cli_warn
 predict.C5.0 <-
   function(
     object,
@@ -78,21 +79,16 @@ predict.C5.0 <-
     ...
   ) {
     if (!(type %in% c("class", "prob"))) {
-      stop("type should be either 'class' or 'prob'", call. = FALSE)
+      cli_abort("{.arg type} must be {.val class} or {.val prob}, not {.obj_type_friendly {type}}.")
     }
     if (
       object$cost != "" &
         type == "prob"
     ) {
-      stop(
-        "confidence values (i.e. class probabilities) should ",
-        "
-           not be used with costs",
-        call. = FALSE
-      )
+      cli_abort("Confidence values (i.e. class probabilities) should not be used with costs.")
     }
     if (is.null(newdata)) {
-      stop("newdata must be non-null", call. = FALSE)
+      cli_abort("{.arg newdata} must not be {.val NULL}.")
     }
 
     if (!is.null(object$Terms)) {
@@ -109,23 +105,17 @@ predict.C5.0 <-
     }
 
     if (is.null(colnames(newdata))) {
-      stop("column names are required", call. = FALSE)
+      cli_abort("{.arg newdata} must have column names.")
     }
 
     if (length(trials) > 1) {
-      stop("only one value of trials is allowed")
+      cli_abort("{.arg trials} must be a single value, not a vector of length {length(trials)}.")
     }
     if (trials > object$trials["Actual"]) {
-      warning(
-        paste(
-          "'trials' should be <=",
-          object$trials["Actual"],
-          "for this object. Predictions generated using",
-          object$trials["Actual"],
-          "trials"
-        ),
-        call. = FALSE
-      )
+      cli_warn(c(
+        "{.arg trials} should be <= {object$trials['Actual']} for this object.",
+        "i" = "Predictions generated using {object$trials['Actual']} trials."
+      ))
     }
 
     ## If there are case weights used during training, the C code
@@ -144,7 +134,7 @@ predict.C5.0 <-
     ## zero if the original version of trials is used
 
     if (trials <= 0) {
-      stop("'trials should be a positive integer", call. = FALSE)
+      cli_abort("{.arg trials} must be a positive integer, not {.obj_type_friendly {trials}}.")
     }
     if (trials == object$trials["Actual"]) {
       trials <- 0
@@ -165,7 +155,7 @@ predict.C5.0 <-
       PACKAGE = "C50"
     )
     if (any(grepl("Error limit exceeded", Z$output))) {
-      stop(Z$output, call. = FALSE)
+      cli_abort(Z$output)
     }
 
     if (type == "class") {
