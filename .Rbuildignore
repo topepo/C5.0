@@ -7,3 +7,5 @@
 ^\.Rproj\.user$
 ^codecov\.yml$
 ^\.github$
+^[.]?air[.]toml$
+^\.vscode$
