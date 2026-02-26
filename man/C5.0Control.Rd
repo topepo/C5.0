@@ -15,7 +15,8 @@ C5.0Control(
   sample = 0,
   seed = sample.int(4096, size = 1) - 1L,
   earlyStopping = TRUE,
-  label = "outcome"
+  label = "outcome",
+  strip_time_stamps = TRUE
 )
 }
 \arguments{
@@ -61,7 +62,15 @@ code.}
 method for stopping boosting should be used.}
 
 \item{label}{A character label for the outcome used in the
-output. @return A list of options.}
+output.}
+
+\item{strip_time_stamps}{A logical to toggle whether timestamps
+should be removed from the C5.0 output. This removes the date/time
+from the header line and the "Time:" line showing execution time.
+Default is \code{TRUE} to make output reproducible.}
+}
+\value{
+A list of options.
 }
 \description{
 Various parameters that control aspects of the C5.0 fit.

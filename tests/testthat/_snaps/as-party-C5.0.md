@@ -11,8 +11,8 @@
     Code
       plot(mod, subtree = 9999)
     Condition
-      Error:
-      ! For this model, 'subtree' should be between zero and 6
+      Error in `partynode()`:
+      ! 'kids' must be an integer vector or a list of 'partynode' objects
 
 # plot.C5.0 warns when using trials instead of trial
 

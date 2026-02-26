@@ -35,3 +35,4 @@ revdep/data.sqlite
 .Rhistory
 docs
 src/Makevars
+pr-comments.md

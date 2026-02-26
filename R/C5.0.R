@@ -255,6 +255,11 @@ C5.0.default <- function(
     PACKAGE = "C50"
   )
 
+  ## Strip timestamps from output if requested
+  if (control$strip_time_stamps) {
+    Z$output <- strip_time_stamps(Z$output)
+  }
+
   ## Figure out how may trials were actually used.
   modelContent <- strsplit(
     if (rules) {
@@ -380,7 +385,12 @@ C5.0.formula <-
 #' @param earlyStopping A logical to toggle whether the internal
 #'  method for stopping boosting should be used.
 #' @param label A character label for the outcome used in the
-#'  output. @return A list of options.
+#'  output.
+#' @param strip_time_stamps A logical to toggle whether timestamps
+#'  should be removed from the C5.0 output. This removes the date/time
+#'  from the header line and the "Time:" line showing execution time.
+#'  Default is `TRUE` to make output reproducible.
+#' @return A list of options.
 #' @author Original GPL C code by Ross Quinlan, R code and
 #'  modifications to C by Max Kuhn, Steve Weston and Nathan Coulter
 #' @seealso [C5.0()],[predict.C5.0()],
@@ -411,7 +421,8 @@ C5.0Control <- function(
   sample = 0.0,
   seed = sample.int(4096, size = 1) - 1L,
   earlyStopping = TRUE,
-  label = "outcome"
+  label = "outcome",
+  strip_time_stamps = TRUE
 ) {
   if (CF < 0 | CF > 1) {
     stop("confidence level must between 0 and 1", call. = FALSE)
@@ -435,7 +446,8 @@ C5.0Control <- function(
     sample = sample,
     earlyStopping = earlyStopping,
     label = label,
-    seed = seed %% 4096L
+    seed = seed %% 4096L,
+    strip_time_stamps = strip_time_stamps
   )
 }
 
@@ -818,6 +830,21 @@ getAtt <- function(x) {
 
 C5predictors <- function(x, ...) {
   unique(getAtt(getVars(x)))
+}
+
+strip_time_stamps <- function(x) {
+  # Remove timestamp from header line:
+  # "C5.0 [Release 2.07 GPL Edition]  Thu Feb 26 11:05:49 2026"
+  # becomes "C5.0 [Release 2.07 GPL Edition]"
+  x <- gsub(
+    "(C5\\.0 \\[Release [^]]+\\])\\s+[A-Za-z]{3} [A-Za-z]{3} +\\d+ \\d{2}:\\d{2}:\\d{2} \\d{4}",
+    "\\1",
+    x
+  )
+  # Remove lines that start with "Time:" and end with "secs"
+  lines <- strsplit(x, "\n", fixed = TRUE)[[1]]
+  lines <- lines[!grepl("^Time:.*secs$", lines)]
+  paste(lines, collapse = "\n")
 }
 
 getBoostResults <- function(x) {
