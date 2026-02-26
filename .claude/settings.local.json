@@ -4,7 +4,17 @@
       "Bash(wc:*)",
       "Bash(grep:*)",
       "Bash(Rscript:*)",
-      "Bash(air format:*)"
+      "Bash(air format:*)",
+      "Bash(R CMD build:*)",
+      "Bash(R CMD check:*)",
+      "Bash(R CMD INSTALL:*)",
+      "Bash(R -q -e \"devtools::test\\(\\)\":*)",
+      "Bash(R -q -e:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:cli.r-lib.org)",
+      "WebFetch(domain:rlang.r-lib.org)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)"
     ]
   }
 }
