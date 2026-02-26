@@ -6,7 +6,9 @@
 \alias{C50-package}
 \title{C50: C5.0 Decision Trees and Rule-Based Models}
 \description{
-C5.0 decision trees and rule-based models for pattern recognition that extend the work of Quinlan (1993, ISBN:1-55860-238-0).
+Fit classification models using Quinlan's C5.0 algorithm, an extension of
+C4.5. Models can be trees or rule sets, with optional boosting and
+cost-sensitive learning. Supports factor, numeric, and ordered predictors,
 }
 \seealso{
 Useful links:

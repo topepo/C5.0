@@ -35,12 +35,6 @@
 #'
 #' @export
 #' @method plot C5.0
-#' @importFrom stats model.frame model.weights as.formula na.omit
-#' @importFrom stats delete.response
-#' @importFrom partykit as.partynode partynode partysplit as.party
-#' @importFrom partykit fitted_node party
-#' @importFrom graphics plot
-#' @importFrom cli cli_abort cli_warn
 plot.C5.0 <- function(x, trial = 0, subtree = NULL, ...) {
   if (x$rules != "") {
     cli_abort("Only tree models can be plotted, not rule-based models.")
@@ -69,7 +63,7 @@ plot.C5.0 <- function(x, trial = 0, subtree = NULL, ...) {
   plot(x, ...)
 }
 
-#' @importFrom stats terms model.response model.weights
+#' @export
 model.frame.C5.0 <- function(formula, ...) {
   if (!is.null(formula$model)) {
     return(formula$model)

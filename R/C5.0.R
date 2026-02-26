@@ -96,8 +96,6 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'  Learning. Morgan Kaufmann Publishers,
 #'  \url{http://www.rulequest.com/see5-unix.html}
 #' @keywords models
-#' @useDynLib C50
-#' @importFrom cli cli_abort cli_warn
 #' @examples
 #'
 #' library(modeldata)
@@ -114,8 +112,6 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #' @export
 #' @rawNamespace export(C5.0.default)
 #' @rdname C5.0
-#' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
-
 C5.0.default <- function(
   x,
   y,
@@ -329,7 +325,6 @@ C5.0.default <- function(
 #' @export
 #' @rawNamespace export(C5.0.formula)
 #' @rdname C5.0
-#' @importFrom stats na.pass model.extract .getXlevels terms
 C5.0.formula <-
   function(formula, data, weights, subset, na.action = na.pass, ...) {
     call <- match.call()
