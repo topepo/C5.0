@@ -67,7 +67,8 @@
 <span>  sample <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fl">4096</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span>,</span>
 <span>  earlyStopping <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  label <span class="op">=</span> <span class="st">"outcome"</span></span>
+<span>  label <span class="op">=</span> <span class="st">"outcome"</span>,</span>
+<span>  strip_time_stamps <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,9 +139,20 @@ method for stopping boosting should be used.</p></dd>
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
 <dd><p>A character label for the outcome used in the
-output. @return A list of options.</p></dd>
+output.</p></dd>
+
+
+<dt id="arg-strip-time-stamps">strip_time_stamps<a class="anchor" aria-label="anchor" href="#arg-strip-time-stamps"></a></dt>
+<dd><p>A logical to toggle whether timestamps
+should be removed from the C5.0 output. This removes the date/time
+from the header line and the "Time:" line showing execution time.
+Default is <code>TRUE</code> to make output reproducible.</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A list of options.</p>
+    </div>
     <div id="references">
     <h2>References</h2>
     <p>Quinlan R (1993). C4.5: Programs for Machine
@@ -173,7 +185,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  = C5.0Control(winnow = TRUE))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]  	Thu Feb 26 16:12:05 2026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C5.0 [Release 2.07 GPL Edition]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Class specified by attribute `outcome'</span>
@@ -285,8 +297,6 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	  0.18%	account_length</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	  0.18%	total_day_charge</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Time: 0.0 secs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
