@@ -159,8 +159,15 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
   } else {
     indx <- 1:which(out == "Decision tree:")
     out <- out[-indx]
-    l1 = length(out)
-    out <- out[1:(l1 - 2)]
+    # Find end of tree structure at "Evaluation on training data"
+    eval_idx <- grep("Evaluation on training data", out)
+    if (length(eval_idx) > 0) {
+      out <- out[1:(eval_idx[1] - 1)]
+    } else {
+      # Fallback: remove last 2 lines (legacy behavior)
+      l1 <- length(out)
+      out <- out[1:(l1 - 2)]
+    }
   }
   check1 <- cbind(grep("\\{", out), grep("\\}", out))
   indv1 <- which(check1[, 1] != check1[, 2])
