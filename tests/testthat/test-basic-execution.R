@@ -55,7 +55,8 @@ test_that("C5.0Control returns expected structure", {
       "sample",
       "earlyStopping",
       "label",
-      "seed"
+      "seed",
+      "strip_time_stamps"
     )
   )
 })

@@ -20,5 +20,7 @@ revdep/data.sqlite
 .Rproj.user
 .Rhistory
 docs
+src/Makevars
+pr-comments.md
 tests/testthat/Rplots.pdf
 ^\.vscode$
