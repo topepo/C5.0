@@ -163,6 +163,34 @@ test_that("C5.0Control earlyStopping parameter works", {
   expect_false(mod$control$earlyStopping)
 })
 
+test_that("C5.0Control strip_time_stamps removes timestamps from output", {
+  set.seed(1017)
+  dat <- make_two_class_data(100, seed = 1017)
+
+  # With strip_time_stamps = TRUE (default), output should not contain timestamps
+  mod_stripped <- C5.0(
+    dat[, -1],
+    dat$y,
+    control = C5.0Control(strip_time_stamps = TRUE)
+  )
+  expect_true(mod_stripped$control$strip_time_stamps)
+  # Header should not have date/time
+  expect_false(grepl("[A-Z][a-z]{2} [A-Z][a-z]{2} +\\d+", mod_stripped$output))
+  # Should not have "Time:" line
+  expect_false(grepl("^Time:.*secs", mod_stripped$output))
+
+  # With strip_time_stamps = FALSE, output should contain timestamps
+  set.seed(1018)
+  mod_with_time <- C5.0(
+    dat[, -1],
+    dat$y,
+    control = C5.0Control(strip_time_stamps = FALSE)
+  )
+  expect_false(mod_with_time$control$strip_time_stamps)
+  # Header should have date/time (e.g., "Thu Feb 26 11:05:49 2026")
+  expect_true(grepl("[A-Z][a-z]{2} [A-Z][a-z]{2} +\\d+", mod_with_time$output))
+})
+
 # --- Error Conditions ---
 
 test_that("C5.0 errors on non-factor outcome", {

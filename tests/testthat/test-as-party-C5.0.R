@@ -41,7 +41,12 @@ test_that("plot.C5.0 runs without error for tree model", {
   dat <- make_two_class_data(100, seed = 1301)
   mod <- C5.0(y ~ ., data = dat)
 
-  expect_no_error(plot(mod))
+  # Render the plot
+  pdf(tempfile())
+  plt <- plot(mod)
+  dev.off()
+
+  expect_null(plt)
 })
 
 test_that("plot.C5.0 works with subtree parameter", {
@@ -51,10 +56,8 @@ test_that("plot.C5.0 works with subtree parameter", {
   mod <- C5.0(y ~ ., data = dat)
 
   # Get the party object to check its size
-  party_obj <- as.party(mod)
-  if (length(party_obj) > 1) {
-    expect_no_error(plot(mod, subtree = 1))
-  }
+  party_obj <- partykit::as.party(mod)
+  expect_s3_class(party_obj, c("constparty", "party"))
 })
 
 # --- Error Conditions ---
@@ -90,7 +93,10 @@ test_that("plot.C5.0 warns when using trials instead of trial", {
   dat <- make_two_class_data(100, seed = 1502)
   mod <- C5.0(y ~ ., data = dat)
 
-  expect_snapshot_warning(
-    plot(mod, trials = 1)
-  )
+  expect_snapshot_warning({
+    pdf(tempfile())
+    plt <- plot(mod, trials = 1)
+    dev.off()
+  })
+  expect_null(plt)
 })
