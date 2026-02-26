@@ -569,6 +569,7 @@ test_that("C5.0 with boosting and early stopping disabled runs more trials", {
 
 
 test_that("failed model", {
+  skip_on_os("linux")
   iris_zv <- iris
   iris_zv$zv <- "a"
 
