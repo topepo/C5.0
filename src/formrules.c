@@ -322,7 +322,10 @@ void PopCondition(void)
 void PruneRule(Condition Cond[], ClassNo TargetClass)
 /*   ---------  */
 {
-  int d, id, Bestid, Remaining = NCond;
+  int d, id, Remaining = NCond;
+#ifdef VerbOpt
+  int Bestid;
+#endif
   double RealTotal, RealCorrect;
   CaseNo i, LL = 0;
   float Prior;
@@ -392,7 +395,9 @@ void PruneRule(Condition Cond[], ClassNo TargetClass)
 
             if (!Bestd || Pessimistic[d] <= Pessimistic[Bestd]) {
           Bestd = d;
+#ifdef VerbOpt
           Bestid = id;
+#endif
         }
       }
     }
