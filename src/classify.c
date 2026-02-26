@@ -412,7 +412,7 @@ ClassNo PredictRuleClassify(DataRec Case, CRuleSet RS)
 /*      ------------  */
 {
   ClassNo c, Best;
-  double TotWeight = 0, TotVote = 0;
+  double TotWeight = 0;
   int a;
   CRule R;
   RuleNo r;
@@ -450,7 +450,6 @@ ClassNo PredictRuleClassify(DataRec Case, CRuleSet RS)
     R = RS->SRule[r];
 
     ClassSum[R->Rhs] += R->Vote;
-    TotVote += R->Vote;
     TotWeight += 1000.0;
 
     /*  Check whether this is the most specific rule for this class;

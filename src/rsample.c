@@ -71,8 +71,7 @@ int rpredictmain(int *trials, int *outputv, double *confidencev)
 {
   FILE *F;
   DataRec Case;
-  int CaseNo = 0, MaxClassLen = 5, o, TotalRules = 0, StartList,
-      CurrentPosition, RealTrials;
+  int TotalRules = 0, StartList;
   double TotalConf = 0, NumClasses = 0;
   ClassNo Predict, c;
   //    Boolean  XRefForm=binfalse;
@@ -123,6 +122,9 @@ trees or rulesets  */
 
     ForEach(Trial, 0, TRIALS - 1) { Pruned[Trial] = GetTree(".tree"); }
   }
+
+  (void)TotalRules; /* Used only when RULESUSED is enabled */
+  (void)StartList;  /* Used only when printing is enabled */
 
   /*  Set global default class for boosting  */
 
