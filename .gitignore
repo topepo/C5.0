@@ -1,29 +1,15 @@
-
-pkg/C50_0.1.0-20.tar.gz
-pkg/C50.Rcheck
 *.o
+*.so
+config.log
+config.status
+src/Makevars
 
 pkg/C50/config.log
-
 pkg/C50/config.status
-
 pkg/C50/src/C50.so
-
 pkg/C50/src/Makevars
 
-pkg/C50_0.1.0-23.tar.gz
-
-pkg/C50_0.1.0-22.tar.gz
-
-pkg/C50_0.1.0-24.tar.gz
-
-pkg/C50_0.1.0-25.tar.gz
-
-config.log
-
-config.status
-
-*.so
+pkg/C50.Rcheck
 
 revdep/*.noindex
 
@@ -36,3 +22,5 @@ revdep/data.sqlite
 docs
 src/Makevars
 pr-comments.md
+tests/testthat/Rplots.pdf
+^\.vscode$

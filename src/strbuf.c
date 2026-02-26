@@ -190,7 +190,9 @@ int strbuf_vprintf(STRBUF *sb, const char *format, va_list ap) {
   unsigned int nlen;
   int size = sb->len - sb->i; /* Remaining space left */
   va_list ap2;
+#ifdef WIN32
   va_list ap3;
+#endif
 
   /* Copy ap to ap2 in case we need to call vsnprintf a second time */
   va_copy(ap2, ap);

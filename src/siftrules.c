@@ -382,16 +382,13 @@ void SetInitialTheory(void)
 /*   ----------------  */
 {
   ClassNo c;
-  RuleNo r, Active = 0;
+  RuleNo r;
 
   ForEach(c, 1, MaxClass) { CoverClass(c); }
 
   /*  Remove rules that don't help coverage  */
 
-  ForEach(r, 1, NRules) {
-    if ((RuleIn[r] &= 1))
-      Active++;
-  }
+  ForEach(r, 1, NRules) { RuleIn[r] &= 1; }
 }
 
 void CoverClass(ClassNo Target)
@@ -497,7 +494,10 @@ void HillClimb(void)
   int j;
   CaseCount Errs;
   double RuleBits = 0;
-  int LastCost = 1E9, CurrentCost, AltCost, NewCost;
+  int CurrentCost, AltCost, NewCost;
+#ifdef VerbOpt
+  int LastCost = 1E9;
+#endif
   Boolean DeleteOnly = binfalse;
 
   ForEach(r, 1, NRules) {
@@ -609,7 +609,9 @@ void HillClimb(void)
     DeltaErrs[Toggle] = -DeltaErrs[Toggle];
 
     LastToggle = Toggle;
+#ifdef VerbOpt
     LastCost = CurrentCost;
+#endif
 
     Progress(1.0);
   }
@@ -932,7 +934,9 @@ int OrderByUtility(void)
   RuleNo r, *Drop, NDrop = 0, NewNRules = 0, Toggle;
   CaseNo i;
   int j, OutCount;
+#ifdef VerbOpt
   double Errs = 0;
+#endif
 
   Verbosity(1, fprintf(Of, "\n    Determining rule utility\n"))
 
@@ -986,7 +990,9 @@ int OrderByUtility(void)
     Drop[NDrop++] = Toggle;
     RuleIn[Toggle] = binfalse;
 
+#ifdef VerbOpt
     Errs += DeltaErrs[Toggle];
+#endif
   }
 
   /*  Now reverse the order  */
