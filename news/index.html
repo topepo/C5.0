@@ -53,6 +53,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="c50-development-version">C50 (development version)<a class="anchor" aria-label="anchor" href="#c50-development-version"></a></h2>
 <ul><li><p>Added <code>strip_time_stamps</code> option to <code><a href="../reference/C5.0Control.html">C5.0Control()</a></code> (default <code>TRUE</code>) to remove timestamps from model output, making results reproducible across runs.</p></li>
+<li><p>Switched from base R <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> and <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning()</a></code> to cli’s <code>cli_abort()</code> and <code>cli_warn()</code> for improved error messages with better formatting and context.</p></li>
 <li><p>Fixed compiler warnings for unused variables in C source code.</p></li>
 </ul></div>
     <div class="section level2">
