@@ -50,8 +50,8 @@
 void EvalContinuousAtt(Attribute Att, CaseNo Fp, CaseNo Lp)
 /*   -----------------  */
 {
-  CaseNo i, j, BestI, Tries = 0;
-  double LowInfo, LHInfo, LeastInfo = 1E38, w, BestGain, BestInfo,
+  CaseNo i, j, BestI = 0, Tries = 0;
+  double LowInfo, LHInfo, LeastInfo = 1E38, w, BestGain, BestInfo = 0,
                           ThreshCost = 1;
   ClassNo c;
   ContValue Interval;

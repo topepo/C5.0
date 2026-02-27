@@ -92,8 +92,8 @@ void EvalOrderedAtt(Attribute Att, CaseCount Cases)
   double *HoldFreqRow, SplitFreq[4];
   ClassNo c;
   int Tries = 0;
-  DiscrValue v, BestV;
-  double BaseInfo, ThisGain, BestInfo, BestGain = None;
+  DiscrValue v, BestV = 0;
+  double BaseInfo, ThisGain, BestInfo = 0, BestGain = None;
 
   SetDiscrFreq(Att);
   KnownCases = Cases - GEnv.ValFreq[0];

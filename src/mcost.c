@@ -38,7 +38,7 @@
 void GetMCosts(FILE *Cf)
 /*   ---------  */
 {
-  ClassNo Pred, Real, p, r;
+  ClassNo Pred = 0, Real = 0, p, r;
   char Name[1000];
   CaseNo i;
   float Val, Sum = 0;
@@ -120,7 +120,7 @@ if not using cost weighting  */
 void PredictGetMCosts(FILE *Cf)
 /*   ---------  */
 {
-  ClassNo Pred, Real, p, r;
+  ClassNo Pred = 0, Real = 0, p, r;
   char Name[1000];
   float Val;
 

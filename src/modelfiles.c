@@ -448,7 +448,7 @@ void AsciiOut(String Pre, String S)
 void ReadHeader(void)
 /*   ---------  */
 {
-  Attribute Att;
+  Attribute Att = 0;
   DiscrValue v;
   char *p, Dummy;
   int Year, Month, Day;
@@ -521,7 +521,7 @@ void ReadHeader(void)
 void PredictReadHeader(void)
 /*   ---------  */
 {
-  Attribute Att;
+  Attribute Att = 0;
   DiscrValue v;
   char *p, Dummy;
   int Year, Month, Day;

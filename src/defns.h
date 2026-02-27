@@ -173,7 +173,7 @@
 #define EmptyNA(T) (T->Branch[1]->Cases < 0.01)
 
 #define Before(n1, n2)                                                         \
-  (n1->Tested < n2->Tested || n1->Tested == n2->Tested && n1->Cut < n2->Cut)
+  (n1->Tested < n2->Tested || (n1->Tested == n2->Tested && n1->Cut < n2->Cut))
 
 #define Swap(a, b)                                                             \
   {                                                                            \

@@ -66,7 +66,7 @@ void ConstructClassifiers(void)
   double ErrWt, OKWt, ExtraErrWt, NFact, MinWt = 1.0, a, b;
   ClassNo c, Pred, Real, Best;
   static ClassNo *Wrong = Nil;
-  int BaseLeaves;
+  int BaseLeaves = 0;
   Boolean NoStructure, CheckExcl;
   float *BVote;
 
@@ -430,7 +430,7 @@ void EvaluateSingle(int Flags)
 /*   --------------  */
 {
   ClassNo RealClass, PredClass;
-  int x, u, SaveUtility;
+  int x, u, SaveUtility = 0;
   CaseNo *ConfusionMat, *Usage, i, Errs = 0;
 #ifdef VerbOpt
   CaseNo RawErrs = 0;
