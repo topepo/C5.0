@@ -35,53 +35,35 @@
 #'
 #' @export
 #' @method plot C5.0
-#' @importFrom stats model.frame model.weights as.formula na.omit
-#' @importFrom stats delete.response
-#' @importFrom partykit as.partynode partynode partysplit as.party
-#' @importFrom partykit fitted_node party
-#' @importFrom graphics plot
 plot.C5.0 <- function(x, trial = 0, subtree = NULL, ...) {
   if (x$rules != "") {
-    stop("tree models only", call. = FALSE)
+    cli_abort("Only tree models can be plotted, not rule-based models.")
   }
   if (trial > x$trials["Actual"] - 1) {
-    warning(
-      paste(
-        "Only",
-        x$trials["Actual"],
-        "trials are in the model.",
-        "Setting 'trial' to",
-        x$trials["Actual"] - 1,
-        "(the plot code is zero-based)."
-      ),
-      call. = FALSE
-    )
+    cli_warn(c(
+      "Only {x$trials['Actual']} trial{?s} {?is/are} in the model.",
+      "i" = "Setting {.arg trial} to {x$trials['Actual'] - 1} (the plot code is zero-based)."
+    ))
     trial <- x$trials["Actual"] - 1
   }
   x <- as.party(x, trial = trial)
   if (!is.null(subtree)) {
     if (subtree < 0 || subtree > length(x)) {
-      stop(
-        "For this model, 'subtree' should be between zero and ",
-        length(x),
-        call. = FALSE
-      )
+      cli_abort("{.arg subtree} must be between 0 and {length(x)}, not {.val {subtree}}.")
     } else {
       x <- x[subtree]
     }
   }
   if (any(names(list(...)) == "trials")) {
-    warning(
-      "The option 'trials' was passed and will be ignored. ",
-      "
-      Did you mean to use 'trial'?",
-      call. = FALSE
-    )
+    cli_warn(c(
+      "The option {.arg trials} was passed and will be ignored.",
+      "i" = "Did you mean to use {.arg trial}?"
+    ))
   }
   plot(x, ...)
 }
 
-#' @importFrom stats terms model.response model.weights
+#' @export
 model.frame.C5.0 <- function(formula, ...) {
   if (!is.null(formula$model)) {
     return(formula$model)
@@ -139,6 +121,8 @@ model.frame.C5.0 <- function(formula, ...) {
 #' @export
 #' @export as.party.C5.0
 as.party.C5.0 <- function(obj, trial = 0, ...) {
+
+  error_call <- rlang::current_env()
   out <- strsplit(obj$output, "\n")[[1]]
   out <- out[out != ""]
   out <- out[grep("^\t", out, invert = TRUE)]
@@ -282,7 +266,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
         return(ind)
       }))
       if (!any(varp > 0)) {
-        stop("Variable match was not found.")
+        cli_abort("Variable match was not found.", call = error_call)
       }
       valpred <- as.vector(which(varp > 0))
       valpred <- valpred[which.max(nchar(adj.pred[valpred]))]
@@ -299,8 +283,9 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
           if (length(grep(":", a2)) > 0) {
             a2 <- strsplit(a2, "\\}:")
             if (length(a2) > 2) {
-              stop(
-                "The code currently does not work with factor levels or responses that have the symbol '}:' in them."
+              cli_abort(
+                "The code currently does not work with factor levels or responses that have the symbol {.val \\}:} in them.",
+                call = error_call
               )
             }
           } else {
@@ -319,8 +304,9 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
           a2 <- sub("^= ", "", vec)
           a2 <- strsplit(a2, ":")
           if (length(a2) > 2) {
-            stop(
-              "The code currently does not work with factor levels or responses that have the symbol ':' in them."
+            cli_abort(
+              "The code currently does not work with factor levels or responses that have the symbol {.val :} in them.",
+              call = error_call
             )
           }
           a2 <- a2[[1]][1]
@@ -482,7 +468,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
   } else {
     p1 <- all.vars(attr(obj$Terms, "predvars"))[attr(obj$Terms, "response")]
     if (is.na(p1)) {
-      stop("Error in Response")
+      cli_abort("Error in Response.", call = error_call)
     }
 
     C5.0_fitted <- function(p1) {

@@ -3,19 +3,19 @@
     Code
       plot(mod)
     Condition
-      Error:
-      ! tree models only
+      Error in `plot()`:
+      ! Only tree models can be plotted, not rule-based models.
 
 # plot.C5.0 errors on invalid subtree
 
     Code
       plot(mod, subtree = 9999)
     Condition
-      Error:
-      ! For this model, 'subtree' should be between zero and 6
+      Error in `plot()`:
+      ! `subtree` must be between 0 and 6, not 9999.
 
 # plot.C5.0 warns when using trials instead of trial
 
-    The option 'trials' was passed and will be ignored. 
-          Did you mean to use 'trial'?
+    The option `trials` was passed and will be ignored.
+    i Did you mean to use `trial`?
 

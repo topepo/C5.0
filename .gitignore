@@ -24,3 +24,4 @@ src/Makevars
 pr-comments.md
 tests/testthat/Rplots.pdf
 ^\.vscode$
+pr-comments.md

@@ -3,25 +3,24 @@
     Code
       predict(mod, dat[, -1], type = "invalid")
     Condition
-      Error:
-      ! type should be either 'class' or 'prob'
+      Error in `predict()`:
+      ! `type` must be "class" or "prob", not a string.
 
 # predict errors on prob with costs
 
     Code
       predict(mod, dat[, -1], type = "prob")
     Condition
-      Error:
-      ! confidence values (i.e. class probabilities) should 
-                 not be used with costs
+      Error in `predict()`:
+      ! Confidence values (i.e. class probabilities) should not be used with costs.
 
 # predict errors on NULL newdata
 
     Code
       predict(mod, newdata = NULL)
     Condition
-      Error:
-      ! newdata must be non-null
+      Error in `predict()`:
+      ! `newdata` must not be "NULL".
 
 # predict errors on missing column names
 
@@ -36,18 +35,19 @@
     Code
       predict(mod, dat[, -1], trials = c(1, 2, 3))
     Condition
-      Error in `predict.C5.0()`:
-      ! only one value of trials is allowed
+      Error in `predict()`:
+      ! `trials` must be a single value, not a vector of length 3.
 
 # predict errors on non-positive trials
 
     Code
       predict(mod, dat[, -1], trials = 0)
     Condition
-      Error:
-      ! 'trials should be a positive integer
+      Error in `predict()`:
+      ! `trials` must be a positive integer, not a number.
 
 # predict warns when trials exceeds actual
 
-    'trials' should be <= 1 for this object. Predictions generated using 1 trials
+    `trials` should be <= 1 for this object.
+    i Predictions generated using 1 trials.
 

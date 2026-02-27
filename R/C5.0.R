@@ -96,7 +96,6 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'  Learning. Morgan Kaufmann Publishers,
 #'  \url{http://www.rulequest.com/see5-unix.html}
 #' @keywords models
-#' @useDynLib C50
 #' @examples
 #'
 #' library(modeldata)
@@ -113,8 +112,6 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #' @export
 #' @rawNamespace export(C5.0.default)
 #' @rdname C5.0
-#' @importFrom Cubist makeDataFile makeNamesFile QuinlanAttributes
-
 C5.0.default <- function(
   x,
   y,
@@ -127,17 +124,16 @@ C5.0.default <- function(
 ) {
   funcCall <- match.call(expand.dots = TRUE)
   if (!is.factor(y)) {
-    stop("C5.0 models require a factor outcome", call. = FALSE)
+    cli_abort("{.arg y} must be a factor, not {.obj_type_friendly {y}}.")
   }
   if (is.null(colnames(x))) {
-    stop("column names are required", call. = FALSE)
+    cli_abort("{.arg x} must have column names.")
   }
   if (control$bands > 2 & !rules) {
-    warning(
-      "rule banding only works with rules; ",
-      "'rules' was changed to TRUE",
-      call. = FALSE
-    )
+    cli_warn(c(
+      "Rule banding only works with rules.",
+      "i" = "{.arg rules} was changed to {.val TRUE}."
+    ))
     rules <- TRUE
   }
 
@@ -147,17 +143,21 @@ C5.0.default <- function(
   nClass <- length(lvl)
   if (!is.null(costs)) {
     if (!is.matrix(costs)) {
-      stop("'costs' should be a matrix", call. = FALSE)
+      cli_abort(
+        "{.arg costs} must be a matrix, not {.obj_type_friendly {costs}}."
+      )
     }
     if (ncol(costs) != nClass | nrow(costs) != nClass) {
-      stop("'cost should be a ", nClass, "x", nClass, "matrix", call. = FALSE)
+      cli_abort(c(
+        "{.arg costs} must be a {nClass}x{nClass} matrix.",
+        "x" = "Provided: {nrow(costs)}x{ncol(costs)}."
+      ))
     }
     if (is.null(dimnames(costs))) {
-      warning(
-        "no dimnames were given for the cost matrix; ",
-        "the factor levels will be used",
-        call. = FALSE
-      )
+      cli_warn(c(
+        "No dimnames were given for the cost matrix.",
+        "i" = "The factor levels will be used."
+      ))
       colnames(costs) <- lvl
       rownames(costs) <- lvl
     } else {
@@ -165,7 +165,7 @@ C5.0.default <- function(
         is.null(colnames(costs)) |
           is.null(rownames(costs))
       ) {
-        stop("both row and column names are needed", call. = FALSE)
+        cli_abort("{.arg costs} must have both row and column names.")
       }
     }
     costString <- makeCostFile(costs)
@@ -175,10 +175,8 @@ C5.0.default <- function(
 
   maxtrials <- 100
   if (trials < 1 | trials > maxtrials) {
-    stop(
-      "number of boosting iterations must be between 1 and ",
-      maxtrials,
-      call. = FALSE
+    cli_abort(
+      "{.arg trials} must be between 1 and {maxtrials}, not {.val {trials}}."
     )
   }
 
@@ -186,7 +184,9 @@ C5.0.default <- function(
     !is.data.frame(x) &
       !is.matrix(x)
   ) {
-    stop("x must be a matrix or data frame", call. = FALSE)
+    cli_abort(
+      "{.arg x} must be a matrix or data frame, not {.obj_type_friendly {x}}."
+    )
   }
 
   if (inherits(x, "tbl_df")) {
@@ -194,7 +194,9 @@ C5.0.default <- function(
   }
 
   if (!is.null(weights) && !is.numeric(weights)) {
-    stop("case weights must be numeric", call. = FALSE)
+    cli_abort(
+      "{.arg weights} must be numeric, not {.obj_type_friendly {weights}}."
+    )
   }
 
   ## TODO: add case weights to these files when needed
@@ -255,10 +257,13 @@ C5.0.default <- function(
     PACKAGE = "C50"
   )
 
+  parse_model_failure(Z$output)
+  
   ## Strip timestamps from output if requested
   if (control$strip_time_stamps) {
     Z$output <- strip_time_stamps(Z$output)
   }
+  parse_model_failure(Z$output)
 
   ## Figure out how may trials were actually used.
   modelContent <- strsplit(
@@ -320,7 +325,6 @@ C5.0.default <- function(
 #' @export
 #' @rawNamespace export(C5.0.formula)
 #' @rdname C5.0
-#' @importFrom stats na.pass model.extract .getXlevels terms
 C5.0.formula <-
   function(formula, data, weights, subset, na.action = na.pass, ...) {
     call <- match.call()
@@ -425,14 +429,14 @@ C5.0Control <- function(
   strip_time_stamps = TRUE
 ) {
   if (CF < 0 | CF > 1) {
-    stop("confidence level must between 0 and 1", call. = FALSE)
+    cli_abort("{.arg CF} must be between 0 and 1, not {.val {CF}}.")
   }
   if (sample < 0.0 | sample > .999) {
-    stop("sampling percentage must be between 0.0 and .999", call. = FALSE)
+    cli_abort("{.arg sample} must be between 0 and 0.999, not {.val {sample}}.")
   }
 
   if (bands == 1 | bands > 10000) {
-    stop("if used, bands must be between 2 and 10000", call. = FALSE)
+    cli_abort("{.arg bands} must be between 2 and 10000, not {.val {bands}}.")
   }
 
   list(
@@ -715,7 +719,9 @@ truncateText <- function(x) {
 #' @export
 C5imp <- function(object, metric = "usage", pct = TRUE, ...) {
   if (!(metric %in% c("usage", "splits"))) {
-    stop("metric should be either 'usage' or 'splits'")
+    cli_abort(
+      "{.arg metric} must be {.val usage} or {.val splits}, not {.obj_type_friendly {metric}}."
+    )
   }
   allVar <- getOriginalVars(object)
   allVar <- gsub("\\", "", allVar, fixed = TRUE)
@@ -724,7 +730,7 @@ C5imp <- function(object, metric = "usage", pct = TRUE, ...) {
     usageIndex <-
       grep("Attribute usage:", object$output, fixed = TRUE)
     if (length(usageIndex) == 0) {
-      stop("Error in parsing model output")
+      cli_abort("Error in parsing model output.")
     }
     object$output <-
       object$output[usageIndex:length(object$output)]
@@ -733,7 +739,7 @@ C5imp <- function(object, metric = "usage", pct = TRUE, ...) {
 
     usageData <- strsplit(usageData, "%", fixed = TRUE)
     if (!all(unlist(lapply(usageData, length)) == 2)) {
-      stop("Error in parsing model output")
+      cli_abort("Error in parsing model output.")
     }
 
     usageData <-
@@ -793,11 +799,11 @@ breakUp <- function(y) {
 }
 
 
-getOriginalVars <- function(x) {
+getOriginalVars <- function(x, call = rlang::caller_env()) {
   treeDat <- strsplit(x$names, "\n")[[1]]
   varStart <- grep(paste(x$control$label, ":", sep = ""), treeDat)
   if (length(varStart) == 0) {
-    stop("cannot parse names file")
+    cli_abort("Cannot parse names file.", call = call)
   }
   treeDat <- treeDat[(varStart + 1):length(treeDat)]
   treeDat <- strsplit(treeDat, ":")
@@ -814,15 +820,15 @@ getVars <- function(x) {
   treeDat
 }
 
-getAtt <- function(x) {
+getAtt <- function(x, call = rlang::caller_env()) {
   strt <- regexpr("att=", x)
   if (length(strt) == 0) {
-    stop("cannot parse model file")
+    cli_abort("Cannot parse model file.", call = call)
   }
   strt <- strt + 5
   stp <- regexpr("(forks=)|(cut=)|(val=)", x)
   if (length(stp) == 0) {
-    stop("cannot parse model file")
+    cli_abort("Cannot parse model file.", call = call)
   }
   stp <- stp - 3
   substring(x, strt, stp)
@@ -904,4 +910,18 @@ parseBoostTable <- function(x) {
     x <- NULL
   }
   x
+}
+
+parse_model_failure <- function(x, call = rlang::caller_env()) {
+  if (!grepl("Error limit exceeded", x)) {
+    return(invisible(NULL))
+  }
+  y <- strsplit(x, split = "\n")[[1]]
+  y <- gsub("Error limit exceeded", "", y)
+  y <- gsub("*** ", "", y, fixed = TRUE)
+  y <- y[y != ""]
+  first_line <- grep("^------", y)
+  y <- y[(first_line + 1):length(y)]
+  cli::cli_abort(c("{.fn C5.0} failed with error:", x = "{y}"), call = call)
+  invisible(NULL)
 }

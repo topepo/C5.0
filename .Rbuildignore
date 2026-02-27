@@ -10,3 +10,4 @@
 ^[.]?air[.]toml$
 ^\.vscode$
 ^\.claude$
+^pr-comments.md$

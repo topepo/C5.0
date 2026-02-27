@@ -2,6 +2,8 @@
 
 * Added `strip_time_stamps` option to `C5.0Control()` (default `TRUE`) to remove timestamps from model output, making results reproducible across runs.
 
+* Switched from base R `stop()` and `warning()` to cli's `cli_abort()` and `cli_warn()` for improved error messages with better formatting and context.
+
 * Fixed compiler warnings for unused variables in C source code.
 
 # C50 0.2.0
