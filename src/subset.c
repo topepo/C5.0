@@ -69,10 +69,10 @@ void InitialiseBellNumbers(void)
 void EvalSubset(Attribute Att, CaseCount Cases)
 /*   ----------  */
 {
-  DiscrValue V1, V2, V3, BestV1, BestV2, InitialBlocks, First = 1, Prelim = 0;
+  DiscrValue V1, V2, V3, BestV1, BestV2 = 0, InitialBlocks, First = 1, Prelim = 0;
   ClassNo c;
   double BaseInfo, ThisGain, ThisInfo, Penalty, UnknownRate, Val, BestVal,
-      BestGain, BestInfo, PrevGain, PrevInfo;
+      BestGain, BestInfo = 0, PrevGain, PrevInfo;
   int MissingValues = 0;
   CaseCount KnownCases;
   Boolean Better;

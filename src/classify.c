@@ -499,7 +499,7 @@ rule for class Best or the scaled ClassSum[Best] value  */
 int FindOutcome(DataRec Case, Condition OneCond)
 /*  -----------  */
 {
-  DiscrValue v, Outcome;
+  DiscrValue v, Outcome = 0;
   Attribute Att;
 
   Att = OneCond->Tested;

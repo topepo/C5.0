@@ -842,10 +842,8 @@ void Cleanup(void)
 
   extern DataRec *Blocked;
   extern Tree *SubDef;
-  extern int SubSpace, ActiveSpace, PropValSize;
-  extern RuleNo *Active;
+  extern int SubSpace;
   extern float *AttImp;
-  extern char *PropVal;
   extern Boolean *Split, *Used;
   extern FILE *Uf;
 

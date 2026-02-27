@@ -686,7 +686,7 @@ void CountVotes(CaseNo i)
 /*                                                                       */
 /*************************************************************************/
 
-#define Prefer(d, c1, c2) ((d) > 0 || (d) == 0 && c1 < c2)
+#define Prefer(d, c1, c2) ((d) > 0 || ((d) == 0 && c1 < c2))
 
 void UpdateDeltaErrs(CaseNo i, double Delta, RuleNo Toggle)
 /*   ---------------  */
