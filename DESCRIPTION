@@ -19,7 +19,7 @@ Description: C5.0 decision trees and rule-based models for pattern
     recognition that extend the work of Quinlan (1993,
     ISBN:1-55860-238-0).
 License: GPL-3
-URL: https://topepo.github.io/C5.0/, https://github.com/topepo/C5.0/, https://github.com/topepo/C5.0
+URL: https://topepo.github.io/C5.0/, https://github.com/topepo/C5.0/
 BugReports: https://github.com/topepo/C5.0/issues
 Depends: 
     R (>= 2.10.0)
