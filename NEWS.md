@@ -1,4 +1,4 @@
-# C50 (development version)
+# C50 0.3.0
 
 * Added `strip_time_stamps` option to `C5.0Control()` (default `TRUE`) to remove timestamps from model output, making results reproducible across runs.
 
