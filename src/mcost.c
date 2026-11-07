@@ -35,51 +35,43 @@
 #include "redefine.h"
 #include "transform.h"
 
-void GetMCosts(FILE *Cf)
-/*   ---------  */
+/*************************************************************************/
+/*                                                                       */
+/* Costs come from a .costs file (GetMCosts, PredictGetMCosts) or  */
+/* directly from an R matrix (RSetCosts in rdata.c).  Both use:  */
+/*                                                                       */
+/*   SetMCost     - record one entry MCost[Pred][Real]    */
+/*   FinishMCosts - set the case reweighting for two classes   */
+/*                                                                       */
+/*************************************************************************/
+
+void SetMCost(ClassNo Pred, ClassNo Real, float Val)
+/*   --------  */
 {
-  ClassNo Pred = 0, Real = 0, p, r;
-  char Name[1000];
-  CaseNo i;
-  float Val, Sum = 0;
+  ClassNo p, r;
 
-  LineNo = 0;
+  if (Pred > 0 && Real > 0 && Pred != Real && Val != 1) {
+    /*  Have a non-trivial cost entry  */
 
-  /*  Read entries from cost file  */
+    if (!MCost) {
+      /*  Set up cost matrices  */
 
-  while (ReadName(Cf, Name, 1000, ':')) {
-    if (!(Pred = Which(Name, ClassName, 1, MaxClass))) {
-      Error(BADCOSTCLASS, Name, "");
-    }
-
-    if (!ReadName(Cf, Name, 1000, ':') ||
-        !(Real = Which(Name, ClassName, 1, MaxClass))) {
-      Error(BADCOSTCLASS, Name, "");
-    }
-
-    if (!ReadName(Cf, Name, 1000, ':') || sscanf(Name, "%f", &Val) != 1 ||
-        Val < 0) {
-      Error(BADCOST, "", "");
-      Val = 1;
-    }
-
-    if (Pred > 0 && Real > 0 && Pred != Real && Val != 1) {
-      /*  Have a non-trivial cost entry  */
-
-      if (!MCost) {
-        /*  Set up cost matrices  */
-
-        MCost = Alloc(MaxClass + 1, float *);
-        ForEach(p, 1, MaxClass) {
-          MCost[p] = Alloc(MaxClass + 1, float);
-          ForEach(r, 1, MaxClass) { MCost[p][r] = (p == r ? 0.0 : 1.0); }
-        }
+      MCost = Alloc(MaxClass + 1, float *);
+      ForEach(p, 1, MaxClass) {
+        MCost[p] = Alloc(MaxClass + 1, float);
+        ForEach(r, 1, MaxClass) { MCost[p][r] = (p == r ? 0.0 : 1.0); }
       }
-
-      MCost[Pred][Real] = Val;
     }
+
+    MCost[Pred][Real] = Val;
   }
-  fclose(Cf);
+}
+
+void FinishMCosts(void)
+/*   ------------  */
+{
+  CaseNo i;
+  float Sum = 0;
 
   /*  Don't need weights etc. for predict or interpret, or
 if not using cost weighting  */
@@ -117,10 +109,16 @@ if not using cost weighting  */
   ClassFreq = Nil;
 }
 
-void PredictGetMCosts(FILE *Cf)
-/*   ---------  */
+/*************************************************************************/
+/*                                                                       */
+/* Read a .costs file: lines of "predicted class, real class: cost" */
+/*                                                                       */
+/*************************************************************************/
+
+static void ReadMCostEntries(FILE *Cf)
+/*          ----------------  */
 {
-  ClassNo Pred = 0, Real = 0, p, r;
+  ClassNo Pred = 0, Real = 0;
   char Name[1000];
   float Val;
 
@@ -144,21 +142,20 @@ void PredictGetMCosts(FILE *Cf)
       Val = 1;
     }
 
-    if (Pred > 0 && Real > 0 && Pred != Real && Val != 1) {
-      /*  Have a non-trivial cost entry  */
-
-      if (!MCost) {
-        /*  Set up cost matrices  */
-
-        MCost = Alloc(MaxClass + 1, float *);
-        ForEach(p, 1, MaxClass) {
-          MCost[p] = Alloc(MaxClass + 1, float);
-          ForEach(r, 1, MaxClass) { MCost[p][r] = (p == r ? 0.0 : 1.0); }
-        }
-      }
-
-      MCost[Pred][Real] = Val;
-    }
+    SetMCost(Pred, Real, Val);
   }
   fclose(Cf);
+}
+
+void GetMCosts(FILE *Cf)
+/*   ---------  */
+{
+  ReadMCostEntries(Cf);
+  FinishMCosts();
+}
+
+void PredictGetMCosts(FILE *Cf)
+/*   ----------------  */
+{
+  ReadMCostEntries(Cf);
 }

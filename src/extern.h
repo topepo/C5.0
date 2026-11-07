@@ -128,3 +128,5 @@ extern char Fn[500];
 
 extern FILE *Of;
 extern enum mode { m_build, m_predict } MODE;
+
+extern void (*LoadTestData)(void); /* rc50.c; set by rdata.c */

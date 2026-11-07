@@ -63,12 +63,16 @@ plot.C5.0 <- function(x, trial = 0, subtree = NULL, ...) {
   plot(x, ...)
 }
 
-#' @export
-model.frame.C5.0 <- function(formula, ...) {
-  if (!is.null(formula$model)) {
-    return(formula$model)
+# The training data of a formula fit, as `as.party.C5.0()` needs them: the
+# predictors, then the outcome under its own name, then `(weights)`. This is
+# not a `model.frame()` method: up to version 0.2.0 it was not registered, and
+# other packages call `model.frame()` on C5.0 fits and expect a standard model
+# frame (with a `terms` attribute) from the default method.
+c50_model_frame <- function(object) {
+  if (!is.null(object$model)) {
+    return(object$model)
   }
-  mf <- formula$call
+  mf <- object$call
   mf <- mf[c(
     1L,
     match(
@@ -82,8 +86,8 @@ model.frame.C5.0 <- function(formula, ...) {
   }
   mf$drop.unused.levels <- FALSE
   mf[[1L]] <- as.name("model.frame")
-  env <- if (!is.null(environment(formula$Terms))) {
-    environment(formula$Terms)
+  env <- if (!is.null(environment(object$Terms))) {
+    environment(object$Terms)
   } else {
     parent.frame()
   }
@@ -221,7 +225,7 @@ as.party.C5.0 <- function(obj, trial = 0, ...) {
   }
   is.default <- !("Terms" %in% names(obj))
   if (!is.default) {
-    mf <- model.frame(obj)
+    mf <- c50_model_frame(obj)
   } else {
     xspot <- match("x", names(obj$call))[1]
     yspot <- match("y", names(obj$call))[1]

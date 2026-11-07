@@ -34,6 +34,16 @@
 #'  terminal nodes may not be consistent with the final predicted
 #'  class. For this reason, requesting class probabilities from a
 #'  model using unequal costs will throw an error.
+#'#'   Factor or character values in `newdata` that were not in the
+#'  training data are treated as missing, with a warning, and C5.0
+#'  handles them as it handles any missing value. (Up to version
+#'  0.2.0, they made `predict()` stop with an error when `C5.0()` was
+#'  called with `x` and `y`.) With the formula method,
+#'  [stats::model.frame()] still gives an error for new levels of
+#'  factor and character columns.
+#'
+#'   Models fitted with version 0.2.0 or earlier can still be used
+#'  for prediction.
 #'
 #' @param object an object of class `C5.0`
 #' @param newdata a matrix or data frame of predictors
@@ -116,42 +126,21 @@ predict.C5.0 <-
       ))
     }
 
-    ## If there are case weights used during training, the C code
-    ## will expect a column of weights in the new data but the
-    ## values will be ignored. `makeDataFile` puts those last in
-    ## the data when `C5.0.default` is run, so we will add a
-    ## column of NA values at the end here
-    if (object$caseWeights) {
-      newdata$case_weight_pred <- NA
-    }
-
-    ## make cases file
-    caseString <- makeDataFile(x = newdata, y = NULL)
-
-    ## When passing trials to the C code, convert to
-    ## zero if the original version of trials is used
-
     if (trials <= 0) {
       cli_abort("{.arg trials} must be a positive integer, not {.obj_type_friendly {trials}}.")
     }
+
+    ## When passing trials to the C code, convert to
+    ## zero if the original version of trials is used
     if (trials == object$trials["Actual"]) {
       trials <- 0
     }
 
-    ## Add trials (not object$trials) as an argument
-    Z <- .C(
-      "predictions",
-      as.character(caseString),
-      as.character(object$names),
-      as.character(object$tree),
-      as.character(object$rules),
-      as.character(object$cost),
-      pred = integer(nrow(newdata)),
-      confidence = double(length(object$levels) * nrow(newdata)),
-      trials = as.integer(trials),
-      output = character(1),
-      PACKAGE = "C50"
-    )
+    if (isTRUE(object$format_version == 2L)) {
+      Z <- predict_c50_direct(object, newdata, trials)
+    } else {
+      Z <- predict_c50_legacy(object, newdata, trials)
+    }
     if (any(grepl("Error limit exceeded", Z$output))) {
       cli_abort(Z$output)
     }
@@ -168,3 +157,53 @@ predict.C5.0 <-
     }
     out
   }
+
+# Fits from version 0.2.0.9000 on store the attribute spec, and the data are
+# passed to the C code as vectors (see R/data-spec.R)
+predict_c50_direct <- function(object, newdata, trials, call = rlang::caller_env()) {
+  cols <- c50_data_columns(newdata, object$spec, new_data = TRUE, call = call)
+  model <- object$tree
+  if (object$rbm) {
+    model <- object$rules
+  }
+  .Call(
+    "C_c50_predict",
+    object$spec,
+    model,
+    isTRUE(object$rbm),
+    object$costMatrix,
+    cols,
+    as.integer(trials),
+    PACKAGE = "C50"
+  )
+}
+
+# Fits from earlier versions have only the text of the `.names` file, so the
+# new data are written in the `.cases` text format
+predict_c50_legacy <- function(object, newdata, trials) {
+  ## If there are case weights used during training, the C code
+  ## will expect a column of weights in the new data but the
+  ## values will be ignored. `makeDataFile` puts those last in
+  ## the data when `C5.0.default` is run, so we will add a
+  ## column of NA values at the end here
+  if (object$caseWeights) {
+    newdata$case_weight_pred <- NA
+  }
+
+  ## make cases file
+  caseString <- makeDataFile(x = newdata, y = NULL)
+
+  .C(
+    "predictions",
+    as.character(caseString),
+    as.character(object[["names"]]),
+    as.character(object$tree),
+    as.character(object$rules),
+    as.character(object$cost),
+    pred = integer(nrow(newdata)),
+    confidence = double(length(object$levels) * nrow(newdata)),
+    trials = as.integer(trials),
+    output = character(1),
+    PACKAGE = "C50"
+  )
+}

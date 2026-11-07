@@ -16,15 +16,58 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'  This particular model handles non-numeric data of some types
 #'  (such as character, factor and ordered data).
 #'
-#' The cost matrix should by CxC, where C is the number of
-#'  classes. Diagonal elements are ignored. Columns should
-#'  correspond to the true classes and rows are the predicted
-#'  classes. For example, if C = 3 with classes Red, Blue and Green
-#'  (in that order), a value of 5 in the (2,3) element of the matrix
-#'  would indicate that the cost of predicting a Green sample as
-#'  Blue is five times the usual value (of one). Note that when
-#'  costs are used, class probabilities cannot be generated using
-#' [predict.C5.0()].
+#' Predictors can be numeric, factor, ordered factor, or character
+#'  columns. Character columns are treated as factors with sorted
+#'  levels. Names and values are used exactly as given: there are no
+#'  reserved names or special values, so a column can be called
+#'  `"case weight"`, and a factor level can be `"?"`, `"N/A"`, or an
+#'  empty string. The only exception is that no predictor can have
+#'  the same name as the outcome label (`label` in [C5.0Control()]).
+#'  Missing values (`NA`) are allowed in the predictors; C5.0 handles
+#'  them directly. Rows with a missing outcome are not used.
+#'
+#' @section Costs:
+#' The cost matrix should be CxC, where C is the number of
+#'  classes. Columns should correspond to the true classes and rows
+#'  are the predicted classes. For example, if C = 3 with classes
+#'  Red, Blue and Green (in that order), a value of 5 in the (2,3)
+#'  element of the matrix would indicate that the cost of predicting
+#'  a Green sample as Blue is five times the usual value (of one).
+#'
+#' The row and column names must both be the levels of `y`. They can
+#'  be in any order: rows are matched by the row names and columns
+#'  by the column names. If the matrix has no dimnames, the levels of
+#'  `y` are used, in order, with a warning.
+#'
+#' Which values are used:
+#'  * Diagonal elements are ignored.
+#'  * An off-diagonal value of 1 is the default cost, so it has no
+#'    effect.
+#'  * All other off-diagonal values are used, including values
+#'    between 0 and 1.
+#'  * A value of 0 (an error with no cost) is allowed when there are
+#'    three or more classes. With two classes, both off-diagonal
+#'    values must be greater than 0.
+#'  * Negative, missing, and infinite values are errors.
+#'
+#' How the costs are used depends on the number of classes:
+#'  * With two classes, the training cases are reweighted so that
+#'    cases of the class whose errors cost more count for more. These
+#'    weights are multiplied by any case `weights`, and `minCases` is
+#'    lowered to match.
+#'  * With any number of classes, the predicted class is the one with
+#'    the lowest expected cost, not the most probable one. Because of
+#'    this, class probabilities cannot be generated with
+#'    [predict.C5.0()] when costs are used.
+#'  * For rule-based models with three or more classes, the costs are
+#'    also used when the rules are formed.
+#'
+#' Up to version 0.2.0, off-diagonal costs that were not greater than
+#'  1 were dropped without a message, so that C5.0 used a cost of 1
+#'  instead (a value of 0.5, for example, had no effect). The row
+#'  names of the matrix were also ignored, and the rows were assumed
+#'  to be in the order of the column names. Models fitted with such
+#'  cost matrices will differ from those versions.
 #'
 #' Internally, the code will attempt to halt boosting if it
 #'  appears to be ineffective. For this reason, the value of
@@ -53,7 +96,9 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'  [C5.0Control()]
 #' @param costs a matrix of costs associated with the possible
 #'  errors. The matrix should have C columns and rows where C is the
-#'  number of class levels.
+#'  number of class levels. Rows are the predicted classes and
+#'  columns are the true classes. See the Costs section for which
+#'  values are used and how.
 #' @param formula a formula, with a response and at least one predictor.
 #' @param data an optional data frame in which to interpret the
 #'  variables named in the formula.
@@ -68,30 +113,39 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'
 #'   \item{boostResults}{ a parsed version of the boosting table(s)
 #'  shown in the output }
-#'   \item{call}{ the function call } \item{caseWeights}{ not
-#'  currently supported. }
+#'   \item{call}{ the function call }
+#'   \item{caseWeights}{ a logical: were case weights used? }
 #'   \item{control}{ an echo of the specifications from
 #'  [C5.0Control()] }
-#'   \item{cost}{ the text version of the cost matrix (or "") }
-#'   \item{costMatrix}{ an echo of the model argument }
+#'   \item{cost}{ the text version of the cost matrix (or "" when
+#'  no off-diagonal cost differs from 1) }
+#'   \item{costMatrix}{ the cost matrix, with its rows and columns in
+#'  the order of the class levels }
 #'   \item{dims}{ original dimensions of the predictor matrix or
 #'  data frame }
 #'   \item{levels}{ a character vector of factor levels for the
 #'  outcome }
-#'   \item{names}{ a string version of the names file }
+#'   \item{names}{ a string version of the names file. The C code
+#'  does not use it; it is kept for code that reads the predictor
+#'  types and levels from it. }
 #'   \item{output}{ a string version of the command line output }
 #'   \item{predictors}{ a character vector of predictor names }
 #'   \item{rbm}{ a logical for rules }
 #'   \item{rules}{ a character version of the rules file }
 #'   \item{size}{ n integer vector of the tree/rule size (or sizes
 #'  in the case of boosting) }
-#'.  \item{tree}{ a string version of the tree file }
+#'   \item{spec}{ a description of the predictors and the outcome
+#'  (names, types, and levels) that [predict.C5.0()] uses to
+#'  prepare new data }
+#'   \item{format_version}{ the version of the data interface;
+#'  `2` for models fitted with this version of the package }
+#'   \item{tree}{ a string version of the tree file }
 #'   \item{trials}{ a named vector with elements `Requested`
 #'  (an echo of the function call) and `Actual` (how many the
 #'  model used) }
 #' @note The command line version currently supports more data
-#'  types than the R port. Currently, numeric, factor and ordered
-#'  factors are allowed as predictors.
+#'  types than the R port. Currently, numeric, factor, ordered
+#'  factor, and character columns are allowed as predictors.
 #' @author Original GPL C code by Ross Quinlan, R code and
 #'  modifications to C by Max Kuhn, Steve Weston and Nathan Coulter
 #' @seealso [C5.0Control()], [summary.C5.0()],
@@ -172,6 +226,7 @@ C5.0.default <- function(
         cli_abort("{.arg costs} must have both row and column names.")
       }
     }
+    costs <- c50_cost_matrix(costs, lvl)
     costString <- makeCostFile(costs)
   } else {
     costString <- ""
@@ -205,42 +260,57 @@ C5.0.default <- function(
     )
   }
 
-  if (inherits(x, "tbl_df")) {
-    x <- as.data.frame(x)
+  if (!is.data.frame(x) || inherits(x, "tbl_df")) {
+    x <- as.data.frame(x, stringsAsFactors = FALSE)
   }
 
-  if (!is.null(weights) && !is.numeric(weights)) {
+  if (length(y) != nrow(x)) {
     cli_abort(
-      "{.arg weights} must be numeric, not {.obj_type_friendly {weights}}."
+      "{.arg y} must have one value per row of {.arg x} ({nrow(x)}), not
+       {length(y)}."
     )
   }
 
-  ## TODO: add case weights to these files when needed
-  namesString <-
-    makeNamesFile(x, y, w = weights, label = control$label, comments = TRUE)
-  dataString <- makeDataFile(x, y, weights)
+  if (!is.null(weights)) {
+    if (!is.numeric(weights)) {
+      cli_abort(
+        "{.arg weights} must be numeric, not {.obj_type_friendly {weights}}."
+      )
+    }
+    if (length(weights) != nrow(x)) {
+      cli_abort(
+        "{.arg weights} must have one value per row of {.arg x}
+         ({nrow(x)}), not {length(weights)}."
+      )
+    }
+    check_finite(weights, "weights")
+    weights <- as.double(weights)
+  }
 
-  Z <- .C(
-    "C50",
-    as.character(namesString),
-    as.character(dataString),
-    as.character(costString),
+  ## The data are passed to the C code as vectors; see R/data-spec.R
+  spec <- c50_data_spec(
+    x,
+    y,
+    label = control$label,
+    has_weights = !is.null(weights)
+  )
+  x_cols <- c50_data_columns(x, spec)
+
+  Z <- .Call(
+    "C_c50_fit",
+    spec,
+    x_cols,
+    as.integer(y),
+    weights,
+    costs,
     as.logical(control$subset),
     # -s "use the Subset option" var name: SUBSET
     as.logical(rules),
     # -r "use the Ruleset option" var name: RULES
-
-    ## for the bands option, I'm not sure what the default should be.
     as.integer(control$bands),
     # -u "sort rules by their utility into bands" var name: UTILITY
-
-    ## The documentation has two options for boosting:
-    ## -b use the Boosting option with 10 trials
-    ## -t trials ditto with specified number of trial
-    ## I think we should use -t
     as.integer(trials),
-    # -t : " ditto with specified number of trial", var name: TRIALS
-
+    # -t : "ditto with specified number of trial", var name: TRIALS
     as.logical(control$winnow),
     # -w "winnow attributes before constructing a classifier" var name: WINNOW
     as.double(control$sample),
@@ -252,24 +322,12 @@ C5.0.default <- function(
     # -g: "turn off the global tree pruning stage" var name: GLOBAL
     as.double(control$CF),
     # -c: "set the Pruning CF value" var name: CF
-
-    ## Also, for the number of minimum cases, I'm not sure what the
-    ## default should be. The code looks like it dynamically sets the
-    ## value (as opposed to a static, universal integer
     as.integer(control$minCases),
     # -m : "set the Minimum cases" var name: MINITEMS
-
     as.logical(control$fuzzyThreshold),
     # -p "use the Fuzzy thresholds option" var name: PROBTHRESH
     as.logical(control$earlyStopping),
     # toggle C5.0 to check to see if we should stop boosting early
-    ## the model is returned in 2 files: .rules and .tree
-    tree = character(1),
-    # pass back C5.0 tree as a string
-    rules = character(1),
-    # pass back C5.0 rules as a string
-    output = character(1),
-    # get output that normally goes to screen
     PACKAGE = "C50"
   )
 
@@ -316,7 +374,7 @@ C5.0.default <- function(
   }
 
   out <- list(
-    names = namesString,
+    names = c50_names_string(spec),
     cost = costString,
     costMatrix = costs,
     caseWeights = !is.null(weights),
@@ -331,7 +389,9 @@ C5.0.default <- function(
     output = Z$output,
     tree = Z$tree,
     predictors = colnames(x),
-    rules = Z$rules
+    rules = Z$rules,
+    spec = spec,
+    format_version = 2L
   )
 
   class(out) <- "C5.0"
@@ -740,7 +800,6 @@ C5imp <- function(object, metric = "usage", pct = TRUE, ...) {
     )
   }
   allVar <- getOriginalVars(object)
-  allVar <- gsub("\\", "", allVar, fixed = TRUE)
   if (metric == "usage") {
     object$output <- strsplit(object$output, "\n")[[1]]
     usageIndex <-
@@ -816,16 +875,21 @@ breakUp <- function(y) {
 
 
 getOriginalVars <- function(x, call = rlang::caller_env()) {
-  treeDat <- strsplit(x$names, "\n")[[1]]
+  if (isTRUE(x$format_version == 2L)) {
+    return(x$spec$names)
+  }
+  treeDat <- strsplit(x[["names"]], "\n")[[1]]
   varStart <- grep(paste(x$control$label, ":", sep = ""), treeDat)
   if (length(varStart) == 0) {
     cli_abort("Cannot parse names file.", call = call)
   }
   treeDat <- treeDat[(varStart + 1):length(treeDat)]
   treeDat <- strsplit(treeDat, ":")
-  unlist(lapply(treeDat, function(x) {
+  out <- unlist(lapply(treeDat, function(x) {
     x[1]
   }))
+  # the names in the legacy text are escaped
+  gsub("\\", "", out, fixed = TRUE)
 }
 
 getVars <- function(x) {

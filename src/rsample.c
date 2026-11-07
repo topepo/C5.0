@@ -66,23 +66,98 @@ extern void SetTrials(int *internal, int user);
 /*                                                                       */
 /*************************************************************************/
 
+/*************************************************************************/
+/*                                                                       */
+/* Prediction is split so that the R interface in rdata.c can   */
+/* define the attributes and build the cases itself:    */
+/*                                                                       */
+/*   PredictLoadModel - read the trees or rulesets    */
+/*   PredictOneCase   - classify one case and store the results  */
+/*                                                                       */
+/*************************************************************************/
+
+void PredictLoadModel(int trials)
+/*   ----------------  */
+{
+  int TotalRules = 0;
+
+  /* TRIALS is a global variable that is derived from the rule/tree
+   file and is the value specified at the time of the model build.
+   trials is the value that was used when calling predict.C5.0.
+   That R code passes a value of zero if the default value of trials
+   is used */
+
+  /*  Read the appropriate classifier file.  Call CheckFile() to
+determine the number of trials, then allocate space for
+trees or rulesets  */
+
+  if (RULES) {
+    CheckFile(".rules", binfalse);
+    SetTrials(&TRIALS, trials);
+    RuleSet = AllocZero(TRIALS + 1, CRuleSet);
+    ForEach(Trial, 0, TRIALS - 1) {
+      RuleSet[Trial] = GetRules(".rules");
+      TotalRules += RuleSet[Trial]->SNRules;
+    }
+
+    MostSpec = Alloc(MaxClass + 1, CRule);
+  } else {
+    CheckFile(".tree", binfalse);
+    SetTrials(&TRIALS, trials);
+    Pruned = AllocZero(TRIALS + 1, Tree);
+
+    ForEach(Trial, 0, TRIALS - 1) { Pruned[Trial] = GetTree(".tree"); }
+  }
+
+  (void)TotalRules; /* Used only when RULESUSED is enabled */
+
+  /*  Set global default class for boosting  */
+
+  Default = (RULES ? RuleSet[0]->SDefault : Pruned[0]->Leaf);
+
+  ClassSum = AllocZero(MaxClass + 1, double); /* used in classification */
+  Vote = AllocZero(MaxClass + 1, float);      /* used with boosting */
+}
+
+void PredictOneCase(DataRec Case, int i, int *outputv, double *confidencev)
+/*   --------------  */
+{
+  double TotalConf = 0, NumClasses = 0;
+  ClassNo Predict, c;
+
+  /*  For this case, find the class predicted by See5/C5.0 model  */
+
+  Predict = PredictClassify(Case);
+
+  outputv[i] = Predict;
+  ForEach(c, 1, MaxClass) {
+    confidencev[MaxClass * i + c - 1] = ClassSum[c];
+    TotalConf += ClassSum[c];
+    NumClasses += 1;
+  }
+
+  // AMK In case no rule is triggered
+  if (TotalConf == 0) {
+    ForEach(c, 1, MaxClass) {
+      confidencev[MaxClass * i + c - 1] = 1 / NumClasses;
+    }
+    TotalConf = 1;
+  }
+  // AMK if a class has no active rules, normalize the conf values.
+  // In other cases, the probabilities don't exactly add up (e.g.
+  // 0.999999920630845)
+  ForEach(c, 1, MaxClass) {
+    confidencev[MaxClass * i + c - 1] =
+        confidencev[MaxClass * i + c - 1] / TotalConf;
+  }
+}
+
 int rpredictmain(int *trials, int *outputv, double *confidencev)
 /*  ----------  */
 {
   FILE *F;
   DataRec Case;
-  int TotalRules = 0, StartList;
-  double TotalConf = 0, NumClasses = 0;
-  ClassNo Predict, c;
-  //    Boolean  XRefForm=binfalse;
-  //    void  ShowRules(int);
   int i;
-
-  /* TRIALS is a global variable that is derived from the rule/tree
-   file and is the value specified at the time of the model build.
-   The integer inside *trials is the value that was used when calling
-   predict.C5.0. That R code passes a value of zero if the default
-   value of trials is used */
 
   MODE = m_predict;
 
@@ -93,145 +168,21 @@ int rpredictmain(int *trials, int *outputv, double *confidencev)
 
   GetNames(F);
 
-  /*  Read the appropriate classifier file.  Call CheckFile() to
-determine the number of trials, then allocate space for
-trees or rulesets  */
-
-  if (RULES) {
-    CheckFile(".rules", binfalse);
-    SetTrials(&TRIALS, *trials);
-    RuleSet = AllocZero(TRIALS + 1, CRuleSet);
-    // Rprintf("TRIALS: %4d\n", TRIALS);
-    ForEach(Trial, 0, TRIALS - 1) {
-      RuleSet[Trial] = GetRules(".rules");
-      TotalRules += RuleSet[Trial]->SNRules;
-    }
-
-    /*
-    if ( RULESUSED )
-    {
-        RulesUsed = Alloc(TotalRules + TRIALS, RuleNo);
-    }
-    */
-
-    MostSpec = Alloc(MaxClass + 1, CRule);
-  } else {
-    CheckFile(".tree", binfalse);
-    SetTrials(&TRIALS, *trials);
-    Pruned = AllocZero(TRIALS + 1, Tree);
-
-    ForEach(Trial, 0, TRIALS - 1) { Pruned[Trial] = GetTree(".tree"); }
-  }
-
-  (void)TotalRules; /* Used only when RULESUSED is enabled */
-  (void)StartList;  /* Used only when printing is enabled */
-
-  /*  Set global default class for boosting  */
-
-  Default = (RULES ? RuleSet[0]->SDefault : Pruned[0]->Leaf);
+  PredictLoadModel(*trials);
 
   /*  Now classify the cases in file <filestem>.cases.
 This has the same format as a .data file except that
 the class can be "?" to indicate that it is unknown.  */
 
-  //    if ( XRefForm )
-  //    {
-  // ForEach(c, 1, MaxClass)
-  // {
-  //     if ( (o = strlen(ClassName[c])) > MaxClassLen ) MaxClassLen = o;
-  // }
-  //
-  // printf("%-15s %*s   [Predicted]%s\n\n",
-  //        "Case", -MaxClassLen, "Class",
-  //        ( RULESUSED ? "   Rules" : "" ));
-  //
-  // StartList = 16 + MaxClassLen + 3 +
-  //      ( MaxClassLen > 9 ? MaxClassLen + 2 : 11 ) + 3;
-  //    }
-  //    else
-  //    {
-  // printf("Case\t\tGiven\t\tPredicted%s\n %s\t\tClass\t\tClass\n\n",
-  //  ( RULESUSED ? "\t\t    Rules" : "" ),
-  //  ( LabelAtt ? "ID" : "No" ));
-
-  StartList = 60;
-  //    }
-
   if (!(F = GetFile(".cases", "r")))
     Error(NOFILE, Fn, "");
 
-  ClassSum = AllocZero(MaxClass + 1, double); /* used in classification */
-  Vote = AllocZero(MaxClass + 1, float);      /* used with boosting */
-
   LineNo = 0;
 
-  i = 0; // XXX added this at least temporarily
+  i = 0;
 
   while ((Case = PredictGetDataRec(F, binfalse))) {
-    /*  For this case, find the class predicted by See5/C5.0 model  */
-
-    Predict = PredictClassify(Case);
-
-    /* XXX prediction is ClassName[Predict]? */
-    outputv[i] = Predict; // XXX add one?
-    TotalConf = 0;
-    NumClasses = 0;
-    ForEach(c, 1, MaxClass) {
-      confidencev[MaxClass * i + c - 1] = ClassSum[c];
-      TotalConf += ClassSum[c];
-      NumClasses += 1;
-    }
-
-    // AMK In case no rule is triggered
-    if (TotalConf == 0) {
-      ForEach(c, 1, MaxClass) {
-        confidencev[MaxClass * i + c - 1] = 1 / NumClasses;
-      }
-      TotalConf = 1;
-    }
-    // AMK if a class has no active rules, normalize the conf values.
-    // In other cases, the probabilities don't exactly add up (e.g.
-    // 0.999999920630845)
-    ForEach(c, 1, MaxClass) {
-      confidencev[MaxClass * i + c - 1] =
-          confidencev[MaxClass * i + c - 1] / TotalConf;
-    }
-
-    /*  Print either case label or number  */
-
-    //      if ( LabelAtt )
-    //      {
-    //          printf("%-15.15s ", (String) (IgnoredVals +
-    //          SVal(Case,LabelAtt)));
-    //      }
-    //      else
-    //      {
-    //          printf("%4d\t\t", ++CaseNo);
-    //      }
-    //
-    /*  Print the result for this case in alternative formats  */
-    //
-    //      if ( XRefForm )
-    //      {
-    //          printf("%*s", -MaxClassLen, ClassName[Class(Case)]);
-    //          CurrentPosition = 16 + MaxClassLen;
-    //
-    //          if ( Class(Case) != Predict )
-    //          {
-    //   printf("   [%s]", ClassName[Predict]);
-    //   CurrentPosition += 5 + strlen(ClassName[Predict]);
-    //      }
-    //  }
-    //  else
-    //  {
-    //      printf("%-15.15s %-15.15s [%.2f]",
-    //       ClassName[Class(Case)], ClassName[Predict], Confidence);
-    //      CurrentPosition = 54;
-    //  }
-
-    //  if ( RULESUSED ) ShowRules(StartList - CurrentPosition);
-
-    //  printf("\n");
+    PredictOneCase(Case, i, outputv, confidencev);
 
     /*  Free the memory used by this case  */
 

@@ -613,12 +613,21 @@ test_that("C5.0 with boosting and early stopping disabled runs more trials", {
 
 
 test_that("failed model", {
-  skip_on_os("linux")
+  # A predictor with a single value used to make the C code fail, since the
+  # `.names` text cannot describe it. The text interface still fails, which
+  # tests how C errors are reported.
   iris_zv <- iris
   iris_zv$zv <- "a"
 
-  expect_snapshot(
-    C5.0(Species ~ zv, data = iris_zv),
-    error = TRUE
+  # The data are now passed directly, so the model can be fit
+  fit <- C5.0(Species ~ zv, data = iris_zv)
+  expect_s3_class(fit, "C5.0")
+  expect_equal(fit$size, 1)
+
+  skip_on_os("linux")
+  expect_output(
+    out <- legacy_c50_fit(iris_zv["zv"], iris_zv$Species),
+    "called exit"
   )
+  expect_snapshot(parse_model_failure(out$output), error = TRUE)
 })
