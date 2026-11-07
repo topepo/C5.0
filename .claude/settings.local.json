@@ -14,7 +14,8 @@
       "WebFetch(domain:cli.r-lib.org)",
       "WebFetch(domain:rlang.r-lib.org)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:aml4td.org)"
     ]
   }
 }

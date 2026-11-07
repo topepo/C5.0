@@ -37,7 +37,11 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #' @param y a factor vector with 2 or more levels
 #' @param trials an integer specifying the number of boosting
 #'  iterations. A value of one indicates that a single model is
-#'  used.
+#'  used. There is no upper limit, but fitting time, memory use, and
+#'  model size grow linearly with the number of trials. When
+#'  `earlyStopping = TRUE` in [C5.0Control()] (the default), boosting
+#'  can stop before the requested number of trials; see the `trials`
+#'  element of the returned object for the number actually used.
 #' @param rules A logical: should the tree be decomposed into a
 #'  rule-based model?
 #' @param weights an optional numeric vector of case weights. Note
@@ -173,10 +177,22 @@ C5.0.default <- function(
     costString <- ""
   }
 
-  maxtrials <- 100
-  if (trials < 1 | trials > maxtrials) {
+  trials_ok <-
+    is.numeric(trials) &&
+    length(trials) == 1 &&
+    !is.na(trials) &&
+    trials >= 1 &&
+    trials <= .Machine$integer.max &&
+    trials == round(trials)
+  if (!trials_ok) {
+    trials_scalar <- is.numeric(trials) && length(trials) == 1 && !is.na(trials)
+    if (trials_scalar) {
+      trials_desc <- cli::format_inline("{.val {trials}}")
+    } else {
+      trials_desc <- cli::format_inline("{.obj_type_friendly {trials}}")
+    }
     cli_abort(
-      "{.arg trials} must be between 1 and {maxtrials}, not {.val {trials}}."
+      "{.arg trials} must be a single whole number >= 1, not {trials_desc}."
     )
   }
 
@@ -539,7 +555,7 @@ print.C5.0 <- function(x, ...) {
     !x$control$earlyStopping &
       x$trials["Requested"] > 1
   ) {
-    otherOptions <- c(otherOptions, "early stopping for boosting")
+    otherOptions <- c(otherOptions, "no early stopping for boosting")
   }
   if (x$control$sample > 0) {
     otherOptions <- c(
