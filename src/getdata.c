@@ -67,23 +67,25 @@ CaseNo SampleFrom; /* file count for sampling */
 
 /*************************************************************************/
 /*                                                                       */
-/* Read raw cases from file with given extension.    */
+/* Case loading is split into three steps so that cases can come  */
+/* either from a text file (GetData) or directly from R vectors  */
+/* (RLoadCases in rdata.c):        */
 /*                                                                       */
-/* On completion, cases are stored in array Case in the form  */
-/* of vectors of attribute values, and MaxCase is set to the  */
-/* number of data cases.       */
+/*   StartData  - reset the case store and the sampling state   */
+/*   KeepCase   - apply sampling, then store or discard one case  */
+/*   FinishData - set MaxCase to the index of the last case   */
 /*                                                                       */
 /*************************************************************************/
 
-void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
-/*   -------  */
-{
-  DataRec DVec;
-  CaseNo CaseSpace, WantTrain, LeftTrain, WantTest, LeftTest;
-  Boolean FirstIgnore = bintrue, SelectTrain;
+static CaseNo CaseSpace, WantTrain, LeftTrain, WantTest, LeftTest;
+static Boolean FirstIgnore;
 
+void StartData(Boolean Train, CaseNo NCases)
+/*   ---------  */
+{
   LineNo = 0;
   SuppressErrorMessages = SAMPLE && !Train;
+  FirstIgnore = bintrue;
 
   /*  Don't reset case count if appending data for xval  */
 
@@ -97,7 +99,7 @@ void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
 
   if (SAMPLE) {
     if (Train) {
-      SampleFrom = CountData(Df);
+      SampleFrom = NCases;
       ResetKR(KRInit); /* initialise KRandom() */
     } else {
       ResetKR(KRInit); /* restore  KRandom() */
@@ -106,61 +108,103 @@ void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
     WantTrain = SampleFrom * SAMPLE + 0.5;
     LeftTrain = SampleFrom;
 
-    WantTest = (SAMPLE < 0.5 ? WantTrain : SampleFrom - WantTrain);
+    if (SAMPLE < 0.5) {
+      WantTest = WantTrain;
+    } else {
+      WantTest = SampleFrom - WantTrain;
+    }
     LeftTest = SampleFrom - WantTrain;
   }
+}
+
+void KeepCase(DataRec DVec, Boolean Train, Boolean AllowUnknownClass)
+/*   --------  */
+{
+  Boolean SelectTrain;
+
+  /*  Check whether to include if we are sampling */
+
+  if (SAMPLE) {
+    SelectTrain = KRandom() < WantTrain / (float)LeftTrain--;
+
+    /*  Include if
+  * Select and this is the training set
+  * ! Select and this is the test set and sub-select
+  NB: Must use different random number generator for
+ sub-selection since cannot disturb random number sequence  */
+
+    if (SelectTrain) {
+      WantTrain--;
+    }
+
+    if (SelectTrain != Train ||
+        (!Train && AltRandom >= WantTest / (float)LeftTest--)) {
+      FreeLastCase(DVec);
+      return;
+    }
+
+    if (!Train) {
+      WantTest--;
+    }
+  }
+
+  /*  Make sure there is room for another case  */
+
+  if (MaxCase >= CaseSpace) {
+    CaseSpace += Inc;
+    Realloc(Case, CaseSpace + 1, DataRec);
+  }
+
+  /*  Ignore cases with unknown class  */
+
+  if (AllowUnknownClass || (Class(DVec) & 077777777) > 0) {
+    Case[MaxCase] = DVec;
+    MaxCase++;
+  } else {
+    if (FirstIgnore && Of) {
+      fprintf(Of, T_IgnoreBadClass);
+      FirstIgnore = binfalse;
+    }
+
+    FreeLastCase(DVec);
+  }
+}
+
+void FinishData(void)
+/*   ----------  */
+{
+  MaxCase--;
+}
+
+/*************************************************************************/
+/*                                                                       */
+/* Read raw cases from file with given extension.    */
+/*                                                                       */
+/* On completion, cases are stored in array Case in the form  */
+/* of vectors of attribute values, and MaxCase is set to the  */
+/* number of data cases.       */
+/*                                                                       */
+/*************************************************************************/
+
+void GetData(FILE *Df, Boolean Train, Boolean AllowUnknownClass)
+/*   -------  */
+{
+  DataRec DVec;
+  CaseNo NCases = 0;
+
+  if (SAMPLE && Train) {
+    NCases = CountData(Df);
+  }
+
+  StartData(Train, NCases);
 
   while ((DVec = GetDataRec(Df, Train))) {
-    /*  Check whether to include if we are sampling */
-
-    if (SAMPLE) {
-      SelectTrain = KRandom() < WantTrain / (float)LeftTrain--;
-
-      /*  Include if
-    * Select and this is the training set
-    * ! Select and this is the test set and sub-select
-    NB: Must use different random number generator for
-   sub-selection since cannot disturb random number sequence  */
-
-      if (SelectTrain) {
-        WantTrain--;
-      }
-
-      if (SelectTrain != Train ||
-          (!Train && AltRandom >= WantTest / (float)LeftTest--)) {
-        FreeLastCase(DVec);
-        continue;
-      }
-
-      if (!Train) {
-        WantTest--;
-      }
-    }
-
-    /*  Make sure there is room for another case  */
-
-    if (MaxCase >= CaseSpace) {
-      CaseSpace += Inc;
-      Realloc(Case, CaseSpace + 1, DataRec);
-    }
-
-    /*  Ignore cases with unknown class  */
-
-    if (AllowUnknownClass || (Class(DVec) & 077777777) > 0) {
-      Case[MaxCase] = DVec;
-      MaxCase++;
-    } else {
-      if (FirstIgnore && Of) {
-        fprintf(Of, T_IgnoreBadClass);
-        FirstIgnore = binfalse;
-      }
-
-      FreeLastCase(DVec);
-    }
+    KeepCase(DVec, Train, AllowUnknownClass);
   }
 
   fclose(Df);
-  MaxCase--;
+
+  FinishData();
 }
 
 /*************************************************************************/

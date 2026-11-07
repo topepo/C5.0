@@ -46,7 +46,9 @@ Quinlan's notes on case weights).}
 
 \item{costs}{a matrix of costs associated with the possible
 errors. The matrix should have C columns and rows where C is the
-number of class levels.}
+number of class levels. Rows are the predicted classes and
+columns are the true classes. See the Costs section for which
+values are used and how.}
 
 \item{\dots}{other options to pass into the function (not
 currently used with default method)}
@@ -68,24 +70,33 @@ An object of class \code{C5.0} with elements:
 
 \item{boostResults}{ a parsed version of the boosting table(s)
 shown in the output }
-\item{call}{ the function call } \item{caseWeights}{ not
-currently supported. }
+\item{call}{ the function call }
+\item{caseWeights}{ a logical: were case weights used? }
 \item{control}{ an echo of the specifications from
 \code{\link[=C5.0Control]{C5.0Control()}} }
-\item{cost}{ the text version of the cost matrix (or "") }
-\item{costMatrix}{ an echo of the model argument }
+\item{cost}{ the text version of the cost matrix (or "" when
+no off-diagonal cost differs from 1) }
+\item{costMatrix}{ the cost matrix, with its rows and columns in
+the order of the class levels }
 \item{dims}{ original dimensions of the predictor matrix or
 data frame }
 \item{levels}{ a character vector of factor levels for the
 outcome }
-\item{names}{ a string version of the names file }
+\item{names}{ a string version of the names file. The C code
+does not use it; it is kept for code that reads the predictor
+types and levels from it. }
 \item{output}{ a string version of the command line output }
 \item{predictors}{ a character vector of predictor names }
 \item{rbm}{ a logical for rules }
 \item{rules}{ a character version of the rules file }
 \item{size}{ n integer vector of the tree/rule size (or sizes
 in the case of boosting) }
-.  \item{tree}{ a string version of the tree file }
+\item{spec}{ a description of the predictors and the outcome
+(names, types, and levels) that \code{\link[=predict.C5.0]{predict.C5.0()}} uses to
+prepare new data }
+\item{format_version}{ the version of the data interface;
+\code{2} for models fitted with this version of the package }
+\item{tree}{ a string version of the tree file }
 \item{trials}{ a named vector with elements \code{Requested}
 (an echo of the function call) and \code{Actual} (how many the
 model used) }
@@ -105,15 +116,68 @@ preserved (i.e. dummy variables are not automatically created).
 This particular model handles non-numeric data of some types
 (such as character, factor and ordered data).
 
-The cost matrix should by CxC, where C is the number of
-classes. Diagonal elements are ignored. Columns should
-correspond to the true classes and rows are the predicted
-classes. For example, if C = 3 with classes Red, Blue and Green
-(in that order), a value of 5 in the (2,3) element of the matrix
-would indicate that the cost of predicting a Green sample as
-Blue is five times the usual value (of one). Note that when
-costs are used, class probabilities cannot be generated using
-\code{\link[=predict.C5.0]{predict.C5.0()}}.
+Predictors can be numeric, factor, ordered factor, or character
+columns. Character columns are treated as factors with sorted
+levels. Names and values are used exactly as given: there are no
+reserved names or special values, so a column can be called
+\code{"case weight"}, and a factor level can be \code{"?"}, \code{"N/A"}, or an
+empty string. The only exception is that no predictor can have
+the same name as the outcome label (\code{label} in \code{\link[=C5.0Control]{C5.0Control()}}).
+Missing values (\code{NA}) are allowed in the predictors; C5.0 handles
+them directly. Rows with a missing outcome are not used.
+}
+\note{
+The command line version currently supports more data
+types than the R port. Currently, numeric, factor, ordered
+factor, and character columns are allowed as predictors.
+}
+\section{Costs}{
+
+The cost matrix should be CxC, where C is the number of
+classes. Columns should correspond to the true classes and rows
+are the predicted classes. For example, if C = 3 with classes
+Red, Blue and Green (in that order), a value of 5 in the (2,3)
+element of the matrix would indicate that the cost of predicting
+a Green sample as Blue is five times the usual value (of one).
+
+The row and column names must both be the levels of \code{y}. They can
+be in any order: rows are matched by the row names and columns
+by the column names. If the matrix has no dimnames, the levels of
+\code{y} are used, in order, with a warning.
+
+Which values are used:
+\itemize{
+\item Diagonal elements are ignored.
+\item An off-diagonal value of 1 is the default cost, so it has no
+effect.
+\item All other off-diagonal values are used, including values
+between 0 and 1.
+\item A value of 0 (an error with no cost) is allowed when there are
+three or more classes. With two classes, both off-diagonal
+values must be greater than 0.
+\item Negative, missing, and infinite values are errors.
+}
+
+How the costs are used depends on the number of classes:
+\itemize{
+\item With two classes, the training cases are reweighted so that
+cases of the class whose errors cost more count for more. These
+weights are multiplied by any case \code{weights}, and \code{minCases} is
+lowered to match.
+\item With any number of classes, the predicted class is the one with
+the lowest expected cost, not the most probable one. Because of
+this, class probabilities cannot be generated with
+\code{\link[=predict.C5.0]{predict.C5.0()}} when costs are used.
+\item For rule-based models with three or more classes, the costs are
+also used when the rules are formed.
+}
+
+Up to version 0.2.0, off-diagonal costs that were not greater than
+1 were dropped without a message, so that C5.0 used a cost of 1
+instead (a value of 0.5, for example, had no effect). The row
+names of the matrix were also ignored, and the rows were assumed
+to be in the order of the column names. Models fitted with such
+cost matrices will differ from those versions.
 
 Internally, the code will attempt to halt boosting if it
 appears to be ineffective. For this reason, the value of
@@ -121,11 +185,7 @@ appears to be ineffective. For this reason, the value of
 produced. There is an option to turn this off in
 \code{\link[=C5.0Control]{C5.0Control()}}.
 }
-\note{
-The command line version currently supports more data
-types than the R port. Currently, numeric, factor and ordered
-factors are allowed as predictors.
-}
+
 \examples{
 
 library(modeldata)

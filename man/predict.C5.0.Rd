@@ -70,6 +70,16 @@ probabilities derived from the class distribution in the
 terminal nodes may not be consistent with the final predicted
 class. For this reason, requesting class probabilities from a
 model using unequal costs will throw an error.
+#'   Factor or character values in \code{newdata} that were not in the
+training data are treated as missing, with a warning, and C5.0
+handles them as it handles any missing value. (Up to version
+0.2.0, they made \code{predict()} stop with an error when \code{C5.0()} was
+called with \code{x} and \code{y}.) With the formula method,
+\code{\link[stats:model.frame]{stats::model.frame()}} still gives an error for new levels of
+factor and character columns.
+
+Models fitted with version 0.2.0 or earlier can still be used
+for prediction.
 }
 \examples{
 

@@ -1,4 +1,4 @@
-# Tests for plot.C5.0, as.party.C5.0, and model.frame.C5.0
+# Tests for plot.C5.0, as.party.C5.0, and c50_model_frame
 
 # --- as.party.C5.0 tests ---
 
@@ -21,14 +21,14 @@ test_that("as.party works with formula-fitted model", {
   expect_s3_class(party_obj, "party")
 })
 
-# --- model.frame.C5.0 tests ---
+# --- c50_model_frame tests ---
 
-test_that("model.frame extracts data from formula model", {
+test_that("c50_model_frame extracts data from formula model", {
   set.seed(1201)
   dat <- make_two_class_data(100, seed = 1201)
   mod <- C5.0(y ~ ., data = dat)
 
-  mf <- model.frame(mod)
+  mf <- c50_model_frame(mod)
   expect_s3_class(mf, "data.frame")
   expect_equal(nrow(mf), 100)
 })

@@ -113,6 +113,7 @@ void initglobals(void)
   Vote = 0;       /* total votes for classes */
   BVoteBlock = 0; /* boost voting block */
   MCost = 0;      /* misclass cost [pred][real] */
+  LoadTestData = Nil; /* R hook for hold-out cases, see rc50.c */
   NCost = 0;      /* normalised MCost used for rules */
   WeightMul = 0;  /* prior adjustment factor */
 
