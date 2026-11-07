@@ -385,9 +385,13 @@ test_that("fitted objects from version 0.2.0 still predict", {
       info = nm
     )
     if (!is.null(legacy$expected[[nm]]$prob)) {
-      expect_identical(
+      # The expected values were saved on one platform. The C code computes
+      # the confidences in single precision, so other platforms (e.g. 32-bit
+      # Windows) can differ in the 8th digit.
+      expect_equal(
         predict(fit, legacy$newdata, type = "prob"),
         legacy$expected[[nm]]$prob,
+        tolerance = 1e-6,
         info = nm
       )
     }
