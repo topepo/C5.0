@@ -89,7 +89,11 @@ Quinlan's C5.0 algorithm</p>
 <dt id="arg-trials">trials<a class="anchor" aria-label="anchor" href="#arg-trials"></a></dt>
 <dd><p>an integer specifying the number of boosting
 iterations. A value of one indicates that a single model is
-used.</p></dd>
+used. There is no upper limit, but fitting time, memory use, and
+model size grow linearly with the number of trials. When
+<code>earlyStopping = TRUE</code> in <code><a href="C5.0Control.html">C5.0Control()</a></code> (the default), boosting
+can stop before the requested number of trials; see the <code>trials</code>
+element of the returned object for the number actually used.</p></dd>
 
 
 <dt id="arg-rules">rules<a class="anchor" aria-label="anchor" href="#arg-rules"></a></dt>
@@ -562,7 +566,7 @@ modifications to C by Max Kuhn, Steve Weston and Nathan Coulter</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

@@ -52,7 +52,9 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="c50-development-version">C50 (development version)<a class="anchor" aria-label="anchor" href="#c50-development-version"></a></h2>
-<ul><li><p>Added <code>strip_time_stamps</code> option to <code><a href="../reference/C5.0Control.html">C5.0Control()</a></code> (default <code>TRUE</code>) to remove timestamps from model output, making results reproducible across runs.</p></li>
+<ul><li><p><code><a href="../reference/C5.0.html">C5.0()</a></code> no longer limits <code>trials</code> to 100. Any whole number &gt;= 1 is allowed; the C code already allocated its per-trial storage at run time, so the cap existed only in R. Models with 100 or fewer trials are unchanged. Note that some downstream packages have their own cap of 100: parsnip (<code>boost_tree()</code> C5.0 engine tuning range and <code>C5_rules()</code>), rules (<code>C5_rules</code> fit wrapper and tuning range), and caret (random search over <code>1:100</code>).</p></li>
+<li><p><code>print.C5.0()</code> now says “no early stopping for boosting” when <code>earlyStopping = FALSE</code>. Before, it said “early stopping for boosting”, which read as if early stopping were turned on.</p></li>
+<li><p>Added <code>strip_time_stamps</code> option to <code><a href="../reference/C5.0Control.html">C5.0Control()</a></code> (default <code>TRUE</code>) to remove timestamps from model output, making results reproducible across runs.</p></li>
 <li><p>Switched from base R <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> and <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning()</a></code> to cli’s <code>cli_abort()</code> and <code>cli_warn()</code> for improved error messages with better formatting and context.</p></li>
 <li><p>Fixed compiler warnings for unused variables in C source code.</p></li>
 </ul></div>
@@ -102,7 +104,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
