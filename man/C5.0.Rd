@@ -26,7 +26,11 @@
 
 \item{trials}{an integer specifying the number of boosting
 iterations. A value of one indicates that a single model is
-used.}
+used. There is no upper limit, but fitting time, memory use, and
+model size grow linearly with the number of trials. When
+\code{earlyStopping = TRUE} in \code{\link[=C5.0Control]{C5.0Control()}} (the default), boosting
+can stop before the requested number of trials; see the \code{trials}
+element of the returned object for the number actually used.}
 
 \item{rules}{A logical: should the tree be decomposed into a
 rule-based model?}

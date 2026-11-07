@@ -1,5 +1,9 @@
 # C50 (development version)
 
+* `C5.0()` no longer limits `trials` to 100. Any whole number >= 1 is allowed; the C code already allocated its per-trial storage at run time, so the cap existed only in R. Models with 100 or fewer trials are unchanged. Note that some downstream packages have their own cap of 100: parsnip (`boost_tree()` C5.0 engine tuning range and `C5_rules()`), rules (`C5_rules` fit wrapper and tuning range), and caret (random search over `1:100`).
+
+* `print.C5.0()` now says "no early stopping for boosting" when `earlyStopping = FALSE`. Before, it said "early stopping for boosting", which read as if early stopping were turned on.
+
 * Added `strip_time_stamps` option to `C5.0Control()` (default `TRUE`) to remove timestamps from model output, making results reproducible across runs.
 
 * Switched from base R `stop()` and `warning()` to cli's `cli_abort()` and `cli_warn()` for improved error messages with better formatting and context.

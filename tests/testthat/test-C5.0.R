@@ -242,13 +242,50 @@ test_that("C5.0 errors on invalid trials value (too low)", {
   )
 })
 
-test_that("C5.0 errors on invalid trials value (too high)", {
-  set.seed(2006)
+test_that("C5.0 errors on invalid trials values", {
   dat <- make_two_class_data(100, seed = 2006)
-  expect_snapshot(
-    error = TRUE,
-    C5.0(dat[, -1], dat$y, trials = 101)
-  )
+  expect_snapshot(error = TRUE, C5.0(dat[, -1], dat$y, trials = 2.5))
+  expect_snapshot(error = TRUE, C5.0(dat[, -1], dat$y, trials = c(5, 10)))
+  expect_snapshot(error = TRUE, C5.0(dat[, -1], dat$y, trials = NA))
+  expect_snapshot(error = TRUE, C5.0(dat[, -1], dat$y, trials = "10"))
+})
+
+test_that("C5.0 allows more than 100 trials (trees)", {
+  dat <- make_two_class_data(100, seed = 2006)
+  ctrl <- C5.0Control(earlyStopping = FALSE)
+  mod <- C5.0(dat[, -1], dat$y, trials = 150, control = ctrl)
+
+  expect_equal(mod$trials, c(Requested = 150, Actual = 150))
+  expect_equal(sum(mod$boostResults$Data == "Training Set"), 150)
+
+  new_dat <- dat[1:20, -1]
+  pred_cls <- predict(mod, new_dat)
+  expect_length(pred_cls, 20)
+  expect_s3_class(pred_cls, "factor")
+
+  pred_prob <- predict(mod, new_dat, type = "prob")
+  expect_equal(dim(pred_prob), c(20L, 2L))
+  expect_equal(unname(rowSums(pred_prob)), rep(1, 20), tolerance = 1e-6)
+
+  pred_120 <- predict(mod, new_dat, trials = 120, type = "prob")
+  expect_equal(dim(pred_120), c(20L, 2L))
+
+  imp <- C5imp(mod)
+  expect_equal(nrow(imp), 3)
+  expect_no_error(summary(mod))
+})
+
+test_that("C5.0 allows more than 100 trials (rules)", {
+  dat <- make_two_class_data(100, seed = 2006)
+  ctrl <- C5.0Control(earlyStopping = FALSE)
+  mod <- C5.0(dat[, -1], dat$y, trials = 150, rules = TRUE, control = ctrl)
+
+  expect_equal(mod$trials, c(Requested = 150, Actual = 150))
+
+  new_dat <- dat[1:20, -1]
+  expect_length(predict(mod, new_dat), 20)
+  expect_equal(dim(predict(mod, new_dat, type = "prob")), c(20L, 2L))
+  expect_length(predict(mod, new_dat, trials = 120), 20)
 })
 
 test_that("C5.0 errors on invalid x type", {
@@ -342,6 +379,13 @@ test_that("print.C5.0 works for boosted model", {
   set.seed(4003)
   dat <- make_two_class_data(150, seed = 4003)
   mod <- C5.0(dat[, -1], dat$y, trials = 5)
+  expect_snapshot(print(mod))
+})
+
+test_that("print.C5.0 labels disabled early stopping", {
+  dat <- make_two_class_data(150, seed = 4003)
+  ctrl <- C5.0Control(earlyStopping = FALSE)
+  mod <- C5.0(dat[, -1], dat$y, trials = 5, control = ctrl)
   expect_snapshot(print(mod))
 })
 
