@@ -134,7 +134,16 @@ per-class confidence values sum to one.</p>
 probabilities derived from the class distribution in the
 terminal nodes may not be consistent with the final predicted
 class. For this reason, requesting class probabilities from a
-model using unequal costs will throw an error.</p>
+model using unequal costs will throw an error.
+#'   Factor or character values in <code>newdata</code> that were not in the
+training data are treated as missing, with a warning, and C5.0
+handles them as it handles any missing value. (Up to version
+0.2.0, they made <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> stop with an error when <code><a href="C5.0.html">C5.0()</a></code> was
+called with <code>x</code> and <code>y</code>.) With the formula method,
+<code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">stats::model.frame()</a></code> still gives an error for new levels of
+factor and character columns.</p>
+<p>Models fitted with version 0.2.0 or earlier can still be used
+for prediction.</p>
     </div>
     <div id="references">
     <h2>References</h2>

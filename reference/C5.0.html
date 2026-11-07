@@ -117,7 +117,9 @@ Quinlan's notes on case weights).</p></dd>
 <dt id="arg-costs">costs<a class="anchor" aria-label="anchor" href="#arg-costs"></a></dt>
 <dd><p>a matrix of costs associated with the possible
 errors. The matrix should have C columns and rows where C is the
-number of class levels.</p></dd>
+number of class levels. Rows are the predicted classes and
+columns are the true classes. See the Costs section for which
+values are used and how.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -154,19 +156,21 @@ shown in the output</p></dd>
 
 <dt>call</dt>
 <dd><p>the function call</p></dd>
- <dt>caseWeights</dt>
-<dd><p>not
-currently supported.</p></dd>
+
+<dt>caseWeights</dt>
+<dd><p>a logical: were case weights used?</p></dd>
 
 <dt>control</dt>
 <dd><p>an echo of the specifications from
 <code><a href="C5.0Control.html">C5.0Control()</a></code></p></dd>
 
 <dt>cost</dt>
-<dd><p>the text version of the cost matrix (or "")</p></dd>
+<dd><p>the text version of the cost matrix (or "" when
+no off-diagonal cost differs from 1)</p></dd>
 
 <dt>costMatrix</dt>
-<dd><p>an echo of the model argument</p></dd>
+<dd><p>the cost matrix, with its rows and columns in
+the order of the class levels</p></dd>
 
 <dt>dims</dt>
 <dd><p>original dimensions of the predictor matrix or
@@ -177,7 +181,9 @@ data frame</p></dd>
 outcome</p></dd>
 
 <dt>names</dt>
-<dd><p>a string version of the names file</p></dd>
+<dd><p>a string version of the names file. The C code
+does not use it; it is kept for code that reads the predictor
+types and levels from it.</p></dd>
 
 <dt>output</dt>
 <dd><p>a string version of the command line output</p></dd>
@@ -195,8 +201,16 @@ outcome</p></dd>
 <dd><p>n integer vector of the tree/rule size (or sizes
 in the case of boosting)</p></dd>
 
-</dl><p>.</p>
-<dl><dt>tree</dt>
+<dt>spec</dt>
+<dd><p>a description of the predictors and the outcome
+(names, types, and levels) that <code><a href="predict.C5.0.html">predict.C5.0()</a></code> uses to
+prepare new data</p></dd>
+
+<dt>format_version</dt>
+<dd><p>the version of the data interface;
+<code>2</code> for models fitted with this version of the package</p></dd>
+
+<dt>tree</dt>
 <dd><p>a string version of the tree file</p></dd>
 
 <dt>trials</dt>
@@ -215,26 +229,66 @@ tree or a collection of rules (or boosted versions of either).</p>
 preserved (i.e. dummy variables are not automatically created).
 This particular model handles non-numeric data of some types
 (such as character, factor and ordered data).</p>
-<p>The cost matrix should by CxC, where C is the number of
-classes. Diagonal elements are ignored. Columns should
-correspond to the true classes and rows are the predicted
-classes. For example, if C = 3 with classes Red, Blue and Green
-(in that order), a value of 5 in the (2,3) element of the matrix
-would indicate that the cost of predicting a Green sample as
-Blue is five times the usual value (of one). Note that when
-costs are used, class probabilities cannot be generated using
-<code><a href="predict.C5.0.html">predict.C5.0()</a></code>.</p>
+<p>Predictors can be numeric, factor, ordered factor, or character
+columns. Character columns are treated as factors with sorted
+levels. Names and values are used exactly as given: there are no
+reserved names or special values, so a column can be called
+<code>"case weight"</code>, and a factor level can be <code>"?"</code>, <code>"N/A"</code>, or an
+empty string. The only exception is that no predictor can have
+the same name as the outcome label (<code>label</code> in <code><a href="C5.0Control.html">C5.0Control()</a></code>).
+Missing values (<code>NA</code>) are allowed in the predictors; C5.0 handles
+them directly. Rows with a missing outcome are not used.</p>
+    </div>
+    <div id="note">
+    <h2>Note</h2>
+    <p>The command line version currently supports more data
+types than the R port. Currently, numeric, factor, ordered
+factor, and character columns are allowed as predictors.</p>
+    </div>
+    <div id="costs">
+    <h2>Costs</h2>
+
+
+<p>The cost matrix should be CxC, where C is the number of
+classes. Columns should correspond to the true classes and rows
+are the predicted classes. For example, if C = 3 with classes
+Red, Blue and Green (in that order), a value of 5 in the (2,3)
+element of the matrix would indicate that the cost of predicting
+a Green sample as Blue is five times the usual value (of one).</p>
+<p>The row and column names must both be the levels of <code>y</code>. They can
+be in any order: rows are matched by the row names and columns
+by the column names. If the matrix has no dimnames, the levels of
+<code>y</code> are used, in order, with a warning.</p>
+<p>Which values are used:</p><ul><li><p>Diagonal elements are ignored.</p></li>
+<li><p>An off-diagonal value of 1 is the default cost, so it has no
+effect.</p></li>
+<li><p>All other off-diagonal values are used, including values
+between 0 and 1.</p></li>
+<li><p>A value of 0 (an error with no cost) is allowed when there are
+three or more classes. With two classes, both off-diagonal
+values must be greater than 0.</p></li>
+<li><p>Negative, missing, and infinite values are errors.</p></li>
+</ul><p>How the costs are used depends on the number of classes:</p><ul><li><p>With two classes, the training cases are reweighted so that
+cases of the class whose errors cost more count for more. These
+weights are multiplied by any case <code>weights</code>, and <code>minCases</code> is
+lowered to match.</p></li>
+<li><p>With any number of classes, the predicted class is the one with
+the lowest expected cost, not the most probable one. Because of
+this, class probabilities cannot be generated with
+<code><a href="predict.C5.0.html">predict.C5.0()</a></code> when costs are used.</p></li>
+<li><p>For rule-based models with three or more classes, the costs are
+also used when the rules are formed.</p></li>
+</ul><p>Up to version 0.2.0, off-diagonal costs that were not greater than
+1 were dropped without a message, so that C5.0 used a cost of 1
+instead (a value of 0.5, for example, had no effect). The row
+names of the matrix were also ignored, and the rows were assumed
+to be in the order of the column names. Models fitted with such
+cost matrices will differ from those versions.</p>
 <p>Internally, the code will attempt to halt boosting if it
 appears to be ineffective. For this reason, the value of
 <code>trials</code> may be different from what the model actually
 produced. There is an option to turn this off in
 <code><a href="C5.0Control.html">C5.0Control()</a></code>.</p>
-    </div>
-    <div id="note">
-    <h2>Note</h2>
-    <p>The command line version currently supports more data
-types than the R port. Currently, numeric, factor and ordered
-factors are allowed as predictors.</p>
     </div>
     <div id="references">
     <h2>References</h2>
