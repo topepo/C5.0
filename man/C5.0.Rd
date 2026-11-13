@@ -14,6 +14,7 @@
   weights = NULL,
   control = C5.0Control(),
   costs = NULL,
+  trace_rows = NULL,
   ...
 )
 
@@ -49,6 +50,10 @@ errors. The matrix should have C columns and rows where C is the
 number of class levels. Rows are the predicted classes and
 columns are the true classes. See the Costs section for which
 values are used and how.}
+
+\item{trace_rows}{Demo-only: an optional integer vector of training
+rows whose boosting case weights and per-trial predictions are saved
+in the \code{weight_trace} element of the result.}
 
 \item{\dots}{other options to pass into the function (not
 currently used with default method)}

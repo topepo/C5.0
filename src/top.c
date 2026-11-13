@@ -8,6 +8,7 @@
 #include "rsample.h"
 #include "rulebasedmodels.h"
 #include "strbuf.h"
+#include "trace.h"
 
 extern void c50main(void);
 extern void sample(double *outputv);
@@ -419,7 +420,8 @@ static const char *copy_strbuf(const char *name) {
 SEXP C_c50_fit(SEXP spec, SEXP x, SEXP y, SEXP w, SEXP costs, SEXP subset,
                SEXP rules, SEXP utility, SEXP trials, SEXP winnow,
                SEXP sample, SEXP seed, SEXP noGlobalPruning, SEXP CF,
-               SEXP minCases, SEXP fuzzyThreshold, SEXP earlyStopping) {
+               SEXP minCases, SEXP fuzzyThreshold, SEXP earlyStopping,
+               SEXP traceRows) {
   RAttSpec att_spec;
   RCaseData train;
   RCosts cost_matrix;
@@ -452,6 +454,30 @@ SEXP C_c50_fit(SEXP spec, SEXP x, SEXP y, SEXP w, SEXP costs, SEXP subset,
   int c_early = Rf_asLogical(earlyStopping);
 
   initglobals();
+  ResetTrace();
+
+  int n_trace = 0;
+  if (traceRows != R_NilValue) {
+    n_trace = Rf_length(traceRows);
+  }
+  SEXP trace_wt = PROTECT(Rf_allocMatrix(REALSXP, n_trace, c_trials));
+  SEXP trace_pred = PROTECT(Rf_allocMatrix(INTSXP, n_trace, c_trials));
+  for (R_xlen_t j = 0; j < (R_xlen_t)n_trace * c_trials; j++) {
+    REAL(trace_wt)[j] = NA_REAL;
+    INTEGER(trace_pred)[j] = NA_INTEGER;
+  }
+  if (n_trace > 0) {
+    NTrace = n_trace;
+    TraceTrials = c_trials;
+    TraceRow = (int *)R_alloc(n_trace, sizeof(int));
+    TraceRec = (void **)R_alloc(n_trace, sizeof(void *));
+    for (int k = 0; k < n_trace; k++) {
+      TraceRow[k] = INTEGER(traceRows)[k] - 1;
+      TraceRec[k] = NULL;
+    }
+    TraceWt = REAL(trace_wt);
+    TracePred = INTEGER(trace_pred);
+  }
 
   // The costs are passed as a matrix, so there is no cost text
   setglobals(c_subset, c_rules, c_utility, c_trials, c_winnow, c_sample,
@@ -484,17 +510,22 @@ SEXP C_c50_fit(SEXP spec, SEXP x, SEXP y, SEXP w, SEXP costs, SEXP subset,
   FreeCases();
   rbm_removeall();
   initglobals();
+  ResetTrace();
 
-  SEXP out = PROTECT(Rf_allocVector(VECSXP, 3));
-  SEXP out_names = PROTECT(Rf_allocVector(STRSXP, 3));
+  SEXP out = PROTECT(Rf_allocVector(VECSXP, 5));
+  SEXP out_names = PROTECT(Rf_allocVector(STRSXP, 5));
   SET_VECTOR_ELT(out, 0, make_string(tree_string));
   SET_VECTOR_ELT(out, 1, make_string(rules_string));
   SET_VECTOR_ELT(out, 2, make_string(output_string));
+  SET_VECTOR_ELT(out, 3, trace_wt);
+  SET_VECTOR_ELT(out, 4, trace_pred);
   SET_STRING_ELT(out_names, 0, Rf_mkChar("tree"));
   SET_STRING_ELT(out_names, 1, Rf_mkChar("rules"));
   SET_STRING_ELT(out_names, 2, Rf_mkChar("output"));
+  SET_STRING_ELT(out_names, 3, Rf_mkChar("trace_weight"));
+  SET_STRING_ELT(out_names, 4, Rf_mkChar("trace_pred"));
   Rf_setAttrib(out, R_NamesSymbol, out_names);
-  UNPROTECT(2);
+  UNPROTECT(4);
   return out;
 }
 
@@ -615,7 +646,7 @@ static const R_CMethodDef cEntries[] = {
 
 // Declare the .Call functions that take R vectors directly
 static const R_CallMethodDef callEntries[] = {
-    {"C_c50_fit", (DL_FUNC)&C_c50_fit, 17},
+    {"C_c50_fit", (DL_FUNC)&C_c50_fit, 18},
     {"C_c50_predict", (DL_FUNC)&C_c50_predict, 6},
     {NULL, NULL, 0}};
 

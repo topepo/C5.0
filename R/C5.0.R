@@ -99,6 +99,9 @@ C5.0 <- function(x, ...) UseMethod("C5.0")
 #'  number of class levels. Rows are the predicted classes and
 #'  columns are the true classes. See the Costs section for which
 #'  values are used and how.
+#' @param trace_rows Demo-only: an optional integer vector of training
+#'  rows whose boosting case weights and per-trial predictions are saved
+#'  in the `weight_trace` element of the result.
 #' @param formula a formula, with a response and at least one predictor.
 #' @param data an optional data frame in which to interpret the
 #'  variables named in the formula.
@@ -178,6 +181,7 @@ C5.0.default <- function(
   weights = NULL,
   control = C5.0Control(),
   costs = NULL,
+  trace_rows = NULL,
   ...
 ) {
   funcCall <- match.call(expand.dots = TRUE)
@@ -287,6 +291,21 @@ C5.0.default <- function(
     weights <- as.double(weights)
   }
 
+  if (!is.null(trace_rows)) {
+    rows_ok <-
+      is.numeric(trace_rows) &&
+      length(trace_rows) > 0 &&
+      !anyNA(trace_rows) &&
+      all(trace_rows == round(trace_rows)) &&
+      all(trace_rows >= 1 & trace_rows <= nrow(x))
+    if (!rows_ok) {
+      cli_abort(
+        "{.arg trace_rows} must be whole numbers between 1 and {nrow(x)}."
+      )
+    }
+    trace_rows <- as.integer(trace_rows)
+  }
+
   ## The data are passed to the C code as vectors; see R/data-spec.R
   spec <- c50_data_spec(
     x,
@@ -328,11 +347,12 @@ C5.0.default <- function(
     # -p "use the Fuzzy thresholds option" var name: PROBTHRESH
     as.logical(control$earlyStopping),
     # toggle C5.0 to check to see if we should stop boosting early
+    trace_rows,
     PACKAGE = "C50"
   )
 
   parse_model_failure(Z$output)
-  
+
   ## Strip timestamps from output if requested
   if (control$strip_time_stamps) {
     Z$output <- strip_time_stamps(Z$output)
@@ -373,6 +393,11 @@ C5.0.default <- function(
     size <- length(grep("[0-9])$", strsplit(Z$output, "\n")[[1]]))
   }
 
+  weight_trace <- NULL
+  if (!is.null(trace_rows)) {
+    weight_trace <- make_weight_trace(Z, trace_rows, y, actual)
+  }
+
   out <- list(
     names = c50_names_string(spec),
     cost = costString,
@@ -391,11 +416,31 @@ C5.0.default <- function(
     predictors = colnames(x),
     rules = Z$rules,
     spec = spec,
+    weight_trace = weight_trace,
     format_version = 2L
   )
 
   class(out) <- "C5.0"
   out
+}
+
+# Demo-only: reshape the traced boosting weights into a long data frame.
+# C class codes are 1-based indices into levels(y).
+make_weight_trace <- function(Z, trace_rows, y, actual) {
+  n_trials <- min(ncol(Z$trace_weight), actual)
+  trials <- seq_len(n_trials)
+  wt <- Z$trace_weight[, trials, drop = FALSE]
+  pred <- Z$trace_pred[, trials, drop = FALSE]
+  lvl <- levels(y)
+  res <- data.frame(
+    row = rep(trace_rows, times = n_trials),
+    trial = rep(trials, each = length(trace_rows)),
+    weight = as.vector(wt),
+    predicted = factor(lvl[as.vector(pred)], levels = lvl),
+    truth = rep(y[trace_rows], times = n_trials)
+  )
+  res$correct <- res$predicted == res$truth
+  res
 }
 
 #' @export

@@ -25,6 +25,7 @@
 #include "rdata.h"
 #include "redefine.h"
 #include "transform.h"
+#include "trace.h"
 
 /*************************************************************************/
 /*                                                                       */
@@ -216,15 +217,28 @@ static void RLoadCases(const RAttSpec *Spec, const RCaseData *Data,
                        Boolean Train, Boolean AllowUnknownClass)
 /*          ----------  */
 {
-  CaseNo i;
+  CaseNo i, Before;
   DataRec DVec;
+  int k;
 
   StartData(Train, Data->N);
 
   ForEach(i, 0, Data->N - 1) {
     Case[MaxCase] = DVec = NewCase(); /* for error reporting */
     FillCase(DVec, Spec, Data, i);
+    Before = MaxCase;
     KeepCase(DVec, Train, AllowUnknownClass);
+
+    /*  KeepCase() frees cases dropped by sampling, so only remember
+        the record if MaxCase advanced  */
+
+    if (Train && NTrace > 0 && MaxCase > Before) {
+      for (k = 0; k < NTrace; k++) {
+        if (TraceRow[k] == i) {
+          TraceRec[k] = (void *)DVec;
+        }
+      }
+    }
   }
 
   FinishData();

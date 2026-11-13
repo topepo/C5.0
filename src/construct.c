@@ -49,6 +49,7 @@
 
 #include "defns.h"
 #include "extern.h"
+#include "trace.h"
 
 #include "redefine.h"
 #include "transform.h"
@@ -58,6 +59,39 @@
 /* Grow single tree or sequence of boosted trees    */
 /*                                                                       */
 /*************************************************************************/
+
+/*  Demo-only: record weights/predictions of traced rows.  Records
+    are reached through saved pointers because Case[] is reordered
+    during boosting  */
+
+static void RecordTraceWeights(int Trial) {
+  int k;
+
+  if (NTrace <= 0 || Trial >= TraceTrials) {
+    return;
+  }
+  for (k = 0; k < NTrace; k++) {
+    if (TraceRec[k]) {
+      TraceWt[k + Trial * NTrace] = Weight((DataRec)TraceRec[k]);
+    }
+  }
+}
+
+static void RecordTracePreds(int Trial) {
+  int k;
+  DataRec D;
+
+  if (NTrace <= 0 || Trial >= TraceTrials) {
+    return;
+  }
+  for (k = 0; k < NTrace; k++) {
+    if ((D = (DataRec)TraceRec[k])) {
+      TracePred[k + Trial * NTrace] =
+          (RULES ? RuleClassify(D, RuleSet[Trial])
+                 : TreeClassify(D, Pruned[Trial]));
+    }
+  }
+}
 
 void ConstructClassifiers(void)
 /*   --------------------  */
@@ -126,6 +160,8 @@ void ConstructClassifiers(void)
 
     memset(Tested, 0, MaxAtt + 1); /* reset tested attributes */
 
+    RecordTraceWeights(Trial);
+
     FormTree(Bp, MaxCase, 0, &Raw[Trial]);
 
     /*  Prune the raw tree to minimise expected misclassification cost  */
@@ -181,6 +217,8 @@ void ConstructClassifiers(void)
     } else {
       PrintTree(Pruned[Trial], T_Tree);
     }
+
+    RecordTracePreds(Trial);
 
     if (Trial == TRIALS - 1)
       continue;
