@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Max Kuhn \email{mxkuhn@gmail.com}
   \item Ross Quinlan (Author of imported C code)
 }
 
