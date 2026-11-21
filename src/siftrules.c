@@ -473,9 +473,26 @@ void CoverClass(ClassNo Target)
 int MessageLength(RuleNo NR, double RuleBits, float Errs)
 /*  -------------  */
 {
+  // C5.0 - edit start
+  // Note:
+  // With one class (the outcome can have a single level), the original
+  // `LogCaseNo[MaxClass - 1]` is the sentinel `LogCaseNo[0] = -1E38`, and the
+  // result is outside the range of `int`, which is undefined. With one class
+  // there is no other class to name for an error, so that cost is 0.
+  //
+  // return rint(100.0 *
+  //             (THEORYFRAC * Max(0, RuleBits - LogFact[NR]) + Errs * BitsErr +
+  //              (MaxCase + 1 - Errs) * BitsOK + Errs * LogCaseNo[MaxClass - 1]));
+
+  double ClassBits = 0;
+  if (MaxClass > 1) {
+    ClassBits = LogCaseNo[MaxClass - 1];
+  }
+
   return rint(100.0 *
               (THEORYFRAC * Max(0, RuleBits - LogFact[NR]) + Errs * BitsErr +
-               (MaxCase + 1 - Errs) * BitsOK + Errs * LogCaseNo[MaxClass - 1]));
+               (MaxCase + 1 - Errs) * BitsOK + Errs * ClassBits));
+  // C5.0 - edit end
 }
 
 /*************************************************************************/
