@@ -1,3 +1,5 @@
+# C50 (development version)
+
 # C50 1.0.0
 
 * `C5.0()` and `predict()` now pass the data to the C code as R vectors. Before, the data were written as the text files of the command-line program (`.names`, `.data`, `.cases`, `.costs`) and parsed again by the C code. For data that the text files could hold, the models and predictions are the same as before. The text interface had these problems, which are now fixed:
