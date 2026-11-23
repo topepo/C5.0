@@ -1,4 +1,4 @@
-# C50 (development version)
+# C50 1.0.1
 
 * Fixed undefined behavior in the C code when a rule-based model is fit to an outcome with one level. The cost of a rule set was computed with an invalid value and converted to an integer outside its range, which the CRAN sanitizer checks reported (#73).
 
